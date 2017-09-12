@@ -196,7 +196,39 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    public LinkedMap<Date,Wallet> getLastTwoWallet( ) {
+    public LinkedMap<Date, HomeStats> getLastHomeStats(int limit){
+        LinkedMap<Date, HomeStats> ret = new LinkedMap();
+        int cnt = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(NoobDataBaseContract.HomeStats_.TABLE_NAME, new String[]{
+                        NoobDataBaseContract.HomeStats_._ID,
+                        NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM,
+                        NoobDataBaseContract.HomeStats_.COLUMN_NAME_JSON},
+                null,
+                null,// String[] selectionArgs
+                null,
+                null, // HAVING
+                NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " DESC",
+                ""+limit);//2 results to do compare
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Gson gson = builder.create();
+                // Register an adapter to manage the date types as long values
+                HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), HomeStats.class);
+                cnt++;
+                // Adding contact to list
+                Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM)));
+                ret.put(curDate, retrieved);
+            } while (cursor.moveToNext());
+        }
+        Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
+        cursor.close();
+        db.close();
+        return ret;
+    }
+    public LinkedMap<Date,Wallet> getLastWallet(int limit ) {
         LinkedMap<Date, Wallet> ret = new LinkedMap();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -208,8 +240,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 null,// String[] selectionArgs
                 null,
                 null, // HAVING
-                NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " DESC",
-                "2");//2 results to do compare
+                NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " DESC",
+                ""+limit);//2 results to do compare
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {

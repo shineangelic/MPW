@@ -36,6 +36,9 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,6 +50,7 @@ import it.angelic.noobpoolstats.model.MyDateTypeAdapter;
 import it.angelic.noobpoolstats.model.MyTimeStampTypeAdapter;
 import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
 import it.angelic.noobpoolstats.model.db.NoobPoolQueryGrouper;
+import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Worker;
 
@@ -70,6 +74,7 @@ public class MinerActivity extends AppCompatActivity
     private RadioGroup radioGroupChartGranularity;
     private String minerAddr;
     private LineView lineView;
+    private TextView textViewWalRoundSharesPercValue;
 
 
     @Override
@@ -98,11 +103,11 @@ public class MinerActivity extends AppCompatActivity
         walCurHashrate3HText = (TextView) findViewById(R.id.textViewWalHashrate3hValue);
         walTotSharesText = (TextView) findViewById(R.id.textViewWalSharesValue);
         walOnlineWorkersText = (TextView) findViewById(R.id.textViewWalOnlineMinersValue);
-        lineView =(LineView) findViewById(R.id.line_view_onlineminers);
+        lineView = (LineView) findViewById(R.id.line_view_onlineminers);
         textViewWalPaymentsValue = (TextView) findViewById(R.id.textViewWalPaymentsValue);
         textViewWalLastShareValue = (TextView) findViewById(R.id.textViewWalLastShareValue);
         textViewWalLastShare = (TextView) findViewById(R.id.textViewWalLastShare);
-
+        textViewWalRoundSharesPercValue = (TextView) findViewById(R.id.textViewWalRoundSharesPercValue);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +164,7 @@ public class MinerActivity extends AppCompatActivity
                         //dati semi grezzi
                         storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
 
-                        updateCurrentStats(retrieved);
+                        updateCurrentStats(retrieved, mDbHelper);
                         NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
 
                         TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayout);
@@ -172,15 +177,15 @@ public class MinerActivity extends AppCompatActivity
                             Worker worker = retrieved.getWorkers().get(workerName);
 
                             TableRow rowt = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
-                            ((TextView)rowt.findViewById(R.id.textViewWorkerName)).setText(workerName);
-                            ((TextView)rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatHashrate(worker.getHr()));
-                            ((TextView)rowt.findViewById(R.id.textViewWorkerHashrate3h)).setText(Utils.formatHashrate(worker.getHr2()));
+                            ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(workerName);
+                            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatHashrate(worker.getHr()));
+                            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate3h)).setText(Utils.formatHashrate(worker.getHr2()));
                             if (worker.getOffline()) {
-                                (rowt.findViewById(R.id.buttonworkerOnline)).setBackgroundColor(ContextCompat.getColor(MinerActivity.this, R.color.colorAccent) );
+                                (rowt.findViewById(R.id.buttonworkerOnline)).setBackgroundColor(ContextCompat.getColor(MinerActivity.this, R.color.colorAccent));
                             }
                             Calendar workBeat = Calendar.getInstance();
                             workBeat.setTime(worker.getLastBeat());
-                            ((TextView)rowt.findViewById(R.id.textViewWorkerLastBeat)).setText(Utils.getTimeAgo(workBeat));
+                            ((TextView) rowt.findViewById(R.id.textViewWorkerLastBeat)).setText(Utils.getTimeAgo(workBeat));
 
                             minersTable.addView(rowt);
                         }
@@ -202,7 +207,7 @@ public class MinerActivity extends AppCompatActivity
     /**
      * Update header with last persisted DB row
      */
-    private void updateCurrentStats(Wallet lastHit) {
+    private void updateCurrentStats(Wallet lastHit, final NoobPoolDbHelper mDbHelper) {
 
         try {
             Calendar when = Calendar.getInstance();
@@ -220,10 +225,27 @@ public class MinerActivity extends AppCompatActivity
             walCurHashrate3HText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             walTotSharesText.setText(Utils.formatBigNumber(lastHit.getRoundShares()));
             walOnlineWorkersText.setText(lastHit.getWorkersOnline().toString());
-            textViewWalPaymentsValue.setText( "" +lastHit.getPaymentsTotal());
+            textViewWalPaymentsValue.setText("" + lastHit.getPaymentsTotal());
+
             walletValueText.setText(minerAddr);
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh: " + e.getMessage());
+            e.printStackTrace();
+        }
+        try {
+            MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
+
+            HomeStats last = mDbHelper.getLastHomeStats(1).getValue(0);
+            // bigIntX is a BigInteger
+            BigDecimal bigDecX = new BigDecimal(lastHit.getRoundShares());
+            BigDecimal bigDecY = new BigDecimal(last.getStats().getRoundShares());
+
+            BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
+
+            // to divide:
+            textViewWalRoundSharesPercValue.setText(bd3.toString() + "%");
+        } catch (Exception e) {
+            Log.e(MainActivity.TAG, "Errore refresh share perc: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -286,7 +308,7 @@ public class MinerActivity extends AppCompatActivity
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(MinerActivity.this, EncourageActivity.class);
             startActivity(opzioni);
-        }else {
+        } else {
             Snackbar.make(hashText, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
                     .setAction("WHAT?", new View.OnClickListener() {
                         @Override

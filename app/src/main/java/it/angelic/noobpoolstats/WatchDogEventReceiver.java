@@ -88,7 +88,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
                             mDbHelper.logWalletStats(retrieved);
                             //dati semi grezzi
-                            LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastTwoWallet();
+                            LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallet(2);
                             //controllo se manca qualcuno
                             if (notify && ultimi.get(ultimi.get(0)).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
                                 //trovo chi manca

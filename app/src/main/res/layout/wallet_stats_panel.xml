@@ -15,11 +15,11 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5"
         tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="192dp" />
+        tools:layout_editor_absoluteX="180dp" />
 
     <TextView
         android:id="@+id/textViewWalletValue"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="7dp"
         android:layout_marginLeft="8dp"
@@ -27,12 +27,13 @@
         android:layout_marginTop="8dp"
         android:ellipsize="marquee"
         android:maxLines="1"
-        android:textColor="#337ab7"
+        android:textColor="@color/colorPrimary"
         android:tooltipText="Wallet Address can be set in Preferences"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
+        tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13"
+        android:layout_marginStart="8dp" />
 
     <View
         android:id="@+id/viewSeparatorWallet"
@@ -46,7 +47,8 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/textViewWalletValue"
-        app:layout_constraintHorizontal_bias="0.333" />
+        app:layout_constraintHorizontal_bias="0.333"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/textViewWalCurHashrate"
@@ -67,7 +69,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="NA"
-        android:textColor="#337ab7"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintRight_toLeftOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
@@ -91,7 +93,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        android:textColor="#337ab7"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
@@ -115,7 +117,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        android:textColor="#337ab7"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintRight_toLeftOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/textViewWalCurHashrateValue" />
@@ -139,7 +141,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        android:textColor="#337ab7"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewWalOnlineMinersValue" />
@@ -155,7 +157,8 @@
         android:id="@+id/viewSeparatorWallet2"
         android:layout_marginStart="8dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/textViewWalShares"
@@ -172,14 +175,14 @@
         android:id="@+id/textViewWalSharesValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
         android:layout_marginRight="7dp"
         android:layout_marginTop="7dp"
         android:text="NA"
-        android:textColor="#337ab7"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShareValue"
-        android:layout_marginEnd="7dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShareValue" />
 
     <TextView
         android:id="@+id/textViewWalLastShare"
@@ -196,14 +199,14 @@
         android:id="@+id/textViewWalLastShareValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        android:textColor="#337ab7"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2" />
 
     <TextView
         android:id="@+id/textViewWalRoundSharesPerc"
@@ -213,7 +216,8 @@
         android:layout_marginTop="8dp"
         android:text="Round Share %"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalShares" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalShares"
+        android:layout_marginStart="8dp" />
 
     <TextView
         android:id="@+id/textViewWalRoundSharesPercValue"
@@ -221,8 +225,11 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="NA"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalSharesValue" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalSharesValue"
+        android:layout_marginEnd="8dp" />
 
 </android.support.constraint.ConstraintLayout>
