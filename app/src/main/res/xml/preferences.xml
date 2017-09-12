@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:key="pref_sync"
+        android:title="Service enabled"
+        android:summary="Noobpool app will connect to noobpool in background every hour to retrieve fresh data"
+        android:defaultValue="true" />
+
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:key="pref_notify"
+        android:title="Keep me informed"
+        android:summary="Activate mild notification when a new block is discovered"
+        android:defaultValue="true" />
+
+    <EditTextPreference
+        android:key="wallet_addr"
+        android:title="Login"
+        android:summary="Insert your wallet's public address to know your personal stats"
+        android:hint="0x" />
+</PreferenceScreen>
