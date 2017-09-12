@@ -48,6 +48,9 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
+        //load extra
+        final String minerAddr = intent.getStringExtra("WALLETURL");
+        final Boolean notify = intent.getBooleanExtra("NOTIFY", false);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 MainActivity.homeStatsUrl, null,
@@ -56,12 +59,17 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(MainActivity.TAG, response.toString());
-
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
                         HomeStats retrieved = gson.fromJson(response.toString(), HomeStats.class);
                         mDbHelper.logHomeStats(retrieved);
                         //dati semi grezzi
+                        LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(2);
+                        //controllo se manca qualcuno
+                        if (notify && (ultimi.get(ultimi.get(0)).getMaturedTotal()) != ultimi.get(ultimi.get(1)).getMaturedTotal()) {
+                            //se cambiato, notifica
+                            sendBlockNotification(ctx, "NoobPool has " + retrieved.getMaturedTotal() + " matured blocks");
+                        }
 
                     }
                 }, new Response.ErrorListener() {
@@ -72,11 +80,10 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                 // hide the progress dialog
             }
         });
-        final String minerAddr = intent.getStringExtra("WALLETURL");
-        final Boolean notify = intent.getBooleanExtra("NOTIFY", false);
+
 
         if (minerAddr != null) {
-            Log.i(MainActivity.TAG, "refreshing wallet " + minerAddr + " notify: "+ notify);
+            Log.i(MainActivity.TAG, "refreshing wallet " + minerAddr + " notify: " + notify);
             JsonObjectRequest jsonObjReqWallet = new JsonObjectRequest(Request.Method.GET,
                     MinerActivity.minerStatsUrl + minerAddr, null,
                     new Response.Listener<JSONObject>() {
@@ -92,12 +99,12 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             //controllo se manca qualcuno
                             if (notify && ultimi.get(ultimi.get(0)).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
                                 //trovo chi manca
-                                for (String workerInFullSet  : ultimi.get(ultimi.get(1)).getWorkers().keySet()){
-                                    if (!ultimi.get(ultimi.get(0)).getWorkers().keySet().contains(workerInFullSet)){
+                                for (String workerInFullSet : ultimi.get(ultimi.get(1)).getWorkers().keySet()) {
+                                    if (!ultimi.get(ultimi.get(0)).getWorkers().keySet().contains(workerInFullSet)) {
                                         Worker missingOne = ultimi.get(ultimi.get(1)).getWorkers().get(workerInFullSet);
                                         Calendar ref = Calendar.getInstance();
                                         ref.setTime(missingOne.getLastBeat());
-                                        sendOfflineNotification(ctx, "Worker "+workerInFullSet +" is OFFLINE. Last beat" +Utils.getTimeAgo(ref)+" ago ");
+                                        sendOfflineNotification(ctx, "Worker " + workerInFullSet + " is OFFLINE. Last beat" + Utils.getTimeAgo(ref) + " ago ");
                                     }
                                 }
                             }
@@ -118,7 +125,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
     }
 
-    private void sendOfflineNotification(Context ctx,String contentText ) {
+    private void sendOfflineNotification(Context ctx, String contentText) {
         Intent resultIntent = new Intent(ctx, MinerActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
@@ -146,5 +153,31 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
+    private void sendBlockNotification(Context ctx, String contentText) {
+        Intent resultIntent = new Intent(ctx, MainActivity.class);
+        // Because clicking the notification opens a new ("special") activity, there's
+        // no need to create an artificial back stack.
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        ctx,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
 
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(ctx)
+                        .setSmallIcon(R.drawable.ic_payment_black_24dp)
+                        .setContentTitle("Block Found")
+                        .setContentText(contentText);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        // Sets an ID for the notification
+        int mNotificationId = 002;
+        // Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
 }

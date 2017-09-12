@@ -1,6 +1,7 @@
 package it.angelic.noobpoolstats;
 
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import org.apache.commons.collections4.map.LinkedMap;
@@ -31,6 +32,7 @@ class NoobChartUtils {
         hashText.setText("Pool Hashrate History (now: " + Utils.formatHashrate(campione.getHashrate()) + ")");
         ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
+        chart.setShowPopup(LineView.SHOW_POPUPS_All);
         chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
         chart.setColorArray(new int[]{Color.BLACK, Color.GREEN, Color.GRAY, Color.CYAN});
@@ -58,8 +60,9 @@ class NoobChartUtils {
         ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
         chart.setDrawDotLine(false); //optional
+        chart.setShowPopup(LineView.SHOW_POPUPS_All);
         chart.setBottomTextList(labelsArr);
-        chart.setColorArray(new int[]{Color.BLACK, Color.GREEN, Color.GRAY, Color.CYAN});
+        chart.setColorArray(new int[]{ContextCompat.getColor(textViewNetDiffTitle.getContext(), R.color.colorPrimaryDark)});
         chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
@@ -72,12 +75,12 @@ class NoobChartUtils {
             dataList.add((storia.get(date2).getWorkersOnline()));
             labelsArr.add(MainActivity.yearFormat.format(date2));
         }
-
+        chart.setShowPopup(LineView.SHOW_POPUPS_All);
         ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
         chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
-        chart.setColorArray(new int[]{Color.BLACK, Color.GREEN, Color.GRAY, Color.CYAN});
+        chart.setColorArray(new int[]{ContextCompat.getColor(chart.getContext(), R.color.colorPrimaryDark)});
         chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 }
