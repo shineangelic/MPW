@@ -127,7 +127,6 @@ public class MinerActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
-                //drawHashrateHistory(NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
             }
         };
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
@@ -138,6 +137,7 @@ public class MinerActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miner);
         navigationView.setNavigationItemSelectedListener(this);
@@ -228,6 +228,14 @@ public class MinerActivity extends AppCompatActivity
             textViewWalPaymentsValue.setText("" + lastHit.getPaymentsTotal());
 
             walletValueText.setText(minerAddr);
+            walletValueText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse("https://etherscan.io/address/" + minerAddr));
+                    startActivity(i);
+                }
+            });
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh: " + e.getMessage());
         }

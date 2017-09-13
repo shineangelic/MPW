@@ -12,7 +12,7 @@
         android:summary="Activate mild notification when a new block is discovered"
         android:defaultValue="true" />
 
-    <EditTextPreference
+    <android.support.v7.preference.EditTextPreference
         android:key="wallet_addr"
         android:title="Login"
         android:summary="Insert your wallet's public address to know your personal stats"

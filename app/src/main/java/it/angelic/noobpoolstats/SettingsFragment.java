@@ -1,6 +1,7 @@
 package it.angelic.noobpoolstats;
 
 import android.os.Bundle;
+import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
@@ -23,6 +24,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         };
         service.setOnPreferenceChangeListener(listener);
         service.setEnabled(true);
+
+        EditTextPreference walletAddrPref = (EditTextPreference) findPreference("wallet_addr");
+
+        walletAddrPref.setOnPreferenceChangeListener(new EthereumFormatWatcher(getActivity()));
 
     }
 }
