@@ -230,7 +230,6 @@ public class MinerActivity extends AppCompatActivity
             walletValueText.setText(minerAddr);
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh: " + e.getMessage());
-            e.printStackTrace();
         }
         try {
             MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
@@ -243,7 +242,7 @@ public class MinerActivity extends AppCompatActivity
             BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
 
             // to divide:
-            textViewWalRoundSharesPercValue.setText(bd3.toString() + "%");
+            textViewWalRoundSharesPercValue.setText(bd3.stripTrailingZeros().toString() + "%");
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh share perc: " + e.getMessage());
             e.printStackTrace();

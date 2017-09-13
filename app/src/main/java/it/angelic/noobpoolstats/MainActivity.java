@@ -32,6 +32,9 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private RadioGroup radioGroupBackTo;
     private TextView textViewNetDiffTitle;
     private RadioGroup radioGroupChartGranularity;
+    private TextView textViewVarianceValue;
 
 
     @Override
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity
         textViewBlockChainHeightValue = (TextView) findViewById(R.id.textViewBlockChainHeightValue);
         poolHashrateText = (TextView) findViewById(R.id.textViewPoolHashrateValue);
         roundSharesText = (TextView) findViewById(R.id.textViewRoundSharesValue);
+        textViewVarianceValue = (TextView) findViewById(R.id.textViewVarianceValue);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -198,9 +203,24 @@ public class MainActivity extends AppCompatActivity
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
+
             noobText.setText(String.format(getString(R.string.tot_block_found), lastHit.getMaturedTotal()));
         } catch (Exception e) {
             Log.e(TAG, "Errore refresh: " + e.getMessage());
+            e.printStackTrace();
+        }
+        try {
+            MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
+
+            // Variance % = Pool Shares / Network Difficulty Thanks to alfred
+            BigDecimal bigDecX = new BigDecimal(lastHit.getStats().getRoundShares());
+            BigDecimal bigDecY = new BigDecimal(Long.parseLong(lastHit.getNodes().get(0).getDifficulty()));
+
+            BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
+
+            textViewVarianceValue.setText(bd3.stripTrailingZeros().toPlainString() + "%");
+        } catch (Exception e) {
+            Log.e(MainActivity.TAG, "Errore refresh share perc: " + e.getMessage());
             e.printStackTrace();
         }
     }
