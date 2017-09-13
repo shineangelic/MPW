@@ -15,6 +15,6 @@
     <android.support.v7.preference.EditTextPreference
         android:key="wallet_addr"
         android:title="Login"
-        android:summary="Insert your wallet's public address to know your personal stats"
+        android:summary="Insert your wallet's public address to know your personal stats. Changing it means losing previous wallet's data"
         android:hint="0x" />
 </PreferenceScreen>

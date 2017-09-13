@@ -114,7 +114,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:checked="true"
             android:text="Day" />
 
         <RadioButton
@@ -123,6 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:checked="true"
             android:text="Hours" />
 
         <RadioButton

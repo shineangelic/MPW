@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Toast;
 
+import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
+
 /**
  * Formats the watched EditText to a credit card number
  */
@@ -38,7 +40,9 @@ public class EthereumFormatWatcher implements  Preference.OnPreferenceChangeList
             return false;
         }
 
-
+        NoobPoolDbHelper db = new NoobPoolDbHelper(mCtx);
+        db.truncateWallets(db.getWritableDatabase());
+        db.close();
         return true;
     }
 }

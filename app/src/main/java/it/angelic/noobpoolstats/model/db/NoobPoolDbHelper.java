@@ -42,6 +42,9 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                     + NoobDataBaseContract.HomeStats_.TABLE_NAME + "(" + NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + ");";
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + NoobDataBaseContract.HomeStats_.TABLE_NAME;
+    private static final String SQL_TRUNCATE_WALLET =
+            "DELETE FROM " + NoobDataBaseContract.Wallet_.TABLE_NAME;
+    private static final String SQL_VACUUM = "VACUUM";
     private final GsonBuilder builder;
 
 
@@ -54,6 +57,12 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_HomeSTATS);
         db.execSQL(SQL_CREATE_WALLET);
         db.execSQL(SQL_CREATE_HOME_IDX);
+    }
+
+    public void truncateWallets(SQLiteDatabase db) {
+        Log.w("DB", "SQL_TRUNCATE_WALLET: "+SQL_TRUNCATE_WALLET);
+        db.execSQL(SQL_TRUNCATE_WALLET);
+        db.execSQL(SQL_VACUUM);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -260,4 +269,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }
+
+
 }
