@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -97,16 +100,8 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             //dati semi grezzi
                             LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallet(2);
                             //controllo se manca qualcuno
-                            if (notify && ultimi.get(ultimi.get(0)).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
-                                //trovo chi manca
-                                for (String workerInFullSet : ultimi.get(ultimi.get(1)).getWorkers().keySet()) {
-                                    if (!ultimi.get(ultimi.get(0)).getWorkers().keySet().contains(workerInFullSet)) {
-                                        Worker missingOne = ultimi.get(ultimi.get(1)).getWorkers().get(workerInFullSet);
-                                        Calendar ref = Calendar.getInstance();
-                                        ref.setTime(missingOne.getLastBeat());
-                                        sendOfflineNotification(ctx, "Worker " + workerInFullSet + " is OFFLINE. Last beat" + Utils.getTimeAgo(ref) + " ago ");
-                                    }
-                                }
+                            if (notify && ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
+                                sendOfflineNotification(ctx, "Worker  is OFFLINE. Workers offline: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
                             }
 
                         }
@@ -171,7 +166,12 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         .setContentTitle("Block Found")
                         .setContentText(contentText);
         mBuilder.setContentIntent(resultPendingIntent);
-
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setSound(alarmSound);
+        //Vibration
+        mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+        //LED
+        mBuilder.setLights(Color.WHITE, 3000, 3000);
         // Sets an ID for the notification
         int mNotificationId = 002;
         // Gets an instance of the NotificationManager service

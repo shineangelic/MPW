@@ -20,16 +20,16 @@ import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
  */
 
 class NoobChartUtils {
-    static void drawHashrateHistory(TextView hashText, LinkedMap<Date, HomeStats> storia, LineView chart) {
+    static void drawHashrateHistory(TextView titleTextView, LinkedMap<Date, HomeStats> storia, LineView chart, int grane) {
         ArrayList<Integer> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         Set<Date> dates = storia.keySet();
         HomeStats campione = storia.values().iterator().next();
         for (Date date2 : dates) {
-            labelsArr.add(MainActivity.yearFormat.format(date2));
+            labelsArr.add(getLabelFormat(grane, date2));
             dataList.add(Utils.condenseHashRate(storia.get(date2).getHashrate()));
         }
-        hashText.setText("Pool Hashrate History (now: " + Utils.formatHashrate(campione.getHashrate()) + ")");
+        titleTextView.setText("Pool Hashrate History (now: " + Utils.formatHashrate(campione.getHashrate()) + ")");
         ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
         chart.setShowPopup(LineView.SHOW_POPUPS_All);
@@ -39,13 +39,25 @@ class NoobChartUtils {
         chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
-    static void drawDifficultyHistory(TextView textViewNetDiffTitle, LinkedMap<Date, HomeStats> storia, LineView chart) {
+    private static String getLabelFormat(int radioId, Date date2) {
+        switch (radioId){
+            case R.id.radioButtonMinutes:
+                return MainActivity.yearFormat.format(date2);
+            case R.id.radioButtonHours:
+                return MainActivity.hourFormat.format(date2);
+            case R.id.radioButtonDay:
+                return MainActivity.dayFormat.format(date2);
+        }
+        return date2.toString();
+    }
+
+    static void drawDifficultyHistory(TextView textViewNetDiffTitle, LinkedMap<Date, HomeStats> storia, LineView chart,int grane) {
         ArrayList<Integer> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         Set<Date> dates = storia.keySet();
         String nodeN = "";
         for (Date date2 : dates) {
-            labelsArr.add(MainActivity.yearFormat.format(date2));
+            labelsArr.add(getLabelFormat(grane, date2));
             nodeN = storia.get(date2).getNodes().get(0).getName();
             BigInteger diff = BigInteger.valueOf(Long.valueOf(storia.get(date2).getNodes().get(0).getDifficulty()));
             float kilo = diff.longValue() / 1024f;

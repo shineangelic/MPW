@@ -117,18 +117,19 @@ class Utils {
         long diffSeconds = diff / 1000;
         return getScaledTime(diffSeconds) + " ago";
     }
-    private static String getScaledTime(long diffSeconds) {
+
+    public  static String getScaledTime(long diffSeconds) {
         if (diffSeconds < 120)
             return "" + diffSeconds + " sec.";
         long diffMinutes = diffSeconds / 60;
         if (diffMinutes < 120)
-            return "" + diffMinutes + " min.";
+            return "" + diffMinutes + " minutes";
         long diffHours = diffMinutes / (60);
         if (diffHours < 72)
-            return "" + diffHours + " hr";
+            return "" + diffHours + " hours";
 
-        long diffDays = diffHours / (24);
-        return "days";
+        float diffDays = diffHours / (24f);
+        return diffDays +" days";
     }
     /**
      * Indicates whether the specified app ins installed and can used as an intent. This

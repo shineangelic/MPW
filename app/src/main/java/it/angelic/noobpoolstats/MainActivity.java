@@ -50,10 +50,15 @@ import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
     public static final String TAG = "NoobPool";
     public static final String homeStatsUrl = "http://www.noobpool.com/api/stats";
+    public static final SimpleDateFormat dayFormat = new SimpleDateFormat("MM-dd", Locale.US);
+    public static final SimpleDateFormat hourFormat = new SimpleDateFormat("MM-dd HH", Locale.US);
     public static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+
     private TextView noobText;
     private TextView hashText;
 
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     private TextView textViewNetDiffTitle;
     private RadioGroup radioGroupChartGranularity;
     private TextView textViewVarianceValue;
+    private TextView textViewAvgBlockTime;
 
 
     @Override
@@ -77,6 +83,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        mDbHelper.cleanOldDate(mDbHelper.getWritableDatabase());
+
         final GsonBuilder builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -96,6 +104,7 @@ public class MainActivity extends AppCompatActivity
         poolHashrateText = (TextView) findViewById(R.id.textViewPoolHashrateValue);
         roundSharesText = (TextView) findViewById(R.id.textViewRoundSharesValue);
         textViewVarianceValue = (TextView) findViewById(R.id.textViewVarianceValue);
+        textViewAvgBlockTime = (TextView) findViewById(R.id.textViewAvgBlockTime);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -116,8 +125,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-                NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),(LineView) findViewById(R.id.line_view_difficulty));
-                NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),(LineView) findViewById(R.id.line_view_hashrate));
+                NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),(LineView) findViewById(R.id.line_view_difficulty),radioGroupChartGranularity.getCheckedRadioButtonId());
+                NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),(LineView) findViewById(R.id.line_view_hashrate),radioGroupChartGranularity.getCheckedRadioButtonId());
             }
         };
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
@@ -162,10 +171,11 @@ public class MainActivity extends AppCompatActivity
                         updateCurrentStats();
                         NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
                                 NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                (LineView) findViewById(R.id.line_view_difficulty));
+                                (LineView) findViewById(R.id.line_view_difficulty),radioGroupChartGranularity.getCheckedRadioButtonId());
                         NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia,
                                 radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                (LineView) findViewById(R.id.line_view_hashrate));
+                                (LineView) findViewById(R.id.line_view_hashrate),
+                                radioGroupChartGranularity.getCheckedRadioButtonId());
 
                     }
                 }, new Response.ErrorListener() {
@@ -194,16 +204,16 @@ public class MainActivity extends AppCompatActivity
             lastFoundTextLabel.setText(getString(R.string.last_block_found) + " " + Utils.getTimeAgo(when));
             textViewNetDiffValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getDifficulty())));
             Calendar lastB = Calendar.getInstance();
-            lastB.setTimeZone(TimeZone.getDefault());
+            //lastB.setTimeZone(TimeZone.getDefault());
             lastB.setTime(lastHit.getNodes().get(0).getLastBeat());
-
+            yearFormatExtended.setTimeZone(TimeZone.getDefault());
+            Log.i(TAG, "TimeZone   "+yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT)+" Timezon id :: " +yearFormatExtended.getTimeZone().getID());
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
             lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
             onlineMinersText.setText("" + lastHit.getMinersTotal());
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
-
             noobText.setText(String.format(getString(R.string.tot_block_found), lastHit.getMaturedTotal()));
         } catch (Exception e) {
             Log.e(TAG, "Errore refresh: " + e.getMessage());
@@ -211,16 +221,27 @@ public class MainActivity extends AppCompatActivity
         }
         try {
             MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
-
             // Variance % = Pool Shares / Network Difficulty Thanks to alfred
             BigDecimal bigDecX = new BigDecimal(lastHit.getStats().getRoundShares());
             BigDecimal bigDecY = new BigDecimal(Long.parseLong(lastHit.getNodes().get(0).getDifficulty()));
-
             BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
 
             textViewVarianceValue.setText(bd3.stripTrailingZeros().toPlainString() + "%");
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh share perc: " + e.getMessage());
+            e.printStackTrace();
+        }
+        try {
+            final Date firstBlockDate = new Date();//2017/07/15
+            firstBlockDate.setTime(1500099900000L);
+            long datediffFirst= (new Date().getTime() - firstBlockDate.getTime()) / 1000;
+            textViewAvgBlockTime.setText("It takes an average of "
+                    +Utils.getScaledTime(datediffFirst/lastHit.getMaturedTotal()));
+
+
+
+        } catch (Exception e) {
+            Log.e(MainActivity.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
             e.printStackTrace();
         }
     }

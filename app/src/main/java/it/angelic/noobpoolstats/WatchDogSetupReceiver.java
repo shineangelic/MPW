@@ -6,11 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.SystemClock;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class WatchDogSetupReceiver extends BroadcastReceiver {
@@ -33,9 +35,12 @@ public class WatchDogSetupReceiver extends BroadcastReceiver {
 			PendingIntent patTheDog = PendingIntent.getBroadcast(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
 			//now.add(Calendar.SECOND, 10);//offset
-			alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
-					SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
+			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime() + 5000,
+					  AlarmManager.INTERVAL_HALF_HOUR,
 					patTheDog);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				Log.i(MainActivity.TAG + ":WDSetup", "LifeCheckerSetupReceiver.onReceive() next clock: "+new Date(alarmManager.getNextAlarmClock().getTriggerTime()));
+			}
 
 		}
 	}

@@ -59,6 +59,13 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_HOME_IDX);
     }
 
+    public void cleanOldDate(SQLiteDatabase db) {
+        Log.w("DB", "SQL_ TODO ");
+
+        db.execSQL(SQL_VACUUM);
+        db.close();
+    }
+
     public void truncateWallets(SQLiteDatabase db) {
         Log.w("DB", "SQL_TRUNCATE_WALLET: "+SQL_TRUNCATE_WALLET);
         db.execSQL(SQL_TRUNCATE_WALLET);
@@ -269,6 +276,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }
+
 
 
 }
