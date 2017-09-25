@@ -100,8 +100,10 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             //dati semi grezzi
                             LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallet(2);
                             //controllo se manca qualcuno
-                            if (notify && ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
-                                sendOfflineNotification(ctx, "Worker  is OFFLINE. Workers offline: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
+                            if (notify &&
+                                    ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline() &&
+                                    ultimi.get(ultimi.firstKey()).getWorkersOffline() > 0) {
+                                sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Offline Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
                             }
 
                         }

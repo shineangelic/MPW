@@ -155,4 +155,8 @@ class Utils {
             return false;
         }
     }
+
+    public static String formatEthCurrency(Long balance) {
+        return (balance / 1000000000F) + "ETH";
+    }
 }

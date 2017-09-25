@@ -25,7 +25,9 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_bias="0.501" />
+        app:layout_constraintHorizontal_bias="0.501"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/WalletChartsTitle"
@@ -51,7 +53,9 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <RadioGroup
         android:id="@+id/radioDifficultyGranularity"
@@ -160,14 +164,15 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioDifficultyGranularity" />
+        app:layout_constraintTop_toBottomOf="@+id/radioDifficultyGranularity"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="0dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -205,7 +210,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hashrateText"
-        android:layout_marginBottom="8dp"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1">
 
@@ -216,7 +220,7 @@
             android:layout_height="300dp" />
     </HorizontalScrollView>
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="PLACEHOLDER"
         app:layout_constraintLeft_toLeftOf="parent"

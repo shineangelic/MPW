@@ -61,13 +61,19 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
     public void cleanOldDate(SQLiteDatabase db) {
         Log.w("DB", "SQL_ TODO ");
+        Calendar oneMonthAgo = Calendar.getInstance();
+        oneMonthAgo.add(Calendar.MONTH, -1);
+        db.delete(NoobDataBaseContract.HomeStats_.TABLE_NAME,
+                 NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
+        db.delete(NoobDataBaseContract.Wallet_.TABLE_NAME,
+                 NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
 
         db.execSQL(SQL_VACUUM);
         db.close();
     }
 
     public void truncateWallets(SQLiteDatabase db) {
-        Log.w("DB", "SQL_TRUNCATE_WALLET: "+SQL_TRUNCATE_WALLET);
+        Log.w("DB", "SQL_TRUNCATE_WALLET: " + SQL_TRUNCATE_WALLET);
         db.execSQL(SQL_TRUNCATE_WALLET);
         db.execSQL(SQL_VACUUM);
     }
@@ -212,7 +218,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    public LinkedMap<Date, HomeStats> getLastHomeStats(int limit){
+    public LinkedMap<Date, HomeStats> getLastHomeStats(int limit) {
         LinkedMap<Date, HomeStats> ret = new LinkedMap();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -225,7 +231,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 null,
                 null, // HAVING
                 NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " DESC",
-                ""+limit);//2 results to do compare
+                "" + limit);//2 results to do compare
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -244,7 +250,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }
-    public LinkedMap<Date,Wallet> getLastWallet(int limit ) {
+
+    public LinkedMap<Date, Wallet> getLastWallet(int limit) {
         LinkedMap<Date, Wallet> ret = new LinkedMap();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -257,7 +264,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 null,
                 null, // HAVING
                 NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " DESC",
-                ""+limit);//2 results to do compare
+                "" + limit);//2 results to do compare
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -276,7 +283,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }
-
 
 
 }

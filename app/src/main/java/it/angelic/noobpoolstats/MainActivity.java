@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
     private RadioGroup radioGroupChartGranularity;
     private TextView textViewVarianceValue;
     private TextView textViewAvgBlockTime;
+    private GsonBuilder builder;
 
 
     @Override
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         mDbHelper.cleanOldDate(mDbHelper.getWritableDatabase());
 
-        final GsonBuilder builder = new GsonBuilder();
+        builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
@@ -140,9 +141,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        issueRefresh(mDbHelper, builder);
     }
 
     @Override
@@ -150,6 +148,8 @@ public class MainActivity extends AppCompatActivity
         super.onStart();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.nav_home);
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        issueRefresh(mDbHelper, builder);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
@@ -236,9 +236,7 @@ public class MainActivity extends AppCompatActivity
             firstBlockDate.setTime(1500099900000L);
             long datediffFirst= (new Date().getTime() - firstBlockDate.getTime()) / 1000;
             textViewAvgBlockTime.setText("It takes an average of "
-                    +Utils.getScaledTime(datediffFirst/lastHit.getMaturedTotal()));
-
-
+                    +Utils.getScaledTime(datediffFirst/lastHit.getMaturedTotal())+" to find a block");
 
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());

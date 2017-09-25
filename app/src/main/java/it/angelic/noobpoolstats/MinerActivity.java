@@ -75,6 +75,8 @@ public class MinerActivity extends AppCompatActivity
     private String minerAddr;
     private LineView lineView;
     private TextView textViewWalRoundSharesPercValue;
+    private TextView textViewPendingBalanceValue;
+    private TextView textViewPaidValue;
 
 
     @Override
@@ -108,6 +110,8 @@ public class MinerActivity extends AppCompatActivity
         textViewWalLastShareValue = (TextView) findViewById(R.id.textViewWalLastShareValue);
         textViewWalLastShare = (TextView) findViewById(R.id.textViewWalLastShare);
         textViewWalRoundSharesPercValue = (TextView) findViewById(R.id.textViewWalRoundSharesPercValue);
+        textViewPendingBalanceValue= (TextView) findViewById(R.id.textViewPendingBalanceValue);
+        textViewPaidValue= (TextView) findViewById(R.id.textViewPaidValue);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -167,28 +171,7 @@ public class MinerActivity extends AppCompatActivity
                         updateCurrentStats(retrieved, mDbHelper);
                         NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
 
-                        TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayout);
-                        minersTable.removeAllViews();
-                        //table header
-                        TableRow row = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
-                        (row.findViewById(R.id.buttonworkerOnline)).setVisibility(View.INVISIBLE);
-                        minersTable.addView(row);
-                        for (String workerName : retrieved.getWorkers().keySet()) {
-                            Worker worker = retrieved.getWorkers().get(workerName);
-
-                            TableRow rowt = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
-                            ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(workerName);
-                            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatHashrate(worker.getHr()));
-                            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate3h)).setText(Utils.formatHashrate(worker.getHr2()));
-                            if (worker.getOffline()) {
-                                (rowt.findViewById(R.id.buttonworkerOnline)).setBackgroundColor(ContextCompat.getColor(MinerActivity.this, R.color.colorAccent));
-                            }
-                            Calendar workBeat = Calendar.getInstance();
-                            workBeat.setTime(worker.getLastBeat());
-                            ((TextView) rowt.findViewById(R.id.textViewWorkerLastBeat)).setText(Utils.getTimeAgo(workBeat));
-
-                            minersTable.addView(rowt);
-                        }
+                        drawMinersTable(retrieved);
 
                     }
                 }, new Response.ErrorListener() {
@@ -202,6 +185,31 @@ public class MinerActivity extends AppCompatActivity
 
         // Adding request to request queue
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+    }
+
+    private void drawMinersTable(Wallet retrieved) {
+        TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayout);
+        minersTable.removeAllViews();
+        //table header
+        TableRow row = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
+        (row.findViewById(R.id.buttonworkerOnline)).setVisibility(View.INVISIBLE);
+        minersTable.addView(row);
+        for (String workerName : retrieved.getWorkers().keySet()) {
+            Worker worker = retrieved.getWorkers().get(workerName);
+
+            TableRow rowt = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
+            ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(workerName);
+            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatHashrate(worker.getHr()));
+            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate3h)).setText(Utils.formatHashrate(worker.getHr2()));
+            if (worker.getOffline()) {
+                (rowt.findViewById(R.id.buttonworkerOnline)).setBackgroundColor(ContextCompat.getColor(MinerActivity.this, R.color.colorAccent));
+            }
+            Calendar workBeat = Calendar.getInstance();
+            workBeat.setTime(worker.getLastBeat());
+            ((TextView) rowt.findViewById(R.id.textViewWorkerLastBeat)).setText(Utils.getTimeAgo(workBeat));
+
+            minersTable.addView(rowt);
+        }
     }
 
     /**
@@ -226,7 +234,6 @@ public class MinerActivity extends AppCompatActivity
             walTotSharesText.setText(Utils.formatBigNumber(lastHit.getRoundShares()));
             walOnlineWorkersText.setText(lastHit.getWorkersOnline().toString());
             textViewWalPaymentsValue.setText("" + lastHit.getPaymentsTotal());
-
             walletValueText.setText(minerAddr);
             walletValueText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -248,12 +255,17 @@ public class MinerActivity extends AppCompatActivity
             BigDecimal bigDecY = new BigDecimal(last.getStats().getRoundShares());
 
             BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
-
             // to divide:
             textViewWalRoundSharesPercValue.setText(bd3.stripTrailingZeros().toString() + "%");
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh share perc: " + e.getMessage());
             e.printStackTrace();
+        }
+        try {
+            textViewPendingBalanceValue.setText(Utils.formatEthCurrency(lastHit.getStats().getBalance().longValue()));
+            textViewPaidValue.setText(Utils.formatEthCurrency(lastHit.getStats().getPaid()));
+        }catch (Exception ie){
+            Log.e(MainActivity.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
         }
     }
 

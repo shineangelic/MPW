@@ -233,4 +233,48 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewWalSharesValue"
         android:layout_marginEnd="8dp" />
 
+    <TextView
+        android:id="@+id/textViewPendingBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Pending balance"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalRoundSharesPerc" />
+
+    <TextView
+        android:id="@+id/textViewPendingBalanceValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="NA"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalRoundSharesPercValue" />
+
+    <TextView
+        android:id="@+id/textViewPaid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Paid"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPendingBalance" />
+
+    <TextView
+        android:id="@+id/textViewPaidValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="NA"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPendingBalanceValue" />
+
 </android.support.constraint.ConstraintLayout>
