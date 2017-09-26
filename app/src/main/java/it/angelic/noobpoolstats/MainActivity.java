@@ -122,12 +122,17 @@ public class MainActivity extends AppCompatActivity
         radioGroupChartGranularity = (RadioGroup) findViewById(R.id.radioDifficultyGranularity);
         radioGroupBackTo = (RadioGroup) findViewById(R.id.radioBackto);
 
-        RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
+        final RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-                NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),(LineView) findViewById(R.id.line_view_difficulty),radioGroupChartGranularity.getCheckedRadioButtonId());
-                NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),(LineView) findViewById(R.id.line_view_hashrate),radioGroupChartGranularity.getCheckedRadioButtonId());
+                radioGroupBackTo.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
+                        NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), (LineView) findViewById(R.id.line_view_difficulty), radioGroupChartGranularity.getCheckedRadioButtonId());
+                        NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), (LineView) findViewById(R.id.line_view_hashrate), radioGroupChartGranularity.getCheckedRadioButtonId());
+                    }
+                });
             }
         };
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
@@ -158,24 +163,28 @@ public class MainActivity extends AppCompatActivity
                 new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(final JSONObject response) {
                         Log.d(TAG, response.toString());
+                        hashText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gson gson = builder.create();
+                                // Register an adapter to manage the date types as long values
+                                HomeStats retrieved = gson.fromJson(response.toString(), HomeStats.class);
+                                mDbHelper.logHomeStats(retrieved);
+                                //dati semi grezzi
+                                storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
+                                updateCurrentStats();
+                                NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
+                                        NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
+                                        (LineView) findViewById(R.id.line_view_difficulty), radioGroupChartGranularity.getCheckedRadioButtonId());
+                                NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia,
+                                        radioGroupChartGranularity.getCheckedRadioButtonId()),
+                                        (LineView) findViewById(R.id.line_view_hashrate),
+                                        radioGroupChartGranularity.getCheckedRadioButtonId());
+                            }
+                        });
 
-                        Gson gson = builder.create();
-                        // Register an adapter to manage the date types as long values
-                        HomeStats retrieved = gson.fromJson(response.toString(), HomeStats.class);
-                        mDbHelper.logHomeStats(retrieved);
-                        //dati semi grezzi
-                        storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-
-                        updateCurrentStats();
-                        NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
-                                NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                (LineView) findViewById(R.id.line_view_difficulty),radioGroupChartGranularity.getCheckedRadioButtonId());
-                        NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia,
-                                radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                (LineView) findViewById(R.id.line_view_hashrate),
-                                radioGroupChartGranularity.getCheckedRadioButtonId());
 
                     }
                 }, new Response.ErrorListener() {
@@ -188,7 +197,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(this).addToRequestQueue( jsonObjReq);
+        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     /**
@@ -207,7 +216,7 @@ public class MainActivity extends AppCompatActivity
             //lastB.setTimeZone(TimeZone.getDefault());
             lastB.setTime(lastHit.getNodes().get(0).getLastBeat());
             yearFormatExtended.setTimeZone(TimeZone.getDefault());
-            Log.i(TAG, "TimeZone   "+yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT)+" Timezon id :: " +yearFormatExtended.getTimeZone().getID());
+            Log.i(TAG, "TimeZone   " + yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT) + " Timezon id :: " + yearFormatExtended.getTimeZone().getID());
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
             lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
             onlineMinersText.setText("" + lastHit.getMinersTotal());
@@ -234,9 +243,9 @@ public class MainActivity extends AppCompatActivity
         try {
             final Date firstBlockDate = new Date();//2017/07/15
             firstBlockDate.setTime(1500099900000L);
-            long datediffFirst= (new Date().getTime() - firstBlockDate.getTime()) / 1000;
+            long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
             textViewAvgBlockTime.setText("It takes an average of "
-                    +Utils.getScaledTime(datediffFirst/lastHit.getMaturedTotal())+" to find a block");
+                    + Utils.getScaledTime(datediffFirst / lastHit.getMaturedTotal()) + " to find a block");
 
         } catch (Exception e) {
             Log.e(MainActivity.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
@@ -279,7 +288,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull  MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -307,14 +316,14 @@ public class MainActivity extends AppCompatActivity
             i.setData(Uri.parse("https://telegram.me/Noobpool"));
             final String appName = "org.telegram.messenger";
 
-                if (Utils.isAppAvailable(this.getApplicationContext(), appName))
-                    i.setPackage(appName);
+            if (Utils.isAppAvailable(this.getApplicationContext(), appName))
+                i.setPackage(appName);
 
-             startActivity(i);
+            startActivity(i);
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(MainActivity.this, EncourageActivity.class);
             startActivity(opzioni);
-        }else {
+        } else {
             Snackbar.make(hashText, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
                     .setAction("WHAT?", new View.OnClickListener() {
                         @Override

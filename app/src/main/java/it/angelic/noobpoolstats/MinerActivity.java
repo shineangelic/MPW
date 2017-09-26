@@ -60,7 +60,7 @@ public class MinerActivity extends AppCompatActivity
     private static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
     private TextView walletValueText;
-    private TextView hashText;
+    private TextView hashRateChartTitleText;
 
     private TextView textViewWalPaymentsValue;
     private TextView walOnlineWorkersText;
@@ -78,6 +78,7 @@ public class MinerActivity extends AppCompatActivity
     private TextView textViewPendingBalanceValue;
     private TextView textViewPaidValue;
     private LineView lineViewRate;
+    private GsonBuilder builder;
 
 
     @Override
@@ -90,7 +91,7 @@ public class MinerActivity extends AppCompatActivity
 
 
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
-        final GsonBuilder builder = new GsonBuilder();
+        builder = new GsonBuilder();
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
@@ -99,7 +100,7 @@ public class MinerActivity extends AppCompatActivity
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
 
-        hashText = (TextView) findViewById(R.id.hashrateText);
+        hashRateChartTitleText = (TextView) findViewById(R.id.hashrateText);
 
         walletValueText = (TextView) findViewById(R.id.textViewWalletValue);
         walCurHashrateText = (TextView) findViewById(R.id.textViewWalCurHashrateValue);
@@ -112,8 +113,8 @@ public class MinerActivity extends AppCompatActivity
         textViewWalLastShareValue = (TextView) findViewById(R.id.textViewWalLastShareValue);
         textViewWalLastShare = (TextView) findViewById(R.id.textViewWalLastShare);
         textViewWalRoundSharesPercValue = (TextView) findViewById(R.id.textViewWalRoundSharesPercValue);
-        textViewPendingBalanceValue= (TextView) findViewById(R.id.textViewPendingBalanceValue);
-        textViewPaidValue= (TextView) findViewById(R.id.textViewPaidValue);
+        textViewPendingBalanceValue = (TextView) findViewById(R.id.textViewPendingBalanceValue);
+        textViewPaidValue = (TextView) findViewById(R.id.textViewPaidValue);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -132,8 +133,20 @@ public class MinerActivity extends AppCompatActivity
         RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-                NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
+
+                radioGroupBackTo.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
+                        NoobChartUtils.drawWorkersHistory(lineView,
+                                NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
+                                radioGroupChartGranularity.getCheckedRadioButtonId());
+                        NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText,lineViewRate,
+                                NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
+                                        radioGroupChartGranularity.getCheckedRadioButtonId()),
+                                radioGroupChartGranularity.getCheckedRadioButtonId());
+                    }
+                });
             }
         };
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
@@ -149,8 +162,13 @@ public class MinerActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_wallet);
 
-        issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -170,12 +188,11 @@ public class MinerActivity extends AppCompatActivity
                         storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
 
                         updateCurrentStats(retrieved, mDbHelper);
-                        NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
-                        NoobChartUtils.drawWalletHashRateHistory(lineViewRate,
+                        NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), radioGroupChartGranularity.getCheckedRadioButtonId());
+                        NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
                                 NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
                                         radioGroupChartGranularity.getCheckedRadioButtonId()),
                                 radioGroupChartGranularity.getCheckedRadioButtonId());
-
                         drawMinersTable(retrieved);
 
                     }
@@ -268,7 +285,7 @@ public class MinerActivity extends AppCompatActivity
         try {
             textViewPendingBalanceValue.setText(Utils.formatEthCurrency(lastHit.getStats().getBalance().longValue()));
             textViewPaidValue.setText(Utils.formatEthCurrency(lastHit.getStats().getPaid()));
-        }catch (Exception ie){
+        } catch (Exception ie) {
             Log.e(MainActivity.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
         }
     }
@@ -332,7 +349,7 @@ public class MinerActivity extends AppCompatActivity
             Intent opzioni = new Intent(MinerActivity.this, EncourageActivity.class);
             startActivity(opzioni);
         } else {
-            Snackbar.make(hashText, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
+            Snackbar.make(hashRateChartTitleText, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
                     .setAction("WHAT?", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

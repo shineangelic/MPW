@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 
 import java.util.Calendar;
 import java.util.IllegalFormatException;
+import java.util.Locale;
 
 /**
  * Created by shine@angelic.it on 07/09/2017.
@@ -123,13 +124,13 @@ class Utils {
             return "" + diffSeconds + " sec.";
         long diffMinutes = diffSeconds / 60;
         if (diffMinutes < 120)
-            return "" + diffMinutes + " minutes";
+            return "" + diffMinutes + " min.";
         long diffHours = diffMinutes / (60);
         if (diffHours < 72)
-            return "" + diffHours + " hours";
+            return "" + diffHours + " hr.";
 
         float diffDays = diffHours / (24f);
-        return diffDays +" days";
+        return String.format(Locale.getDefault(),"%.2f", diffDays) +" days";
     }
     /**
      * Indicates whether the specified app ins installed and can used as an intent. This
