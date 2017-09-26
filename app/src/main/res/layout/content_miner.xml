@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Balance History"
+        android:text="Hashrate History"
         android:textSize="16sp"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -157,7 +157,7 @@
             android:text="Back to" />
 
         <RadioButton
-            android:id="@+id/radioButtonOneDay"
+            android:id="@+id/radioButtonOneDayMiner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -166,7 +166,7 @@
             android:text="1 Day" />
 
         <RadioButton
-            android:id="@+id/radioButtonOneWeek"
+            android:id="@+id/radioButtonOneWeekMiner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -174,7 +174,7 @@
             android:text="1 Week" />
 
         <RadioButton
-            android:id="@+id/radioButtonOneMonth"
+            android:id="@+id/radioButtonOneMonthMiner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -200,6 +200,33 @@
             android:layout_height="300dp"
             android:layout_marginTop="8dp" />
     </HorizontalScrollView>
+
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollRateView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1">
+        <view
+            android:id="@+id/line_view_hrate"
+            class="im.dacer.androidcharts.LineView"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="8dp" />
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="PLACEHOLDER"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollRateView"/>
 
     <TextView
         android:id="@+id/textView2"

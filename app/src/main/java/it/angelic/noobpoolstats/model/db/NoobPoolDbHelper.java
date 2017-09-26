@@ -66,7 +66,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.delete(NoobDataBaseContract.HomeStats_.TABLE_NAME,
                  NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
         db.delete(NoobDataBaseContract.Wallet_.TABLE_NAME,
-                 NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
+                 NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
 
         db.execSQL(SQL_VACUUM);
         db.close();
@@ -173,15 +173,15 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         String limitCause = "";
         Calendar now = Calendar.getInstance();
         switch (checkedRadioButtonId) {
-            case R.id.radioButtonOneDay:
+            case R.id.radioButtonOneDayMiner:
                 now.add(Calendar.DATE, -1);
                 limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;
-            case R.id.radioButtonOneWeek:
+            case R.id.radioButtonOneWeekMiner:
                 now.add(Calendar.DATE, -7);
                 limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;
-            case R.id.radioButtonOneMonth:
+            case R.id.radioButtonOneMonthMiner:
                 now.add(Calendar.MONTH, -1);
                 limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;

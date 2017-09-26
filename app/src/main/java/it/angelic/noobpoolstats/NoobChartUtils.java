@@ -95,4 +95,22 @@ class NoobChartUtils {
         chart.setColorArray(new int[]{ContextCompat.getColor(chart.getContext(), R.color.colorPrimaryDark)});
         chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
+
+    public static void drawWalletHashRateHistory(LineView chart, LinkedMap<Date, Wallet> dateWalletLinkedMap, int grane) {
+        ArrayList<Integer> dataList = new ArrayList<>();
+        ArrayList<String> labelsArr = new ArrayList<>();
+        Set<Date> dates = dateWalletLinkedMap.keySet();
+        Wallet campione = dateWalletLinkedMap.values().iterator().next();
+        for (Date date2 : dates) {
+            labelsArr.add(getLabelFormat(grane, date2));
+            dataList.add(Utils.condenseHashRate(dateWalletLinkedMap.get(date2).getHashrate()));
+        }
+        ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
+        dataLists.add(dataList);
+        chart.setShowPopup(LineView.SHOW_POPUPS_All);
+        chart.setDrawDotLine(false); //optional
+        chart.setBottomTextList(labelsArr);
+        chart.setColorArray(new int[]{Color.GRAY, Color.CYAN});
+        chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+    }
 }

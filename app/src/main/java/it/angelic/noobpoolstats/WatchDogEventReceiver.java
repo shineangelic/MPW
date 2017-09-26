@@ -33,6 +33,9 @@ import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Worker;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.support.v4.app.NotificationCompat.CATEGORY_PROGRESS;
+import static android.support.v4.app.NotificationCompat.CATEGORY_SERVICE;
+import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 
 /**
  * Receive per controllo esecuzione servizio. Viene invocato dopo il boot, e
@@ -103,7 +106,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             if (notify &&
                                     ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline() &&
                                     ultimi.get(ultimi.firstKey()).getWorkersOffline() > 0) {
-                                sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Offline Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
+                                sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
                             }
 
                         }
@@ -136,8 +139,11 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.ic_insert_link_chain_24dp)
+                        .setSmallIcon(R.drawable.ic_money_off_black_24dp)
                         .setContentTitle("One of your workers went offline")
+                        .setCategory(CATEGORY_SERVICE)
+                        .setAutoCancel(true)
+                        .setPriority(PRIORITY_LOW)
                         .setContentText(contentText);
         mBuilder.setContentIntent(resultPendingIntent);
 
@@ -166,6 +172,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.ic_payment_black_24dp)
                         .setContentTitle("Block Found")
+                        .setCategory(CATEGORY_PROGRESS)
                         .setContentText(contentText);
         mBuilder.setContentIntent(resultPendingIntent);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

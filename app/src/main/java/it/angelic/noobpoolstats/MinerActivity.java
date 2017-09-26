@@ -77,6 +77,7 @@ public class MinerActivity extends AppCompatActivity
     private TextView textViewWalRoundSharesPercValue;
     private TextView textViewPendingBalanceValue;
     private TextView textViewPaidValue;
+    private LineView lineViewRate;
 
 
     @Override
@@ -106,6 +107,7 @@ public class MinerActivity extends AppCompatActivity
         walTotSharesText = (TextView) findViewById(R.id.textViewWalSharesValue);
         walOnlineWorkersText = (TextView) findViewById(R.id.textViewWalOnlineMinersValue);
         lineView = (LineView) findViewById(R.id.line_view_onlineminers);
+        lineViewRate = (LineView) findViewById(R.id.line_view_hrate);
         textViewWalPaymentsValue = (TextView) findViewById(R.id.textViewWalPaymentsValue);
         textViewWalLastShareValue = (TextView) findViewById(R.id.textViewWalLastShareValue);
         textViewWalLastShare = (TextView) findViewById(R.id.textViewWalLastShare);
@@ -130,6 +132,7 @@ public class MinerActivity extends AppCompatActivity
         RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
                 NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
             }
         };
@@ -142,7 +145,6 @@ public class MinerActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miner);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_wallet);
@@ -150,7 +152,6 @@ public class MinerActivity extends AppCompatActivity
         issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
 
     }
-
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -170,6 +171,10 @@ public class MinerActivity extends AppCompatActivity
 
                         updateCurrentStats(retrieved, mDbHelper);
                         NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()));
+                        NoobChartUtils.drawWalletHashRateHistory(lineViewRate,
+                                NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
+                                        radioGroupChartGranularity.getCheckedRadioButtonId()),
+                                radioGroupChartGranularity.getCheckedRadioButtonId());
 
                         drawMinersTable(retrieved);
 
@@ -248,7 +253,6 @@ public class MinerActivity extends AppCompatActivity
         }
         try {
             MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
-
             HomeStats last = mDbHelper.getLastHomeStats(1).getValue(0);
             // bigIntX is a BigInteger
             BigDecimal bigDecX = new BigDecimal(lastHit.getRoundShares());
