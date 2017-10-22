@@ -38,11 +38,7 @@ public class WatchDogSetupReceiver extends BroadcastReceiver {
 			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime() + 5000,
 					  AlarmManager.INTERVAL_HALF_HOUR,
 					patTheDog);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				Log.i(MainActivity.TAG + ":WDSetup", "LifeCheckerSetupReceiver.onReceive() next clock: "+new Date(alarmManager.getNextAlarmClock().getTriggerTime()));
 			}
-
-		}
 	}
 
 }
