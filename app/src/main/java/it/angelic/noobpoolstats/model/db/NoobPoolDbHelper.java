@@ -12,8 +12,11 @@ import com.google.gson.GsonBuilder;
 
 import org.apache.commons.collections4.map.LinkedMap;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import it.angelic.noobpoolstats.R;
 import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
@@ -166,6 +169,47 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
 
+    public Long getAveragePending() {
+        int cnt = 1;
+        Long pendings = 0L;
+        Long prevPending = 0L;
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.query(NoobDataBaseContract.Wallet_.TABLE_NAME, new String[]{
+                        NoobDataBaseContract.Wallet_._ID,
+                        NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM,
+                        NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON},
+                null,
+                null,// String[] selectionArgs
+                null,
+                null, // HAVING
+                NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " ASC");// ORDER BY
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Gson gson = builder.create();
+                // Register an adapter to manage the date types as long values
+                Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
+
+                if (retrieved.getStats().getPending() > prevPending){
+                    //pending increased
+                    pendings += ( retrieved.getStats().getPending() - prevPending  );
+                    cnt++;
+                }
+
+
+                prevPending = retrieved.getStats().getPending();
+            } while (cursor.moveToNext());
+        }
+        Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
+        cursor.close();
+        db.close();
+
+        return pendings / cnt;
+    }
+
+
     public LinkedMap<Date, Wallet> getWalletHistoryData(int checkedRadioButtonId) {
         LinkedMap<Date, Wallet> ret = new LinkedMap();
         int cnt = 0;
@@ -283,6 +327,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }
+
 
 
 }

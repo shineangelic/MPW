@@ -76,6 +76,7 @@ public class MinerActivity extends AppCompatActivity
     private LineView lineView;
     private TextView textViewWalRoundSharesPercValue;
     private TextView textViewPendingBalanceValue;
+    private TextView textViewAvgPending;
     private TextView textViewPaidValue;
     private LineView lineViewRate;
     private GsonBuilder builder;
@@ -114,6 +115,7 @@ public class MinerActivity extends AppCompatActivity
         textViewWalLastShare = (TextView) findViewById(R.id.textViewWalLastShare);
         textViewWalRoundSharesPercValue = (TextView) findViewById(R.id.textViewWalRoundSharesPercValue);
         textViewPendingBalanceValue = (TextView) findViewById(R.id.textViewPendingBalanceValue);
+        textViewAvgPending = (TextView) findViewById(R.id.textViewAvgPendingValue);
         textViewPaidValue = (TextView) findViewById(R.id.textViewPaidValue);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -238,15 +240,10 @@ public class MinerActivity extends AppCompatActivity
      * Update header with last persisted DB row
      */
     private void updateCurrentStats(Wallet lastHit, final NoobPoolDbHelper mDbHelper) {
-
+        Calendar when = Calendar.getInstance();
         try {
-            Calendar when = Calendar.getInstance();
-
             when.setTime(lastHit.getStats().getLastShare());
             when.setTimeZone(TimeZone.getDefault());
-
-            //textViewWalLastBeat = (TextView) findViewById(R.id.textViewWalLastBeat);
-            //textViewWalPaymentsValue.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
 
             textViewWalLastShareValue.setText(yearFormatExtended.format(when.getTime()));
             textViewWalLastShare.setText(getString(R.string.last_share_found) + " " + Utils.getTimeAgo(when));
@@ -288,6 +285,14 @@ public class MinerActivity extends AppCompatActivity
         } catch (Exception ie) {
             Log.e(MainActivity.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
         }
+
+        try {
+            textViewAvgPending.setText(Utils.formatEthCurrency(mDbHelper.getAveragePending()));
+        } catch (Exception mie) {
+            Log.e(MainActivity.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
+        }
+
+
     }
 
 
