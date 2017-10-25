@@ -168,7 +168,12 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-
+    /**
+     * This methods can serve stats/charts only, as it is not precise
+     * The last block pending before payout is not being counted.
+     *
+     * @return average 'pending' increase per block
+     */
     public Long getAveragePending() {
         int cnt = 1;
         Long pendings = 0L;
@@ -192,14 +197,13 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 // Register an adapter to manage the date types as long values
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
 
-                if (retrieved.getStats().getPending() > prevPending){
+                Long curPending = retrieved.getStats().getBalance().longValue();
+                if (curPending > prevPending){
                     //pending increased
-                    pendings += ( retrieved.getStats().getPending() - prevPending  );
+                    pendings += ( curPending - prevPending  );
                     cnt++;
                 }
-
-
-                prevPending = retrieved.getStats().getPending();
+                prevPending = curPending;
             } while (cursor.moveToNext());
         }
         Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
