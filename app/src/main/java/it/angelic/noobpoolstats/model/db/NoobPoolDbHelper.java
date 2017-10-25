@@ -12,11 +12,8 @@ import com.google.gson.GsonBuilder;
 
 import org.apache.commons.collections4.map.LinkedMap;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import it.angelic.noobpoolstats.R;
 import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
@@ -27,7 +24,7 @@ import static android.content.ContentValues.TAG;
 
 public class NoobPoolDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION =3;
     private static final String DATABASE_NAME = "FeedReader.db";
     private static final String SQL_CREATE_HomeSTATS =
             "CREATE TABLE " + NoobDataBaseContract.HomeStats_.TABLE_NAME + " (" +
@@ -43,8 +40,10 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_HOME_IDX =
             "CREATE INDEX " + NoobDataBaseContract.HomeStats_.TABLE_NAME + "_dtm_idx ON "
                     + NoobDataBaseContract.HomeStats_.TABLE_NAME + "(" + NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + ");";
-    private static final String SQL_DELETE_ENTRIES =
+    private static final String SQL_DELETE_STATS_TABLE =
             "DROP TABLE IF EXISTS " + NoobDataBaseContract.HomeStats_.TABLE_NAME;
+    private static final String SQL_DELETE_WALLET_TABLE =
+            "DROP TABLE IF EXISTS " + NoobDataBaseContract.Wallet_.TABLE_NAME;
     private static final String SQL_TRUNCATE_WALLET =
             "DELETE FROM " + NoobDataBaseContract.Wallet_.TABLE_NAME;
     private static final String SQL_VACUUM = "VACUUM";
@@ -84,7 +83,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(SQL_DELETE_STATS_TABLE);
+        db.execSQL(SQL_DELETE_WALLET_TABLE);
         onCreate(db);
     }
 

@@ -143,7 +143,7 @@ public class MinerActivity extends AppCompatActivity
                         NoobChartUtils.drawWorkersHistory(lineView,
                                 NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
                                 radioGroupChartGranularity.getCheckedRadioButtonId());
-                        NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText,lineViewRate,
+                        NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
                                 NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
                                         radioGroupChartGranularity.getCheckedRadioButtonId()),
                                 radioGroupChartGranularity.getCheckedRadioButtonId());
@@ -341,6 +341,23 @@ public class MinerActivity extends AppCompatActivity
             startActivity(opzioni);
         } else if (id == R.id.nav_wallet) {
             //siamo gia qui
+        } else if (id == R.id.nav_payment) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            String minerAddr = pref.getString("wallet_addr", null);
+
+            if (minerAddr == null || minerAddr.length() == 0) {
+                Snackbar.make(hashRateChartTitleText, "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
+                        .setAction("GO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent miner = new Intent(MinerActivity.this, SettingsActivity.class);
+                                startActivity(miner);
+                            }
+                        }).show();
+            } else {
+                Intent miner = new Intent(this, PaymentsActivity.class);
+                startActivity(miner);
+            }
         } else if (id == R.id.nav_send) {
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse("https://telegram.me/Noobpool"));

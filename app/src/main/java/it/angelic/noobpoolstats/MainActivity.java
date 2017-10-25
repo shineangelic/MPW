@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        noobText = (TextView) findViewById(R.id.textViewWalletStatsTitle);
+        noobText = (TextView) findViewById(R.id.textViewPaymentsTitle);
         hashText = (TextView) findViewById(R.id.hashrateText);
         textViewNetDiffTitle = (TextView) findViewById(R.id.textViewWalHashrateTitle);
         poolLastBeat = (TextView) findViewById(R.id.textViewWalLastShareValue);
@@ -309,6 +309,23 @@ public class MainActivity extends AppCompatActivity
                         }).show();
             } else {
                 Intent miner = new Intent(this, MinerActivity.class);
+                startActivity(miner);
+            }
+        } else if (id == R.id.nav_payment) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            String minerAddr = pref.getString("wallet_addr", null);
+
+            if (minerAddr == null || minerAddr.length() == 0) {
+                Snackbar.make(hashText, "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
+                        .setAction("GO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent miner = new Intent(MainActivity.this, SettingsActivity.class);
+                                startActivity(miner);
+                            }
+                        }).show();
+            } else {
+                Intent miner = new Intent(this, PaymentsActivity.class);
                 startActivity(miner);
             }
         } else if (id == R.id.nav_send) {

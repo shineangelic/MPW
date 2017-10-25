@@ -24,7 +24,12 @@
         </activity>
         <activity
             android:name=".MinerActivity"
-            android:label="Wallet/Workers"
+            android:label="NoobPool Wallet/Workers"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PaymentsActivity"
+            android:label="NoobPool Payments"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

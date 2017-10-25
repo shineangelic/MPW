@@ -1,6 +1,7 @@
 package it.angelic.noobpoolstats.model.jsonpojos.wallet;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ public class Payment implements Serializable
 {
 
 private Long amount;
-private Integer timestamp;
+private Date timestamp;
 private String tx;
 private final Map<String, Object> additionalProperties = new HashMap<>();
 private final static long serialVersionUID = 9059762457675286124L;
@@ -21,11 +22,11 @@ public void setAmount(Long amount) {
 this.amount = amount;
 }
 
-public Integer getTimestamp() {
+public Date getTimestamp() {
 return timestamp;
 }
 
-public void setTimestamp(Integer timestamp) {
+public void setTimestamp(Date timestamp) {
 this.timestamp = timestamp;
 }
 
