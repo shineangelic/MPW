@@ -101,9 +101,10 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
                             mDbHelper.logWalletStats(retrieved);
                             //dati semi grezzi
-                            LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallet(2);
+                            final int LAST_TWO = 2;
+                            LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallet(LAST_TWO);
                             //controllo se manca qualcuno
-                            if (notify &&
+                            if (notify && ultimi.keySet().size() >= LAST_TWO &&
                                     ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline() &&
                                     ultimi.get(ultimi.firstKey()).getWorkersOffline() > 0) {
                                 sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
@@ -171,14 +172,15 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.ic_payment_black_24dp)
-                        .setContentTitle("Block Found")
+                        .setContentTitle("NoobPool Block Found")
                         .setCategory(CATEGORY_PROGRESS)
+                        .setAutoCancel(true)
                         .setContentText(contentText);
         mBuilder.setContentIntent(resultPendingIntent);
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mBuilder.setSound(alarmSound);
         //Vibration
-        mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+        mBuilder.setVibrate(new long[] { 1000, 1000 });
         //LED
         mBuilder.setLights(Color.WHITE, 3000, 3000);
         // Sets an ID for the notification

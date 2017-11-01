@@ -1,17 +1,25 @@
 package it.angelic.noobpoolstats;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.apache.commons.collections4.map.LinkedMap;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import im.dacer.androidcharts.LineView;
 import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
+import it.angelic.noobpoolstats.model.jsonpojos.wallet.Payment;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
 /**
@@ -115,4 +123,23 @@ class NoobChartUtils {
     }
 
 
+    public static void drawPaymentsHistory(LineView chart, Wallet retrieved) {
+        ArrayList<Float> dataList = new ArrayList<>();
+        ArrayList<String> labelsArr = new ArrayList<>();
+        float accumulator = 0;
+        List<Payment> paymnts = retrieved.getPayments();
+        Collections.reverse(paymnts);//mostro in ordine
+        for (final Payment thispay :paymnts) {
+            accumulator+=thispay.getAmount() / 1000000000F;
+            dataList.add(accumulator);
+            labelsArr.add(MainActivity.dayFormat.format(thispay.getTimestamp()));
+        }
+        chart.setDrawDotLine(false); //optional
+        chart.setBottomTextList(labelsArr);
+
+        chart.setColorArray(new int[]{Color.DKGRAY, Color.CYAN});
+        ArrayList<ArrayList<Float>> dataLists = new ArrayList<>();
+        dataLists.add(dataList);
+        chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+    }
 }

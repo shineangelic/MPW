@@ -39,22 +39,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import im.dacer.androidcharts.LineView;
 import it.angelic.noobpoolstats.model.MyDateTypeAdapter;
 import it.angelic.noobpoolstats.model.MyTimeStampTypeAdapter;
 import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
+import it.angelic.noobpoolstats.model.db.NoobPoolQueryGrouper;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Payment;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
 public class PaymentsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String minerStatsUrl = "http://www.noobpool.com/api/accounts/";
-    private static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
+    private static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd", Locale.US);
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     private String minerAddr;
 
     private GsonBuilder builder;
     private TextView textViewWalletValue;
+    private LineView lineViewTotalIncome;
 
 
     @Override
@@ -70,6 +73,7 @@ public class PaymentsActivity extends AppCompatActivity
         builder = new GsonBuilder();
 
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
+        lineViewTotalIncome = (LineView) findViewById(R.id.lineViewPaymentss);
         textViewWalletValue.setText(minerAddr);
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -80,15 +84,7 @@ public class PaymentsActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Data request sent", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
-            }
-        });
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -108,6 +104,7 @@ public class PaymentsActivity extends AppCompatActivity
         super.onStart();
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
+
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -125,7 +122,10 @@ public class PaymentsActivity extends AppCompatActivity
                         mDbHelper.logWalletStats(retrieved);
                         //dati semi grezzi
 
+
                         drawPaymentsTable(retrieved);
+                        //la seguente inverte ordine lista
+                        NoobChartUtils.drawPaymentsHistory(lineViewTotalIncome, retrieved);
 
                     }
                 }, new Response.ErrorListener() {
@@ -151,7 +151,7 @@ public class PaymentsActivity extends AppCompatActivity
         for (final Payment thispay : retrieved.getPayments()) {
 
             TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
-            ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormatExtended.format(thispay.getTimestamp()));
+            ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
             ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatEthCurrency(thispay.getAmount()));
             ((TextView) rowt.findViewById(R.id.buttonPay)).setOnClickListener(new View.OnClickListener() {
                 @Override
