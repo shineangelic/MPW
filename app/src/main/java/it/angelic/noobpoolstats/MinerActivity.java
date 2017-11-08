@@ -3,6 +3,7 @@ package it.angelic.noobpoolstats;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -25,7 +26,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -80,6 +80,7 @@ public class MinerActivity extends AppCompatActivity
     private TextView textViewPaidValue;
     private LineView lineViewRate;
     private GsonBuilder builder;
+    private FloatingActionButton fab;
 
 
     @Override
@@ -118,7 +119,7 @@ public class MinerActivity extends AppCompatActivity
         textViewAvgPending = (TextView) findViewById(R.id.textViewAvgPendingValue);
         textViewPaidValue = (TextView) findViewById(R.id.textViewPaidValue);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,7 +175,7 @@ public class MinerActivity extends AppCompatActivity
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+        JsonObjectRequest jsonObjReq = new NoobJsonObjectRequest(
                 url, null,
                 new Response.Listener<JSONObject>() {
 
@@ -184,19 +185,10 @@ public class MinerActivity extends AppCompatActivity
 
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
-                        Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
+                        final Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
                         mDbHelper.logWalletStats(retrieved);
                         //dati semi grezzi
-                        storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-
-                        updateCurrentStats(retrieved, mDbHelper);
-                        NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), radioGroupChartGranularity.getCheckedRadioButtonId());
-                        NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
-                                NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
-                                        radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                radioGroupChartGranularity.getCheckedRadioButtonId());
-                        drawMinersTable(retrieved);
-
+                        new UpdateUIAsynchTask().execute();
                     }
                 }, new Response.ErrorListener() {
 
@@ -239,7 +231,8 @@ public class MinerActivity extends AppCompatActivity
     /**
      * Update header with last persisted DB row
      */
-    private void updateCurrentStats(Wallet lastHit, final NoobPoolDbHelper mDbHelper) {
+    private void updateCurrentStats(final Wallet lastHit, final NoobPoolDbHelper mDbHelper, Long avgPending) {
+
         Calendar when = Calendar.getInstance();
         try {
             when.setTime(lastHit.getStats().getLastShare());
@@ -287,14 +280,13 @@ public class MinerActivity extends AppCompatActivity
         }
 
         try {
-            textViewAvgPending.setText(Utils.formatEthCurrency(mDbHelper.getAveragePending()));
+            textViewAvgPending.setText(Utils.formatEthCurrency(avgPending));
         } catch (Exception mie) {
             Log.e(MainActivity.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
         }
 
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -370,6 +362,9 @@ public class MinerActivity extends AppCompatActivity
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(MinerActivity.this, EncourageActivity.class);
             startActivity(opzioni);
+        } else if (id == R.id.nav_blocks) {
+            Intent bb = new Intent(MinerActivity.this, BlocksActivity.class);
+            startActivity(bb);
         } else {
             Snackbar.make(hashRateChartTitleText, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
                     .setAction("WHAT?", new View.OnClickListener() {
@@ -384,5 +379,43 @@ public class MinerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class UpdateUIAsynchTask extends AsyncTask<String, Void, String> {
+
+        private Wallet last;
+        private NoobPoolDbHelper mDbHelper;
+        private Long avg;
+
+        @Override
+        protected String doInBackground(String... params) {
+            mDbHelper = new NoobPoolDbHelper(MinerActivity.this);
+            storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
+            last = mDbHelper.getLastWallet();
+            avg = mDbHelper.getAveragePending();
+
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            updateCurrentStats(last, mDbHelper, avg);
+            NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), radioGroupChartGranularity.getCheckedRadioButtonId());
+            NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
+                    NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
+                            radioGroupChartGranularity.getCheckedRadioButtonId()),
+                    radioGroupChartGranularity.getCheckedRadioButtonId());
+            drawMinersTable(last);
+            fab.setPressed(false);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            fab.setPressed(true);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
     }
 }

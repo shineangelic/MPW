@@ -102,7 +102,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             mDbHelper.logWalletStats(retrieved);
                             //dati semi grezzi
                             final int LAST_TWO = 2;
-                            LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallet(LAST_TWO);
+                            LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallets(LAST_TWO);
                             //controllo se manca qualcuno
                             if (notify && ultimi.keySet().size() >= LAST_TWO &&
                                     ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline() &&

@@ -44,8 +44,8 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".WatchDogEventReceiver"/>
+        <receiver android:name=".WatchDogEventReceiver" />
+
         <activity
             android:name=".EncourageActivity"
             android:label="@string/title_activity_encourage"
@@ -55,6 +55,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="it.angelic.noobpoolstats.MainActivity" />
         </activity>
+        <activity
+            android:name=".BlocksActivity"
+            android:label="@string/title_activity_blocks"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

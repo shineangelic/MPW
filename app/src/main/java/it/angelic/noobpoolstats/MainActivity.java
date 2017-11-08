@@ -337,6 +337,9 @@ public class MainActivity extends AppCompatActivity
                 i.setPackage(appName);
 
             startActivity(i);
+        } else if (id == R.id.nav_blocks) {
+            Intent bb = new Intent(MainActivity.this, BlocksActivity.class);
+            startActivity(bb);
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(MainActivity.this, EncourageActivity.class);
             startActivity(opzioni);

@@ -196,17 +196,17 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 Gson gson = builder.create();
                 // Register an adapter to manage the date types as long values
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-
+                cnt++;
                 Long curPending = retrieved.getStats().getBalance().longValue();
                 if (curPending > prevPending){
                     //pending increased
                     pendings += ( curPending - prevPending  );
-                    cnt++;
+
                 }
                 prevPending = curPending;
             } while (cursor.moveToNext());
         }
-        Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
+        Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt);
         cursor.close();
         db.close();
 
@@ -298,8 +298,12 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }
+    public Wallet getLastWallet() {
+        LinkedMap<Date, Wallet> ret = getLastWallets(1);
+        return ret.get(ret.firstKey());
+    }
 
-    public LinkedMap<Date, Wallet> getLastWallet(int limit) {
+    public LinkedMap<Date, Wallet> getLastWallets(int limit) {
         LinkedMap<Date, Wallet> ret = new LinkedMap();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
