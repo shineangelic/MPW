@@ -136,20 +136,7 @@ public class MinerActivity extends AppCompatActivity
         RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                radioGroupBackTo.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-                        NoobChartUtils.drawWorkersHistory(lineView,
-                                NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                radioGroupChartGranularity.getCheckedRadioButtonId());
-                        NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
-                                NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
-                                        radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                radioGroupChartGranularity.getCheckedRadioButtonId());
-                    }
-                });
+                new UpdateUIAsynchTask().execute();
             }
         };
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
@@ -175,7 +162,7 @@ public class MinerActivity extends AppCompatActivity
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
-        JsonObjectRequest jsonObjReq = new NoobJsonObjectRequest(
+        JsonObjectRequest jsonObjReq = new  JsonObjectRequest(
                 url, null,
                 new Response.Listener<JSONObject>() {
 
@@ -187,7 +174,7 @@ public class MinerActivity extends AppCompatActivity
                         // Register an adapter to manage the date types as long values
                         final Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
                         mDbHelper.logWalletStats(retrieved);
-                        //dati semi grezzi
+                        // aggiorna UI
                         new UpdateUIAsynchTask().execute();
                     }
                 }, new Response.ErrorListener() {
@@ -195,7 +182,6 @@ public class MinerActivity extends AppCompatActivity
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(MainActivity.TAG, "Error: " + error.getMessage());
-                // hide the progress dialog
             }
         });
 
@@ -392,7 +378,7 @@ public class MinerActivity extends AppCompatActivity
             mDbHelper = new NoobPoolDbHelper(MinerActivity.this);
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = mDbHelper.getLastWallet();
-            avg = mDbHelper.getAveragePending();
+            avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());
 
             return "Executed";
         }

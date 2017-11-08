@@ -174,17 +174,37 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
      *
      * @return average 'pending' increase per block
      */
-    public Long getAveragePending() {
+    public Long getAveragePending(int checkedRadioButtonId) {
+        String limitCause = "";
+        Calendar now = Calendar.getInstance();
         int cnt = 1;
         Long pendings = 0L;
         Long prevPending = 0L;
+        switch (checkedRadioButtonId) {
+            case R.id.radioButtonOneDayMiner:
+                now.add(Calendar.DATE, -1);
+                limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
+                break;
+            case R.id.radioButtonOneWeekMiner:
+                now.add(Calendar.DATE, -7);
+                limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
+                break;
+            case R.id.radioButtonOneMonthMiner:
+                now.add(Calendar.MONTH, -1);
+                limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
+                break;
+            default:
+                Log.e("DB", "Unexpected switch ERROR");
+                break;
+        }
+
         SQLiteDatabase db = this.getReadableDatabase();
         // Cursor cursor = db.rawQuery(selectQuery, null);
         Cursor cursor = db.query(NoobDataBaseContract.Wallet_.TABLE_NAME, new String[]{
                         NoobDataBaseContract.Wallet_._ID,
                         NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM,
                         NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON},
-                null,
+                limitCause,
                 null,// String[] selectionArgs
                 null,
                 null, // HAVING
@@ -196,12 +216,12 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 Gson gson = builder.create();
                 // Register an adapter to manage the date types as long values
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-                cnt++;
+
                 Long curPending = retrieved.getStats().getBalance().longValue();
                 if (curPending > prevPending){
+                    cnt++;
                     //pending increased
                     pendings += ( curPending - prevPending  );
-
                 }
                 prevPending = curPending;
             } while (cursor.moveToNext());
