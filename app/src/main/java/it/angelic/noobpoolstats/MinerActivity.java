@@ -271,7 +271,6 @@ public class MinerActivity extends AppCompatActivity
             Log.e(MainActivity.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
         }
 
-
     }
 
     @Override

@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
     public static final SimpleDateFormat dayFormat = new SimpleDateFormat("MM-dd", Locale.US);
     public static final SimpleDateFormat hourFormat = new SimpleDateFormat("MM-dd HH", Locale.US);
     public static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
-    private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+    public static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     private TextView noobText;
     private TextView hashText;
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_send) {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://telegram.me/Noobpool"));
+            i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
             final String appName = "org.telegram.messenger";
 
             if (Utils.isAppAvailable(this.getApplicationContext(), appName))

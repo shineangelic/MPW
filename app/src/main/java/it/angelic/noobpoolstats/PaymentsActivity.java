@@ -83,10 +83,6 @@ public class PaymentsActivity extends AppCompatActivity
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
 
-
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -241,6 +237,9 @@ public class PaymentsActivity extends AppCompatActivity
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(PaymentsActivity.this, EncourageActivity.class);
             startActivity(opzioni);
+        } else if (id == R.id.nav_blocks) {
+            Intent bb = new Intent(PaymentsActivity.this, BlocksActivity.class);
+            startActivity(bb);
         } else {
             Snackbar.make(textViewWalletValue, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
                     .setAction("WHAT?", new View.OnClickListener() {

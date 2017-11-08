@@ -9,5 +9,5 @@
     <string name="tot_block_found">NoobPool found %d matured blocks</string>
     <string name="last_share_found">Last share sent</string>
     <string name="title_activity_encourage">EncourageActivity</string>
-    <string name="title_activity_blocks">BlocksActivity</string>
+    <string name="title_activity_blocks">NoobPool Blocks</string>
 </resources>
