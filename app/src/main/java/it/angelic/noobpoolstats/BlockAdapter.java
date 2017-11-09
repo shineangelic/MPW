@@ -105,9 +105,11 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockHeightValue.setText(""+game.getHeight());
             textViewBlockRewardValue.setText(Utils.formatEthCurrency(game.getReward() / 1000000000));
             if (!game.getUncle()) {
+                isUncle.setVisibility(View.INVISIBLE);
                 textViewBlockUncleHeight.setVisibility(View.INVISIBLE);
                 textViewBlockUncleHeightValue.setVisibility(View.INVISIBLE);
             } else {
+                isUncle.setVisibility(View.VISIBLE);
                 textViewBlockUncleHeight.setVisibility(View.VISIBLE);
                 textViewBlockUncleHeightValue.setVisibility(View.VISIBLE);
                 textViewBlockUncleHeightValue.setText(""+game.getUncleHeight());

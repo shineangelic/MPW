@@ -151,6 +151,7 @@ public class MinerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miner);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_wallet);
+        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view));
 
     }
 

@@ -50,7 +50,7 @@ import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 public class PaymentsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String minerStatsUrl = "http://www.noobpool.com/api/accounts/";
-    private static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd", Locale.US);
+    private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     private String minerAddr;
@@ -92,7 +92,7 @@ public class PaymentsActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_payment);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
-
+        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view));
     }
 
     @Override

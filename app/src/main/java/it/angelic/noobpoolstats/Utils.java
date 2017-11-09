@@ -51,7 +51,7 @@ class Utils {
 
     }
     /**
-     * Condense a file size in bytes to it's highest form (i.e. KB, MB, GB, etc)
+     * Condense a file size in bytes to its highest form (i.e. KB, MB, GB, etc)
      *
      * @param bytes         the size in bytes to condense
      * @param precision     the precision of the decimal place
@@ -62,7 +62,7 @@ class Utils {
     }
 
     /**
-     * Condense a file size in bytes to it's highest form (i.e. KB, MB, GB, etc)
+     * Condense a file size in bytes to its highest form (i.e. KB, MB, GB, etc)
      *
      * @param bytes		the size in bytes
      * @return			the condensed string
