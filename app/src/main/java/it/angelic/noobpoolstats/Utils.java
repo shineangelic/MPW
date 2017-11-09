@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -190,15 +191,27 @@ class Utils {
     }
 
     public static void fillEthereumStats(Context ctx, NoobPoolDbHelper mDbHelper, NavigationView navigationView) {
-        navigationView.setCheckedItem(R.id.nav_blocks);
-        Wallet last = mDbHelper.getLastWallet();
-        SharedPreferences settings = ctx.getSharedPreferences("ETHERSCAN", MODE_PRIVATE);
+
         TextView eth = navigationView.findViewById(R.id.textViewEthValue);
         TextView ethC = navigationView.findViewById(R.id.textViewEthCourtesy);
         TextView textViewCurbalance = navigationView.findViewById(R.id.textViewCurbalance);
-        String val = settings.getString("ETHUSD" ,"---");
-        eth.setText(val);
-        ethC.setText("Courtesy of etherscan.io. Last update: "+ MainActivity.yearFormatExtended.format(new Date(settings.getLong("ETHTIMESTAMP" ,0))));
-        textViewCurbalance.setText(""+(last.getStats().getPaid() /   1000000000F) * Float.valueOf(val) );
+        SharedPreferences settings = ctx.getSharedPreferences("ETHERSCAN", MODE_PRIVATE);
+        try {
+            String val = settings.getString("ETHUSD", "---");
+            eth.setText(val);
+            ethC.setText("Courtesy of etherscan.io. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("ETHTIMESTAMP", 0))));
+        }catch (Exception e){
+            Log.e(TAG,"Errore aggiornamento eth currency panel:"+e.getMessage());
+            eth.setVisibility(View.INVISIBLE);
+            ethC.setVisibility(View.INVISIBLE);
+        }
+        try {
+            String val = settings.getString("ETHUSD", "---");
+            Wallet last = mDbHelper.getLastWallet();
+            textViewCurbalance.setText("" + (last.getStats().getPaid() / 1000000000F) * Float.valueOf(val));
+        }catch (Exception e){
+            Log.e(TAG,"Errore aggiornamento eth paid panel:"+e.getMessage());
+            textViewCurbalance.setVisibility(View.INVISIBLE);
+        }
     }
 }

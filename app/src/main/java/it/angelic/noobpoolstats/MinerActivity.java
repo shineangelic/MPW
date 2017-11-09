@@ -191,7 +191,7 @@ public class MinerActivity extends AppCompatActivity
     }
 
     private void drawMinersTable(Wallet retrieved) {
-        TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayout);
+        TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayoutWorkers);
         minersTable.removeAllViews();
         //table header
         TableRow row = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
@@ -338,7 +338,7 @@ public class MinerActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_send) {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://telegram.me/Noobpool"));
+            i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
             final String appName = "org.telegram.messenger";
 
             if (Utils.isAppAvailable(this.getApplicationContext(), appName))

@@ -2,6 +2,7 @@ package it.angelic.noobpoolstats;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -68,7 +70,8 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        //mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new GridLayoutManager(this, getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //gestione UNIX time lungo e non
@@ -174,7 +177,7 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
             }
         } else if (id == R.id.nav_send) {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://telegram.me/Noobpool"));
+            i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
             final String appName = "org.telegram.messenger";
 
             if (Utils.isAppAvailable(this.getApplicationContext(), appName))

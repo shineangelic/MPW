@@ -227,7 +227,7 @@ public class PaymentsActivity extends AppCompatActivity
             //siamo gia qui
         } else if (id == R.id.nav_send) {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://telegram.me/Noobpool"));
+            i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
             final String appName = "org.telegram.messenger";
 
             if (Utils.isAppAvailable(this.getApplicationContext(), appName))
