@@ -14,7 +14,7 @@ public class Block implements Serializable
     private Integer immatureTotal;
     private List<Matured> matured = null;
     private Integer maturedTotal;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = -3934007317307697902L;
 
     public Object getCandidates() {

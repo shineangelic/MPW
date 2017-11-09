@@ -1,9 +1,9 @@
  package it.angelic.noobpoolstats.model.jsonpojos.blocks;
 
-        import java.io.Serializable;
-        import java.util.Date;
-        import java.util.HashMap;
-        import java.util.Map;
+ import java.io.Serializable;
+ import java.util.Date;
+ import java.util.HashMap;
+ import java.util.Map;
 
 public class Matured implements Serializable
 {
@@ -17,7 +17,7 @@ public class Matured implements Serializable
     private Boolean orphan;
     private String hash;
     private Long reward;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = 8304553049716471516L;
 
     public Integer getHeight() {

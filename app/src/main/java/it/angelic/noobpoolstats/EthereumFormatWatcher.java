@@ -1,12 +1,7 @@
 package it.angelic.noobpoolstats;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.Preference;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.Toast;
 
 import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;

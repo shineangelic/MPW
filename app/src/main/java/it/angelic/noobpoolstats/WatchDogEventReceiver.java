@@ -71,7 +71,9 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         //dati semi grezzi
                         LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(2);
                         //controllo se manca qualcuno
-                        if (notify && (ultimi.get(ultimi.get(0)).getMaturedTotal()) != ultimi.get(ultimi.get(1)).getMaturedTotal()) {
+                        if (notify
+                                &&
+                                !(ultimi.get(ultimi.get(0)).getMaturedTotal()).equals(ultimi.get(ultimi.get(1)).getMaturedTotal())) {
                             //se cambiato, notifica
                             sendBlockNotification(ctx, "NoobPool has " + retrieved.getMaturedTotal() + " matured blocks");
                         }
@@ -179,7 +181,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mBuilder.setSound(alarmSound);
         //Vibration
-        mBuilder.setVibrate(new long[] { 1000, 1000 });
+        mBuilder.setVibrate(new long[]{1000, 1000});
         //LED
         mBuilder.setLights(Color.WHITE, 3000, 3000);
         // Sets an ID for the notification

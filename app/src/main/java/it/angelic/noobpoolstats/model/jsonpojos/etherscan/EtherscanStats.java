@@ -1,8 +1,5 @@
 package it.angelic.noobpoolstats.model.jsonpojos.etherscan;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class EtherscanStats {
 
 private String status;

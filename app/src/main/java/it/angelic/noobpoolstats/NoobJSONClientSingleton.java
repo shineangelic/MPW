@@ -15,7 +15,7 @@ public class NoobJSONClientSingleton {
 
     private static final String TAG = NoobJSONClientSingleton.class
             .getSimpleName();
-    private Context mCtx;
+    private final Context mCtx;
     // Instantiate the cache
 
 

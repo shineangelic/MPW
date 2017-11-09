@@ -42,11 +42,8 @@ import it.angelic.noobpoolstats.model.jsonpojos.blocks.Block;
 import it.angelic.noobpoolstats.model.jsonpojos.blocks.Matured;
 
 public class BlocksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private GsonBuilder builder;
     private TextView textViewBlocksTitle;
-    private String blocksUrl = "http://www.noobpool.com/api/blocks";
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
     private BlockAdapter mAdapter;
     private TextView textViewBlockWhenValue;
     private TextView textViewBlockSharesValue;
@@ -61,7 +58,7 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         textViewBlocksTitle = (TextView) findViewById(R.id.textViewBlocksTitle);
 
 
-        builder = new GsonBuilder();
+        GsonBuilder builder = new GsonBuilder();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.blocks_recycler_view);
 
@@ -71,7 +68,7 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
 
         // use a linear layout manager
         //mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager = new GridLayoutManager(this, getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1);
+        LinearLayoutManager mLayoutManager = new GridLayoutManager(this, getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //gestione UNIX time lungo e non
@@ -94,6 +91,7 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
+        String blocksUrl = "http://www.noobpool.com/api/blocks";
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 blocksUrl, null,
                 new Response.Listener<JSONObject>() {
@@ -187,8 +185,6 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(BlocksActivity.this, EncourageActivity.class);
             startActivity(opzioni);
-        } else if (id == R.id.nav_blocks) {
-            //siamo gia qui
         } else {
             Snackbar.make(textViewBlocksTitle, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
                     .setAction("WHAT?", new View.OnClickListener() {

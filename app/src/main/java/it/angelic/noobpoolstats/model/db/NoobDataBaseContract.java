@@ -3,6 +3,7 @@ package it.angelic.noobpoolstats.model.db;
 import android.provider.BaseColumns;
 
 /**
+ *
  * Created by shine@angelic.it on 06/09/2017.
  */
 

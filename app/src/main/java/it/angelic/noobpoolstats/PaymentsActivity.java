@@ -5,10 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -43,13 +41,12 @@ import im.dacer.androidcharts.LineView;
 import it.angelic.noobpoolstats.model.MyDateTypeAdapter;
 import it.angelic.noobpoolstats.model.MyTimeStampTypeAdapter;
 import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
-import it.angelic.noobpoolstats.model.db.NoobPoolQueryGrouper;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Payment;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
 public class PaymentsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static final String minerStatsUrl = "http://www.noobpool.com/api/accounts/";
+    private static final String minerStatsUrl = "http://www.noobpool.com/api/accounts/";
     private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
@@ -149,7 +146,7 @@ public class PaymentsActivity extends AppCompatActivity
             TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
             ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
             ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatEthCurrency(thispay.getAmount()));
-            ((TextView) rowt.findViewById(R.id.buttonPay)).setOnClickListener(new View.OnClickListener() {
+            rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(Intent.ACTION_VIEW);

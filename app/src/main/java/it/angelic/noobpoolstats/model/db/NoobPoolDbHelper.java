@@ -119,7 +119,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
     public LinkedMap<Date, HomeStats> getHistoryData(int cutoff) {
         int cnt = 0;
-        LinkedMap<Date, HomeStats> ret = new LinkedMap<Date, HomeStats>();
+        LinkedMap<Date, HomeStats> ret = new LinkedMap<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String limitCause = "";
         Calendar now = Calendar.getInstance();
@@ -235,7 +235,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
 
     public LinkedMap<Date, Wallet> getWalletHistoryData(int checkedRadioButtonId) {
-        LinkedMap<Date, Wallet> ret = new LinkedMap();
+        LinkedMap<Date, Wallet> ret = new LinkedMap<>();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
         String limitCause = "";
@@ -287,7 +287,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
     public LinkedMap<Date, HomeStats> getLastHomeStats(int limit) {
-        LinkedMap<Date, HomeStats> ret = new LinkedMap();
+        LinkedMap<Date, HomeStats> ret = new LinkedMap<>();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(NoobDataBaseContract.HomeStats_.TABLE_NAME, new String[]{
@@ -324,7 +324,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
     public LinkedMap<Date, Wallet> getLastWallets(int limit) {
-        LinkedMap<Date, Wallet> ret = new LinkedMap();
+        LinkedMap<Date, Wallet> ret = new LinkedMap<>();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(NoobDataBaseContract.Wallet_.TABLE_NAME, new String[]{

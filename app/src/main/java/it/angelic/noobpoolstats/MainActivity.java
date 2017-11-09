@@ -327,9 +327,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // already here
-        } else if (id == R.id.nav_wallet) {
+        if (id == R.id.nav_wallet) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             String minerAddr = pref.getString("wallet_addr", null);
 

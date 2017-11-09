@@ -18,8 +18,17 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter android:label="View stats">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data android:scheme="http"
+                    android:host="http://www.noobpool.com"
+                    android:pathPrefix="/#/account/" />
+                <!-- note that the leading "/" is required for pathPrefix-->
             </intent-filter>
         </activity>
         <activity
@@ -58,7 +67,7 @@
         <activity
             android:name=".BlocksActivity"
             android:label="@string/title_activity_blocks"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

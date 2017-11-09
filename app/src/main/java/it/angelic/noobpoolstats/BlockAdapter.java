@@ -17,7 +17,7 @@ import it.angelic.noobpoolstats.model.jsonpojos.blocks.Matured;
  * Created by shine@angelic.it on 01/11/2017.
  */
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
-    private Matured[] mDataset;
+    private final Matured[] mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public BlockAdapter(Matured[] myDataset) {
@@ -31,8 +31,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_block, parent, false);
         // Task 2
-        BlockViewHolder holder = new BlockViewHolder(view);
-        return holder;
+        return new BlockViewHolder(view);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -64,24 +63,24 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         private final Context ctx;
         private final ImageView imageView2;
         // each data item is just a string in this case
-        public TextView mTextView;
-        public CheckBox isOrphan;
-        public CheckBox isUncle;
+        public final TextView mTextView;
+        public final CheckBox isOrphan;
+        public final CheckBox isUncle;
 
         public BlockViewHolder(View v) {
             super(v);
             ctx = v.getContext();
-            mTextView = (TextView) v.findViewById(R.id.blockTransactionId);
-            isOrphan = (CheckBox) v.findViewById(R.id.checkBoxBlockOrphan);
-            isUncle = (CheckBox) v.findViewById(R.id.checkBoxBlockUncle);
-            textViewBlockWhenValue = (TextView) v.findViewById(R.id.textViewBlockWhenValue);
-            textViewBlockSharesValue = (TextView) v.findViewById(R.id.textViewBlockSharesValue);
-            textViewBlockDiffValue = (TextView) v.findViewById(R.id.textViewBlockDiffValue);
-            textViewBlockHeightValue = (TextView) v.findViewById(R.id.textViewBlockHeightValue);
-            textViewBlockRewardValue = (TextView) v.findViewById(R.id.textViewBlockRewardValue);
-            textViewBlockUncleHeight = (TextView) v.findViewById(R.id.textViewBlockUncleHeight);
-            textViewBlockUncleHeightValue = (TextView) v.findViewById(R.id.textViewBlockUncleHeightValue);
-            imageView2 = (ImageView) v.findViewById(R.id.imageView2);
+            mTextView = v.findViewById(R.id.blockTransactionId);
+            isOrphan = v.findViewById(R.id.checkBoxBlockOrphan);
+            isUncle = v.findViewById(R.id.checkBoxBlockUncle);
+            textViewBlockWhenValue = v.findViewById(R.id.textViewBlockWhenValue);
+            textViewBlockSharesValue = v.findViewById(R.id.textViewBlockSharesValue);
+            textViewBlockDiffValue = v.findViewById(R.id.textViewBlockDiffValue);
+            textViewBlockHeightValue = v.findViewById(R.id.textViewBlockHeightValue);
+            textViewBlockRewardValue = v.findViewById(R.id.textViewBlockRewardValue);
+            textViewBlockUncleHeight = v.findViewById(R.id.textViewBlockUncleHeight);
+            textViewBlockUncleHeightValue = v.findViewById(R.id.textViewBlockUncleHeightValue);
+            imageView2 = v.findViewById(R.id.imageView2);
 
         }
 

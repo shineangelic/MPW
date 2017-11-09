@@ -1,11 +1,6 @@
 package it.angelic.noobpoolstats;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.apache.commons.collections4.map.LinkedMap;
