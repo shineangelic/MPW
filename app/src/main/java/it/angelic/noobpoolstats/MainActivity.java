@@ -46,6 +46,7 @@ import it.angelic.noobpoolstats.model.MyDateTypeAdapter;
 import it.angelic.noobpoolstats.model.MyTimeStampTypeAdapter;
 import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
 import it.angelic.noobpoolstats.model.db.NoobPoolQueryGrouper;
+import it.angelic.noobpoolstats.model.jsonpojos.etherscan.EtherscanStats;
 import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
 
 public class MainActivity extends AppCompatActivity
@@ -53,11 +54,12 @@ public class MainActivity extends AppCompatActivity
 
 
     public static final String TAG = "NoobPool";
-    public static final String homeStatsUrl = "http://www.noobpool.com/api/stats";
+    public static final String HOME_STATS_URL = "http://www.noobpool.com/api/stats";
     public static final SimpleDateFormat dayFormat = new SimpleDateFormat("MM-dd", Locale.US);
     public static final SimpleDateFormat hourFormat = new SimpleDateFormat("MM-dd HH", Locale.US);
     public static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
     public static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+    private static final String ETHER_STATS_URL = "https://api.etherscan.io/api?module=stats&action=ethprice&apikey=Noobs";
 
     private TextView noobText;
     private TextView hashText;
@@ -144,14 +146,15 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         issueRefresh(mDbHelper, builder);
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                MainActivity.homeStatsUrl, null,
+                MainActivity.HOME_STATS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -196,8 +199,40 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        JsonObjectRequest jsonEtherObjReq = new JsonObjectRequest(Request.Method.GET,
+                MainActivity.ETHER_STATS_URL, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(final JSONObject response) {
+                        Log.d(TAG, response.toString());
+                        hashText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gson gson = builder.create();
+                                // Register an adapter to manage the date types as long values
+                                EtherscanStats retrieved = gson.fromJson(response.toString(), EtherscanStats.class);
+
+                                if ("OK".equals(retrieved.getMessage())) {
+                                    Utils.saveEtherValues(retrieved.getResult(), MainActivity.this);
+                                }
+                            }
+                        });
+
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                // hide the progress dialog
+            }
+        });
+
         // Adding request to request queue
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonEtherObjReq);
     }
 
     /**

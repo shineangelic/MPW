@@ -1,11 +1,23 @@
 package it.angelic.noobpoolstats;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.support.design.widget.NavigationView;
+import android.util.Log;
+import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.IllegalFormatException;
 import java.util.Locale;
+
+import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
+import it.angelic.noobpoolstats.model.jsonpojos.etherscan.Result;
+import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
+
+import static android.content.Context.MODE_PRIVATE;
+import static it.angelic.noobpoolstats.MainActivity.TAG;
 
 /**
  * Created by shine@angelic.it on 07/09/2017.
@@ -159,5 +171,34 @@ class Utils {
 
     public static String formatEthCurrency(Long balance) {
         return (balance / 1000000000F) + "ETH";
+    }
+
+    public static void saveEtherValues(Result result, Context ctx) {
+        SharedPreferences settings = ctx.getSharedPreferences("ETHERSCAN", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        try {
+            prefEditor.putString("ETHUSD", result.getEthusd());
+            prefEditor.putString("ETHBTC", result.getEthbtc());
+            prefEditor.putLong("ETHTIMESTAMP", result.getEthusd_timestamp().getTime());
+        } catch (Exception ie) {
+            Log.e(TAG, "Impossible  to save Ether values: "+ ie.getMessage());
+        }
+
+
+        prefEditor.commit();
+
+    }
+
+    public static void fillEthereumStats(Context ctx, NoobPoolDbHelper mDbHelper, NavigationView navigationView) {
+        navigationView.setCheckedItem(R.id.nav_blocks);
+        Wallet last = mDbHelper.getLastWallet();
+        SharedPreferences settings = ctx.getSharedPreferences("ETHERSCAN", MODE_PRIVATE);
+        TextView eth = navigationView.findViewById(R.id.textViewEthValue);
+        TextView ethC = navigationView.findViewById(R.id.textViewEthCourtesy);
+        TextView textViewCurbalance = navigationView.findViewById(R.id.textViewCurbalance);
+        String val = settings.getString("ETHUSD" ,"---");
+        eth.setText(val);
+        ethC.setText("Courtesy of etherscan.io. Last update: "+ MainActivity.yearFormatExtended.format(new Date(settings.getLong("ETHTIMESTAMP" ,0))));
+        textViewCurbalance.setText(""+(last.getStats().getPaid() /   1000000000F) * Float.valueOf(val) );
     }
 }

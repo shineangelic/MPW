@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -56,7 +55,7 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         setContentView(R.layout.activity_blocks);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         textViewBlocksTitle = (TextView) findViewById(R.id.textViewBlocksTitle);
 
 
@@ -80,11 +79,14 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_blocks);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_blocks);
 
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        NavigationView navigationViewInterna = (NavigationView) findViewById(R.id.navigation_view);
+        navigationViewInterna.setNavigationItemSelectedListener(this);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_blocks);
+        Utils.fillEthereumStats(this,mDbHelper,navigationView);
+
+
         issueRefresh(mDbHelper, builder);
     }
 

@@ -30,7 +30,6 @@ import it.angelic.noobpoolstats.model.MyTimeStampTypeAdapter;
 import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
 import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
-import it.angelic.noobpoolstats.model.jsonpojos.wallet.Worker;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.support.v4.app.NotificationCompat.CATEGORY_PROGRESS;
@@ -59,7 +58,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         final Boolean notify = intent.getBooleanExtra("NOTIFY", false);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                MainActivity.homeStatsUrl, null,
+                MainActivity.HOME_STATS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
