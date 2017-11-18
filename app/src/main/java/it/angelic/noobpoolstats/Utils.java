@@ -18,7 +18,7 @@ import it.angelic.noobpoolstats.model.jsonpojos.etherscan.Result;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
 import static android.content.Context.MODE_PRIVATE;
-import static it.angelic.noobpoolstats.MainActivity.TAG;
+import static it.angelic.noobpoolstats.Constants.TAG;
 
 /**
  * Created by shine@angelic.it on 07/09/2017.

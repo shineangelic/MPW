@@ -170,7 +170,7 @@ public class MinerActivity extends AppCompatActivity
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(MainActivity.TAG, response.toString());
+                        Log.d(Constants.TAG, response.toString());
 
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
@@ -183,7 +183,7 @@ public class MinerActivity extends AppCompatActivity
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(MainActivity.TAG, "Error: " + error.getMessage());
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
             }
         });
 
@@ -244,7 +244,7 @@ public class MinerActivity extends AppCompatActivity
                 }
             });
         } catch (Exception e) {
-            Log.e(MainActivity.TAG, "Errore refresh: " + e.getMessage());
+            Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
         }
         try {
             MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
@@ -257,20 +257,20 @@ public class MinerActivity extends AppCompatActivity
             // to divide:
             textViewWalRoundSharesPercValue.setText(bd3.stripTrailingZeros().toString() + "%");
         } catch (Exception e) {
-            Log.e(MainActivity.TAG, "Errore refresh share perc: " + e.getMessage());
+            Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
             e.printStackTrace();
         }
         try {
             textViewPendingBalanceValue.setText(Utils.formatEthCurrency(lastHit.getStats().getBalance().longValue()));
             textViewPaidValue.setText(Utils.formatEthCurrency(lastHit.getStats().getPaid()));
         } catch (Exception ie) {
-            Log.e(MainActivity.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
+            Log.e(Constants.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
         }
 
         try {
             textViewAvgPending.setText(Utils.formatEthCurrency(avgPending));
         } catch (Exception mie) {
-            Log.e(MainActivity.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
+            Log.e(Constants.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
         }
 
     }

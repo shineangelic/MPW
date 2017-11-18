@@ -46,9 +46,7 @@ import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
 public class PaymentsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String minerStatsUrl = "http://www.noobpool.com/api/accounts/";
     private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     private String minerAddr;
 
@@ -65,7 +63,6 @@ public class PaymentsActivity extends AppCompatActivity
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         minerAddr = pref.getString("wallet_addr", null);
 
-
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         builder = new GsonBuilder();
 
@@ -76,7 +73,7 @@ public class PaymentsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://etherscan.io/address/" + minerAddr));
+                i.setData(Uri.parse(Constants.HTTPS_ETHERSCAN_IO_ADDRESS + minerAddr));
                 startActivity(i);
             }
         });
@@ -104,8 +101,7 @@ public class PaymentsActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
-        issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
-
+        issueRefresh(mDbHelper, builder, Constants.MINER_STATS_URL + minerAddr);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -115,14 +111,13 @@ public class PaymentsActivity extends AppCompatActivity
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(MainActivity.TAG, response.toString());
+                        Log.d(Constants.TAG, response.toString());
 
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
                         Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
                         mDbHelper.logWalletStats(retrieved);
                         //dati semi grezzi
-
 
                         drawPaymentsTable(retrieved);
                         //la seguente inverte ordine lista
@@ -133,7 +128,7 @@ public class PaymentsActivity extends AppCompatActivity
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(MainActivity.TAG, "Error: " + error.getMessage());
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                 // hide the progress dialog
             }
         });

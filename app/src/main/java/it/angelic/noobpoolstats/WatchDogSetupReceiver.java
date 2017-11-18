@@ -11,7 +11,7 @@ import android.util.Log;
 
 import java.util.Date;
 
-import static it.angelic.noobpoolstats.MainActivity.TAG;
+import static it.angelic.noobpoolstats.Constants.TAG;
 
 
 public class WatchDogSetupReceiver extends BroadcastReceiver {

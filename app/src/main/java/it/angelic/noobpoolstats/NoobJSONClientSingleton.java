@@ -21,14 +21,13 @@ public class NoobJSONClientSingleton {
 
     // Instantiate the RequestQueue.
     private RequestQueue queue;
-    String url ="http://www.google.com";
 
+    //itself instance
     private static NoobJSONClientSingleton mInstance;
 
     private NoobJSONClientSingleton(Context context) {
         mCtx = context;
         queue = getRequestQueue();
-
     }
 
     public static synchronized NoobJSONClientSingleton getInstance(Context cx) {

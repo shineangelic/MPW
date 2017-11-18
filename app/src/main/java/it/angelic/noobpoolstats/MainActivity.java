@@ -53,13 +53,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    public static final String TAG = "NoobPool";
-    public static final String HOME_STATS_URL = "http://www.noobpool.com/api/stats";
     public static final SimpleDateFormat dayFormat = new SimpleDateFormat("MM-dd", Locale.US);
     public static final SimpleDateFormat hourFormat = new SimpleDateFormat("MM-dd HH", Locale.US);
     public static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
     public static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-    private static final String ETHER_STATS_URL = "https://api.etherscan.io/api?module=stats&action=ethprice&apikey=Noobs";
 
     private TextView noobText;
     private TextView hashText;
@@ -162,12 +159,12 @@ public class MainActivity extends AppCompatActivity
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                MainActivity.HOME_STATS_URL, null,
+                Constants.HOME_STATS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(final JSONObject response) {
-                        Log.d(TAG, response.toString());
+                        Log.d(Constants.TAG, response.toString());
                         hashText.post(new Runnable() {
                             @Override
                             public void run() {
@@ -194,18 +191,18 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                 // hide the progress dialog
             }
         });
 
         JsonObjectRequest jsonEtherObjReq = new JsonObjectRequest(Request.Method.GET,
-                MainActivity.ETHER_STATS_URL, null,
+                Constants.ETHER_STATS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(final JSONObject response) {
-                        Log.d(TAG, response.toString());
+                        Log.d(Constants.TAG, response.toString());
                         hashText.post(new Runnable() {
                             @Override
                             public void run() {
@@ -225,7 +222,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                 // hide the progress dialog
             }
         });
@@ -251,7 +248,7 @@ public class MainActivity extends AppCompatActivity
             //lastB.setTimeZone(TimeZone.getDefault());
             lastB.setTime(lastHit.getNodes().get(0).getLastBeat());
             yearFormatExtended.setTimeZone(TimeZone.getDefault());
-            Log.i(TAG, "TimeZone   " + yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT) + " Timezon id :: " + yearFormatExtended.getTimeZone().getID());
+            Log.i(Constants.TAG, "TimeZone   " + yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT) + " Timezon id :: " + yearFormatExtended.getTimeZone().getID());
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
             lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
             onlineMinersText.setText("" + lastHit.getMinersTotal());
@@ -260,7 +257,7 @@ public class MainActivity extends AppCompatActivity
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
             noobText.setText(String.format(getString(R.string.tot_block_found), lastHit.getMaturedTotal()));
         } catch (Exception e) {
-            Log.e(TAG, "Errore refresh: " + e.getMessage());
+            Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();
         }
         try {
@@ -272,7 +269,7 @@ public class MainActivity extends AppCompatActivity
 
             textViewVarianceValue.setText(bd3.stripTrailingZeros().toPlainString() + "%");
         } catch (Exception e) {
-            Log.e(MainActivity.TAG, "Errore refresh share perc: " + e.getMessage());
+            Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
             e.printStackTrace();
         }
         try {
@@ -283,7 +280,7 @@ public class MainActivity extends AppCompatActivity
                     + Utils.getScaledTime(datediffFirst / lastHit.getMaturedTotal()) + " to find a block");
 
         } catch (Exception e) {
-            Log.e(MainActivity.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
+            Log.e(Constants.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
             e.printStackTrace();
         }
     }

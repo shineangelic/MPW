@@ -17,11 +17,11 @@ import it.angelic.noobpoolstats.model.jsonpojos.blocks.Matured;
  * Created by shine@angelic.it on 01/11/2017.
  */
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
-    private final Matured[] mDataset;
+    private Matured[] blocksArray;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public BlockAdapter(Matured[] myDataset) {
-        mDataset = myDataset;
+        blocksArray = myDataset;
     }
 
     // Create new views (invoked by the layout manager)
@@ -39,20 +39,28 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     public void onBindViewHolder(BlockViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.bindBlock(mDataset[position]);
+        holder.bindBlock(blocksArray[position]);
 
+    }
+
+    public void setBlocksArray(Matured[] blocksArray) {
+        this.blocksArray = blocksArray;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return blocksArray.length;
     }
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class BlockViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public final TextView mTextView;
+        public final CheckBox isOrphan;
+        public final CheckBox isUncle;
         private final TextView textViewBlockWhenValue;
         private final TextView textViewBlockSharesValue;
         private final TextView textViewBlockDiffValue;
@@ -62,10 +70,6 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         private final TextView textViewBlockUncleHeight;
         private final Context ctx;
         private final ImageView imageView2;
-        // each data item is just a string in this case
-        public final TextView mTextView;
-        public final CheckBox isOrphan;
-        public final CheckBox isUncle;
 
         public BlockViewHolder(View v) {
             super(v);
@@ -101,7 +105,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockWhenValue.setText(MainActivity.yearFormatExtended.format(game.getTimestamp()));
             textViewBlockSharesValue.setText(Utils.formatBigNumber(game.getShares()));
             textViewBlockDiffValue.setText(Utils.formatBigNumber(game.getDifficulty()));
-            textViewBlockHeightValue.setText(""+game.getHeight());
+            textViewBlockHeightValue.setText("" + game.getHeight());
             textViewBlockRewardValue.setText(Utils.formatEthCurrency(game.getReward() / 1000000000));
             if (!game.getUncle()) {
                 isUncle.setVisibility(View.INVISIBLE);
@@ -111,7 +115,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
                 isUncle.setVisibility(View.VISIBLE);
                 textViewBlockUncleHeight.setVisibility(View.VISIBLE);
                 textViewBlockUncleHeightValue.setVisibility(View.VISIBLE);
-                textViewBlockUncleHeightValue.setText(""+game.getUncleHeight());
+                textViewBlockUncleHeightValue.setText("" + game.getUncleHeight());
             }
 
             if (!game.getOrphan())

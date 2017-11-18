@@ -18,6 +18,8 @@ import it.angelic.noobpoolstats.model.jsonpojos.wallet.Payment;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
 /**
+ * Utils class to fill charts backing objects
+ *
  * Created by shine@angelic.it on 11/09/2017.
  */
 

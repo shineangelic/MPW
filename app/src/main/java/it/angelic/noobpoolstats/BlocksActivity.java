@@ -41,6 +41,8 @@ import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
 import it.angelic.noobpoolstats.model.jsonpojos.blocks.Block;
 import it.angelic.noobpoolstats.model.jsonpojos.blocks.Matured;
 
+import static it.angelic.noobpoolstats.Constants.BLOCKS_URL;
+
 public class BlocksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private TextView textViewBlocksTitle;
     private RecyclerView mRecyclerView;
@@ -65,8 +67,6 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        //mLayoutManager = new LinearLayoutManager(this);
         LinearLayoutManager mLayoutManager = new GridLayoutManager(this, getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -100,14 +100,14 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
-        String blocksUrl = "http://www.noobpool.com/api/blocks";
+
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                blocksUrl, null,
+                BLOCKS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(final JSONObject response) {
-                        Log.d(MainActivity.TAG, response.toString());
+                        Log.d(Constants.TAG, response.toString());
                         textViewBlocksTitle.post(new Runnable() {
                             @Override
                             public void run() {
@@ -119,9 +119,12 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
                                 Matured[] maturi = new Matured[retrieved.getMaturedTotal()];
                                 retrieved.getMatured().toArray(maturi);
 
-                                // specify an adapter (see also next example)
-                                mAdapter = new BlockAdapter(maturi);
-                                mRecyclerView.setAdapter(mAdapter);
+                                if (mAdapter == null) {
+                                    mAdapter = new BlockAdapter(maturi);
+                                    mRecyclerView.setAdapter(mAdapter);
+                                }
+                                mAdapter.setBlocksArray(maturi);
+                                mAdapter.notifyDataSetChanged();
                             }
                         });
 
@@ -131,7 +134,7 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(MainActivity.TAG, "Error: " + error.getMessage());
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                 // hide the progress dialog
             }
         });

@@ -47,7 +47,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context ctx, final Intent intent) {
-        Log.i(MainActivity.TAG, "DOG called");
+        Log.i(Constants.TAG, "DOG called");
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ctx);
         final GsonBuilder builder = new GsonBuilder();
         //gestione UNIX time lungo e non
@@ -58,12 +58,12 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         final Boolean notify = intent.getBooleanExtra("NOTIFY", false);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                MainActivity.HOME_STATS_URL, null,
+                Constants.HOME_STATS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(MainActivity.TAG, response.toString());
+                        Log.d(Constants.TAG, response.toString());
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
                         HomeStats retrieved = gson.fromJson(response.toString(), HomeStats.class);
@@ -83,20 +83,20 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(MainActivity.TAG, "Error: " + error.getMessage());
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                 // hide the progress dialog
             }
         });
 
 
         if (minerAddr != null) {
-            Log.i(MainActivity.TAG, "refreshing wallet " + minerAddr + " notify: " + notify);
+            Log.i(Constants.TAG, "refreshing wallet " + minerAddr + " notify: " + notify);
             JsonObjectRequest jsonObjReqWallet = new JsonObjectRequest(Request.Method.GET,
                     MinerActivity.minerStatsUrl + minerAddr, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            Log.d(MainActivity.TAG, response.toString());
+                            Log.d(Constants.TAG, response.toString());
                             Gson gson = builder.create();
                             // Register an adapter to manage the date types as long values
                             Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
@@ -116,7 +116,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(MainActivity.TAG, "Error: " + error.getMessage());
+                    VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                     // hide the progress dialog
                 }
             });
