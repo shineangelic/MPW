@@ -148,9 +148,7 @@ public class MinerActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miner);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_wallet);
+
         Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view));
 
     }
@@ -160,6 +158,9 @@ public class MinerActivity extends AppCompatActivity
         super.onStart();
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miner);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_wallet);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -233,7 +234,7 @@ public class MinerActivity extends AppCompatActivity
             walTotSharesText.setText(Utils.formatBigNumber(lastHit.getRoundShares()));
             walOnlineWorkersText.setText(lastHit.getWorkersOnline().toString());
             textViewWalPaymentsValue.setText("" + lastHit.getPaymentsTotal());
-            walletValueText.setText(minerAddr);
+            walletValueText.setText(minerAddr.toUpperCase());
             walletValueText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

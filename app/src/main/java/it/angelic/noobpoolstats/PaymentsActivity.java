@@ -71,7 +71,15 @@ public class PaymentsActivity extends AppCompatActivity
 
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
         lineViewTotalIncome = (LineView) findViewById(R.id.lineViewPaymentss);
-        textViewWalletValue.setText(minerAddr);
+        textViewWalletValue.setText(minerAddr.toUpperCase());
+        textViewWalletValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse("https://etherscan.io/address/" + minerAddr));
+                startActivity(i);
+            }
+        });
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
@@ -142,19 +150,19 @@ public class PaymentsActivity extends AppCompatActivity
         (row.findViewById(R.id.buttonPay)).setVisibility(View.INVISIBLE);
         minersTable.addView(row);
         for (final Payment thispay : retrieved.getPayments()) {
-
+            //one row for each payment
             TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
             ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
             ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatEthCurrency(thispay.getAmount()));
             rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //mostra transazione pagamento
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse("https://etherscan.io/tx/" + thispay.getTx()));
                     startActivity(i);
                 }
             });
-
             minersTable.addView(rowt);
         }
     }

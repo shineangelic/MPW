@@ -38,15 +38,15 @@ class Utils {
 
         // Determine which value to send back
         if(peta > 1)
-            return String.format(precision + " P", peta);
+            return String.format(Locale.getDefault(),precision + " P", peta);
         else if (tera > 1)
-            return String.format(precision + " T", tera);
+            return String.format(Locale.getDefault(),precision + " T", tera);
         else if(giga > 1)
-            return String.format(precision + " G", giga);
+            return String.format(Locale.getDefault(),precision + " G", giga);
         else if(mega > 1)
-            return String.format(precision + " M", mega);
+            return String.format(Locale.getDefault(),precision + " M", mega);
         else if(kilo > 1)
-            return String.format(precision + " K", kilo);
+            return String.format(Locale.getDefault(),precision + " K", kilo);
         else
             return bytes + " b";
 
@@ -171,7 +171,7 @@ class Utils {
     }
 
     public static String formatEthCurrency(Long balance) {
-        return (balance / 1000000000F) + "ETH";
+        return String.format(Locale.getDefault(),PrecisionEnum.SIX_DIGIT.getFormat() + " ETH", (balance / 1000000000F));
     }
 
     public static void saveEtherValues(Result result, Context ctx) {
@@ -210,7 +210,7 @@ class Utils {
             Wallet last = mDbHelper.getLastWallet();
             textViewCurbalance.setText("" + (last.getStats().getPaid() / 1000000000F) * Float.valueOf(val));
         }catch (Exception e){
-            Log.e(TAG,"Errore aggiornamento eth paid panel:"+e.getMessage());
+            Log.e(TAG,"Errore aggiornamento eth paid panel: "+e.getMessage());
             textViewCurbalance.setVisibility(View.INVISIBLE);
         }
     }

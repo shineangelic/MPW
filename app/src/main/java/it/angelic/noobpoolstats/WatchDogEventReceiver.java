@@ -148,9 +148,11 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         .setPriority(PRIORITY_LOW)
                         .setContentText(contentText);
         mBuilder.setContentIntent(resultPendingIntent);
-
+        mBuilder.setVibrate(new long[]{1000, 1000});
+        //LED
+        mBuilder.setLights(Color.WHITE, 500, 500);
         // Sets an ID for the notification
-        int mNotificationId = 001;
+        int mNotificationId = 12;
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
@@ -185,7 +187,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         //LED
         mBuilder.setLights(Color.WHITE, 3000, 3000);
         // Sets an ID for the notification
-        int mNotificationId = 002;
+        int mNotificationId = 13;
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);

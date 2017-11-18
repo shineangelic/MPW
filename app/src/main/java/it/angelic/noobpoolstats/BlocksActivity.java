@@ -47,16 +47,15 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
     private BlockAdapter mAdapter;
     private TextView textViewBlockWhenValue;
     private TextView textViewBlockSharesValue;
+    private NoobPoolDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blocks);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
-        textViewBlocksTitle = (TextView) findViewById(R.id.textViewBlocksTitle);
 
+        mDbHelper = new NoobPoolDbHelper(this);
+        textViewBlocksTitle = (TextView) findViewById(R.id.textViewBlocksTitle);
 
         GsonBuilder builder = new GsonBuilder();
 
@@ -74,6 +73,16 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
+
+        issueRefresh(mDbHelper, builder);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -84,10 +93,10 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         navigationViewInterna.setNavigationItemSelectedListener(this);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_blocks);
-        Utils.fillEthereumStats(this,mDbHelper,navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationViewInterna.setCheckedItem(R.id.nav_blocks);
 
-
-        issueRefresh(mDbHelper, builder);
+        Utils.fillEthereumStats(this, mDbHelper, navigationView);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
@@ -185,6 +194,8 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(BlocksActivity.this, EncourageActivity.class);
             startActivity(opzioni);
+        } else if (id == R.id.nav_blocks) {
+            //gia qui, non far nulla
         } else {
             Snackbar.make(textViewBlocksTitle, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
                     .setAction("WHAT?", new View.OnClickListener() {

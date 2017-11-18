@@ -1,17 +1,19 @@
 package it.angelic.noobpoolstats;
 
 public enum PrecisionEnum {
-        ONE_DIGIT("%.1f"),
-        TWO_DIGIT("%.2f"),
-        THREE_DIGIT("%.3f"),
-        NONE("%.0f");
+    ONE_DIGIT("%.1f"),
+    TWO_DIGIT("%.2f"),
+    THREE_DIGIT("%.3f"),
+    SIX_DIGIT("%.6f"),
+    NONE("%.0f");
 
-        private final String mFormat;
-        PrecisionEnum(String format){
-            this.mFormat = format;
-        }
+    private final String mFormat;
 
-        public String getFormat(){
-            return mFormat;
-        }
+    PrecisionEnum(String format) {
+        this.mFormat = format;
     }
+
+    public String getFormat() {
+        return mFormat;
+    }
+}
