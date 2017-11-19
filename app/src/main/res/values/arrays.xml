@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="freq">
+        <item>30000</item>
+        <item>90000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+    </string-array>
+
+    <string-array name="freq_names">
+        <item>5 minutes</item>
+        <item>15 minutes</item>
+        <item>Half Hour (default)</item>
+        <item>1 Hour</item>
+    </string-array>
+</resources>

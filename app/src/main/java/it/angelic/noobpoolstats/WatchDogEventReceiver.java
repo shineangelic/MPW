@@ -56,6 +56,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         //load extra
         final String minerAddr = intent.getStringExtra("WALLETURL");
         final Boolean notify = intent.getBooleanExtra("NOTIFY", false);
+        final Boolean notifyOffline = intent.getBooleanExtra("NOTIFY_OFFLINE", false);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Constants.HOME_STATS_URL, null,
@@ -105,9 +106,8 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             final int LAST_TWO = 2;
                             LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallets(LAST_TWO);
                             //controllo se manca qualcuno
-                            if (notify && ultimi.keySet().size() >= LAST_TWO &&
-                                    ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline() &&
-                                    ultimi.get(ultimi.firstKey()).getWorkersOffline() > 0) {
+                            if (notifyOffline && ultimi.keySet().size() >= LAST_TWO &&
+                                    ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
                                 sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
                             }
 

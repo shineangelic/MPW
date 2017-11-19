@@ -29,12 +29,15 @@ public class WatchDogSetupReceiver extends BroadcastReceiver {
             Intent i = new Intent(ctx, WatchDogEventReceiver.class); // explicit
             // intent
             i.putExtra("WALLETURL", pref.getString("wallet_addr", null));
-            i.putExtra("NOTIFY", pref.getBoolean("pref_notify", false));
+            if(pref.getBoolean("pref_notify", false)) {
+                i.putExtra("NOTIFY", pref.getBoolean("pref_notify_block", false));
+                i.putExtra("NOTIFY_OFFLINE", pref.getBoolean("pref_notify_offline", false));
+            }
             PendingIntent patTheDog = PendingIntent.getBroadcast(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
             //now.add(Calendar.SECOND, 10);//offset
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime() + 5000,
-                    AlarmManager.INTERVAL_HALF_HOUR,
+                 Long.valueOf(   pref.getString("pref_sync_freq",""+AlarmManager.INTERVAL_HALF_HOUR) ),
                     patTheDog);
         }
     }

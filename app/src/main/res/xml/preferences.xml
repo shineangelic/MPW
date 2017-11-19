@@ -1,23 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_key_cat_general"
+        android:title="NoobPool Settings">
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_sync"
+            android:summary="Noobpool app will connect to noobpool in background every hour to retrieve fresh data"
+            android:title="Service enabled" />
+        <android.support.v7.preference.ListPreference
+            android:entries="@array/freq_names"
+            android:entryValues="@array/freq"
+            android:key="pref_sync_freq"
+            android:title="Update Frequency"
+            android:defaultValue="1800000" />
+        <android.support.v7.preference.EditTextPreference
+            android:hint="0x"
+            android:key="wallet_addr"
+            android:summary="Insert your wallet's public address to know your personal stats. Changing it means losing previous wallet's data"
+            android:title="Login" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_cat_notification"
+        android:title="Notifications">
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_notify"
+            android:summary="Use this option to disable notifications globally. Please note that effective notifications also need Service to be enabled"
+            android:title="Enable notifications" />
 
-    <android.support.v7.preference.SwitchPreferenceCompat
-        android:key="pref_sync"
-        android:title="Service enabled"
-        android:summary="Noobpool app will connect to noobpool in background every hour to retrieve fresh data"
-        android:defaultValue="true" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_notify_block"
+            android:summary="Activate notification when a new block is discovered"
+            android:title="Notify new blocks" />
 
-    <android.support.v7.preference.SwitchPreferenceCompat
-        android:key="pref_notify"
-        android:title="Keep me informed"
-        android:summary="Activate notification when a new block is discovered"
-        android:defaultValue="true" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_notify_offline"
+            android:summary="Activate notification when a miner goes offline"
+            android:title="Notify off-line miners" />
 
-    <android.support.v7.preference.EditTextPreference
-        android:key="wallet_addr"
-        android:title="Login"
-        android:summary="Insert your wallet's public address to know your personal stats. Changing it means losing previous wallet's data"
-        android:hint="0x" />
-
+    </PreferenceCategory>
 
 </android.support.v7.preference.PreferenceScreen>
