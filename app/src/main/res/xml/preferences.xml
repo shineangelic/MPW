@@ -34,12 +34,16 @@
             android:key="pref_notify_block"
             android:summary="Activate notification when a new block is discovered"
             android:title="Notify new blocks" />
-
         <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_notify_offline"
             android:summary="Activate notification when a miner goes offline"
             android:title="Notify off-line miners" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="pref_notify_payment"
+            android:summary="Enable notification upon new payments"
+            android:title="Notify Payment" />
 
     </PreferenceCategory>
 

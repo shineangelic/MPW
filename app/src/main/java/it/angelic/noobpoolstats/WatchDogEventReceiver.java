@@ -43,20 +43,23 @@ import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
  * -using-the-alarm-manager/
  */
 public class WatchDogEventReceiver extends BroadcastReceiver {
-
+    final int NOTIFICATION_MINER_OFFLINE = 12;
 
     @Override
     public void onReceive(final Context ctx, final Intent intent) {
-        Log.i(Constants.TAG, "DOG called");
+        Log.i(Constants.TAG, "NoobPool Service call");
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ctx);
+        final NotificationManager mNotifyMgr =
+                (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         final GsonBuilder builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
         //load extra
         final String minerAddr = intent.getStringExtra("WALLETURL");
-        final Boolean notify = intent.getBooleanExtra("NOTIFY", false);
+        final Boolean notifyBlock = intent.getBooleanExtra("NOTIFY_BLOCK", false);
         final Boolean notifyOffline = intent.getBooleanExtra("NOTIFY_OFFLINE", false);
+        final Boolean notifyPayment = intent.getBooleanExtra("NOTIFY_PAYMENT", false);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Constants.HOME_STATS_URL, null,
@@ -72,9 +75,9 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         //dati semi grezzi
                         LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(2);
                         //controllo se manca qualcuno
-                        if (notify
+                        if (notifyBlock
                                 &&
-                                !(ultimi.get(ultimi.get(0)).getMaturedTotal()).equals(ultimi.get(ultimi.get(1)).getMaturedTotal())) {
+                                ultimi.get(ultimi.get(0)).getImmatureTotal().compareTo(ultimi.get(ultimi.get(1)).getImmatureTotal()) > 0 ) {
                             //se cambiato, notifica
                             sendBlockNotification(ctx, "NoobPool has " + retrieved.getMaturedTotal() + " matured blocks");
                         }
@@ -85,13 +88,12 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                // hide the progress dialog
             }
         });
 
 
         if (minerAddr != null) {
-            Log.i(Constants.TAG, "refreshing wallet " + minerAddr + " notify: " + notify);
+            Log.i(Constants.TAG, "refreshing wallet " + minerAddr + " notify: " + notifyBlock);
             JsonObjectRequest jsonObjReqWallet = new JsonObjectRequest(Request.Method.GET,
                     MinerActivity.minerStatsUrl + minerAddr, null,
                     new Response.Listener<JSONObject>() {
@@ -106,9 +108,18 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             final int LAST_TWO = 2;
                             LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallets(LAST_TWO);
                             //controllo se manca qualcuno
-                            if (notifyOffline && ultimi.keySet().size() >= LAST_TWO &&
-                                    ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
-                                sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
+                            if (notifyOffline && ultimi.keySet().size() >= LAST_TWO) {
+                                if (ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
+                                    sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
+                                } else if (ultimi.get(ultimi.firstKey()).getWorkersOnline() > ultimi.get(ultimi.get(1)).getWorkersOnline()){
+                                    //togli notifiche di offline
+                                    mNotifyMgr.cancel(NOTIFICATION_MINER_OFFLINE);
+                                }
+                            }
+                            if (notifyPayment && ultimi.keySet().size() >= LAST_TWO &&
+                                    ultimi.get(ultimi.firstKey()).getPayments().size() > ultimi.get(ultimi.get(1)).getPayments().size()) {
+                                sendPaymentNotification(ctx, "You received a payment: " +
+                                        Utils.formatEthCurrency(ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()));
                             }
 
                         }
@@ -151,13 +162,16 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         mBuilder.setVibrate(new long[]{1000, 1000});
         //LED
         mBuilder.setLights(Color.WHITE, 500, 500);
-        // Sets an ID for the notification
-        int mNotificationId = 12;
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setSound(alarmSound);
+
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        mNotifyMgr.notify(NOTIFICATION_MINER_OFFLINE, mBuilder.build());
+
     }
 
     private void sendBlockNotification(Context ctx, String contentText) {
@@ -174,7 +188,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.ic_payment_black_24dp)
+                        .setSmallIcon(R.drawable.ic_insert_link_chain_24dp)
                         .setContentTitle("NoobPool Block Found")
                         .setCategory(CATEGORY_PROGRESS)
                         .setAutoCancel(true)
@@ -188,6 +202,41 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         mBuilder.setLights(Color.WHITE, 3000, 3000);
         // Sets an ID for the notification
         int mNotificationId = 13;
+        // Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+        // Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
+
+    private void sendPaymentNotification(Context ctx, String contentText) {
+        Intent resultIntent = new Intent(ctx, MainActivity.class);
+        // Because clicking the notification opens a new ("special") activity, there's
+        // no need to create an artificial back stack.
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        ctx,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(ctx)
+                        .setSmallIcon(R.drawable.ic_payment_black_24dp)
+                        .setContentTitle("Eth payment from NoobPool")
+                        .setCategory(CATEGORY_PROGRESS)
+                        .setAutoCancel(true)
+                        .setContentText(contentText);
+        mBuilder.setContentIntent(resultPendingIntent);
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setSound(alarmSound);
+        //Vibration
+        mBuilder.setVibrate(new long[]{1000, 1000, 1000});
+        //LED
+        mBuilder.setLights(Color.WHITE, 500, 1000);
+        // Sets an ID for the notification
+        int mNotificationId = 14;
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
