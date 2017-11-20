@@ -54,8 +54,7 @@ import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Worker;
 
-public class MinerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MinerActivity extends DrawerActivity {
     public static final String minerStatsUrl = "http://www.noobpool.com/api/accounts/";
     private static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
@@ -98,9 +97,6 @@ public class MinerActivity extends AppCompatActivity
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(this.getTitle());
-        setSupportActionBar(toolbar);
 
         hashRateChartTitleText = (TextView) findViewById(R.id.hashrateText);
 
@@ -142,14 +138,7 @@ public class MinerActivity extends AppCompatActivity
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
         radioGroupChartGranularity.setOnCheckedChangeListener(mescola);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-
-        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view));
+        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view_miner));
 
     }
 
@@ -158,9 +147,18 @@ public class MinerActivity extends AppCompatActivity
         super.onStart();
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miner);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_wallet);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationViewInterna = (NavigationView) findViewById(R.id.navigation_view);
+        navigationViewInterna.setNavigationItemSelectedListener(this);
+        navigationViewInterna.setCheckedItem(R.id.nav_wallet);
+
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -309,64 +307,6 @@ public class MinerActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            Intent opzioni = new Intent(MinerActivity.this, MainActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_wallet) {
-            //siamo gia qui
-        } else if (id == R.id.nav_payment) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            String minerAddr = pref.getString("wallet_addr", null);
-
-            if (minerAddr == null || minerAddr.length() == 0) {
-                Snackbar.make(hashRateChartTitleText, "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
-                        .setAction("GO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent miner = new Intent(MinerActivity.this, SettingsActivity.class);
-                                startActivity(miner);
-                            }
-                        }).show();
-            } else {
-                Intent miner = new Intent(this, PaymentsActivity.class);
-                startActivity(miner);
-            }
-        } else if (id == R.id.nav_send) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
-            final String appName = "org.telegram.messenger";
-
-            if (Utils.isAppAvailable(this.getApplicationContext(), appName))
-                i.setPackage(appName);
-
-            startActivity(i);
-        } else if (id == R.id.nav_support) {
-            Intent opzioni = new Intent(MinerActivity.this, EncourageActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_blocks) {
-            Intent bb = new Intent(MinerActivity.this, BlocksActivity.class);
-            startActivity(bb);
-        } else {
-            Snackbar.make(hashRateChartTitleText, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
-                    .setAction("WHAT?", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent miner = new Intent(MinerActivity.this, EncourageActivity.class);
-                            startActivity(miner);
-                        }
-                    }).show();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     private class UpdateUIAsynchTask extends AsyncTask<String, Void, String> {
 

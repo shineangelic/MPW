@@ -175,7 +175,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
     }
 
     private void sendBlockNotification(Context ctx, String contentText) {
-        Intent resultIntent = new Intent(ctx, MainActivity.class);
+        Intent resultIntent = new Intent(ctx, BlocksActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
         PendingIntent resultPendingIntent =
@@ -210,7 +210,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
     }
 
     private void sendPaymentNotification(Context ctx, String contentText) {
-        Intent resultIntent = new Intent(ctx, MainActivity.class);
+        Intent resultIntent = new Intent(ctx, PaymentsActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
         PendingIntent resultPendingIntent =

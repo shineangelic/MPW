@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -44,12 +41,10 @@ import it.angelic.noobpoolstats.model.db.NoobPoolDbHelper;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Payment;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
-public class PaymentsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class PaymentsActivity extends DrawerActivity {
     private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
     private String minerAddr;
-
     private GsonBuilder builder;
     private TextView textViewWalletValue;
     private LineView lineViewTotalIncome;
@@ -62,6 +57,10 @@ public class PaymentsActivity extends AppCompatActivity
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         minerAddr = pref.getString("wallet_addr", null);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(this.getTitle());
+        setSupportActionBar(toolbar);
 
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         builder = new GsonBuilder();
@@ -80,26 +79,22 @@ public class PaymentsActivity extends AppCompatActivity
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(this.getTitle());
-        setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_payment);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_payment);
-        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view));
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_payment);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_payment);
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         issueRefresh(mDbHelper, builder, Constants.MINER_STATS_URL + minerAddr);
     }
@@ -195,64 +190,5 @@ public class PaymentsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            Intent opzioni = new Intent(PaymentsActivity.this, MainActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_wallet) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            String minerAddr = pref.getString("wallet_addr", null);
-
-            if (minerAddr == null || minerAddr.length() == 0) {
-                Snackbar.make(textViewWalletValue, "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
-                        .setAction("GO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent miner = new Intent(PaymentsActivity.this, SettingsActivity.class);
-                                startActivity(miner);
-                            }
-                        }).show();
-            } else {
-                Intent miner = new Intent(this, MinerActivity.class);
-                startActivity(miner);
-            }
-        } else if (id == R.id.nav_payment) {
-            //siamo gia qui
-        } else if (id == R.id.nav_send) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
-            final String appName = "org.telegram.messenger";
-
-            if (Utils.isAppAvailable(this.getApplicationContext(), appName))
-                i.setPackage(appName);
-
-            startActivity(i);
-        } else if (id == R.id.nav_support) {
-            Intent opzioni = new Intent(PaymentsActivity.this, EncourageActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_blocks) {
-            Intent bb = new Intent(PaymentsActivity.this, BlocksActivity.class);
-            startActivity(bb);
-        } else {
-            Snackbar.make(textViewWalletValue, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
-                    .setAction("WHAT?", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent miner = new Intent(PaymentsActivity.this, EncourageActivity.class);
-                            startActivity(miner);
-                        }
-                    }).show();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

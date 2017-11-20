@@ -43,12 +43,11 @@ import it.angelic.noobpoolstats.model.jsonpojos.blocks.Matured;
 
 import static it.angelic.noobpoolstats.Constants.BLOCKS_URL;
 
-public class BlocksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BlocksActivity extends DrawerActivity  {
     private TextView textViewBlocksTitle;
     private RecyclerView mRecyclerView;
     private BlockAdapter mAdapter;
-    private TextView textViewBlockWhenValue;
-    private TextView textViewBlockSharesValue;
+
     private NoobPoolDbHelper mDbHelper;
 
     @Override
@@ -143,76 +142,5 @@ public class BlocksActivity extends AppCompatActivity implements NavigationView.
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            Intent opzioni = new Intent(BlocksActivity.this, MainActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_wallet) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            String minerAddr = pref.getString("wallet_addr", null);
-
-            if (minerAddr == null || minerAddr.length() == 0) {
-                Snackbar.make(textViewBlocksTitle, "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
-                        .setAction("GO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent miner = new Intent(BlocksActivity.this, SettingsActivity.class);
-                                startActivity(miner);
-                            }
-                        }).show();
-            } else {
-                Intent miner = new Intent(this, MinerActivity.class);
-                startActivity(miner);
-            }
-        } else if (id == R.id.nav_payment) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            String minerAddr = pref.getString("wallet_addr", null);
-
-            if (minerAddr == null || minerAddr.length() == 0) {
-                Snackbar.make(textViewBlocksTitle, "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
-                        .setAction("GO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent miner = new Intent(BlocksActivity.this, SettingsActivity.class);
-                                startActivity(miner);
-                            }
-                        }).show();
-            } else {
-                Intent miner = new Intent(this, PaymentsActivity.class);
-                startActivity(miner);
-            }
-        } else if (id == R.id.nav_send) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
-            final String appName = "org.telegram.messenger";
-
-            if (Utils.isAppAvailable(this.getApplicationContext(), appName))
-                i.setPackage(appName);
-
-            startActivity(i);
-        } else if (id == R.id.nav_support) {
-            Intent opzioni = new Intent(BlocksActivity.this, EncourageActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_blocks) {
-            //gia qui, non far nulla
-        } else {
-            Snackbar.make(textViewBlocksTitle, "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
-                    .setAction("WHAT?", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent miner = new Intent(BlocksActivity.this, EncourageActivity.class);
-                            startActivity(miner);
-                        }
-                    }).show();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 }
 
