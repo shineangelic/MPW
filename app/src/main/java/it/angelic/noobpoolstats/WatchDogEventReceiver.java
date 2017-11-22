@@ -35,6 +35,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.support.v4.app.NotificationCompat.CATEGORY_PROGRESS;
 import static android.support.v4.app.NotificationCompat.CATEGORY_SERVICE;
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
+import static it.angelic.noobpoolstats.Constants.LAST_TWO;
 
 /**
  * Receive per controllo esecuzione servizio. Viene invocato dopo il boot, e
@@ -73,13 +74,12 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         HomeStats retrieved = gson.fromJson(response.toString(), HomeStats.class);
                         mDbHelper.logHomeStats(retrieved);
                         //dati semi grezzi
-                        LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(2);
+                        LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(LAST_TWO);
                         //controllo se manca qualcuno
                         if (notifyBlock
                                 &&
                                 ultimi.get(ultimi.get(0)).getImmatureTotal().compareTo(ultimi.get(ultimi.get(1)).getImmatureTotal()) > 0 ) {
-                            //se cambiato, notifica
-                            sendBlockNotification(ctx, "NoobPool has " + retrieved.getMaturedTotal() + " matured blocks");
+                            sendBlockNotification(ctx, "NoobPool has a new immature blocks.");
                         }
 
                     }
@@ -105,7 +105,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
                             mDbHelper.logWalletStats(retrieved);
                             //dati semi grezzi
-                            final int LAST_TWO = 2;
+
                             LinkedMap<Date, Wallet> ultimi = mDbHelper.getLastWallets(LAST_TWO);
                             //controllo se manca qualcuno
                             if (notifyOffline && ultimi.keySet().size() >= LAST_TWO) {
@@ -114,14 +114,13 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                                 } else if (ultimi.get(ultimi.firstKey()).getWorkersOnline() > ultimi.get(ultimi.get(1)).getWorkersOnline()){
                                     //togli notifiche di offline
                                     mNotifyMgr.cancel(NOTIFICATION_MINER_OFFLINE);
-                                }
+                                } // else uguali, fa nulla
                             }
                             if (notifyPayment && ultimi.keySet().size() >= LAST_TWO &&
                                     ultimi.get(ultimi.firstKey()).getPayments().size() > ultimi.get(ultimi.get(1)).getPayments().size()) {
                                 sendPaymentNotification(ctx, "You received a payment: " +
                                         Utils.formatEthCurrency(ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()));
                             }
-
                         }
                     }, new Response.ErrorListener() {
 

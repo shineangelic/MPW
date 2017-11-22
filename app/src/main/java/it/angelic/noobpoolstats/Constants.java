@@ -7,7 +7,7 @@ package it.angelic.noobpoolstats;
  */
 
 public class Constants {
-
+    public static final int LAST_TWO = 2;
     public static final String HTTPS_ETHERSCAN_IO_ADDRESS = "https://etherscan.io/address/";
 
     public static final String MINER_STATS_URL = "http://www.noobpool.com/api/accounts/";

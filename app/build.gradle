@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "it.angelic.noobpoolstats"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 13
-        versionName "1.3.2"
+        targetSdkVersion 27
+        versionCode 14
+        versionName "1.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,8 +33,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'im.dacer:AndroidCharts:1.0.4'
     compile 'org.apache.commons:commons-collections4:4.1'
-    compile 'com.android.support:cardview-v7:26.0.+'
-    compile 'com.android.support:recyclerview-v7:26.0.+'
+    compile 'com.android.support:cardview-v7:26.+'
+    compile 'com.android.support:recyclerview-v7:26.+'
 
     testCompile 'junit:junit:4.12'
 }
