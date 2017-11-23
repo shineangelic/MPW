@@ -14,7 +14,6 @@ public class Block implements Serializable
     private Integer immatureTotal;
     private List<Matured> matured = null;
     private Integer maturedTotal;
-    private final Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = -3934007317307697902L;
 
     public Object getCandidates() {
@@ -66,13 +65,6 @@ public class Block implements Serializable
         this.maturedTotal = maturedTotal;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 
 }
 

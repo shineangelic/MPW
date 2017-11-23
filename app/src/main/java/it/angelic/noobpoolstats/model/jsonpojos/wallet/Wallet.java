@@ -20,7 +20,6 @@ public class Wallet implements Serializable {
     private Integer workersOffline = 0;
     private Integer workersOnline = 0;
     private Integer workersTotal = 0;
-    private final Map<String, Object> additionalProperties = new HashMap<>();
 
 
 
@@ -103,14 +102,6 @@ public class Wallet implements Serializable {
 
     public void setWorkersTotal(Integer workersTotal) {
         this.workersTotal = workersTotal;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
     public HashMap<String, Worker> getWorkers() {

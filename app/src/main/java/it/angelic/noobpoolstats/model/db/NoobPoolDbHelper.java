@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import it.angelic.noobpoolstats.R;
+import it.angelic.noobpoolstats.model.MyDateTypeAdapter;
+import it.angelic.noobpoolstats.model.MyTimeStampTypeAdapter;
 import it.angelic.noobpoolstats.model.jsonpojos.home.HomeStats;
 import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
@@ -53,6 +55,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     public NoobPoolDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         builder = new GsonBuilder();
+
     }
 
     public void onCreate(SQLiteDatabase db) {

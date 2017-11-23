@@ -14,7 +14,7 @@ private Integer immature;
 private Date lastShare;
 private Long paid;
 private Long pending;
-private final Map<String, Object> additionalProperties = new HashMap<>();
+
 private final static long serialVersionUID = -3508834706692198488L;
 
 public Integer getBalance() {
@@ -65,12 +65,6 @@ public void setPending(Long pending) {
 this.pending = pending;
 }
 
-public Map<String, Object> getAdditionalProperties() {
-return this.additionalProperties;
-}
 
-public void setAdditionalProperty(String name, Object value) {
-this.additionalProperties.put(name, value);
-}
 
 }

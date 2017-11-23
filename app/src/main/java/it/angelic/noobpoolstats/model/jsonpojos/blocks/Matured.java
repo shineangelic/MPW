@@ -17,7 +17,6 @@ public class Matured implements Serializable
     private Boolean orphan;
     private String hash;
     private Long reward;
-    private final Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = 8304553049716471516L;
 
     public Integer getHeight() {
@@ -92,12 +91,5 @@ public class Matured implements Serializable
         this.reward = reward;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 
 }

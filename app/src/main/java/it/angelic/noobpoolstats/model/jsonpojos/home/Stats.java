@@ -10,17 +10,12 @@ public class Stats implements Serializable {
     private final static long serialVersionUID = -8772158729012648157L;
     private Date lastBlockFound;
     private Long roundShares;
-    private final Map<String, Object> additionalProperties = new HashMap<>();
 
     /**
      * No args constructor for use in serialization
      */
     public Stats() {
     }
-
-
-
-
 
     public Date getLastBlockFound() {
         return lastBlockFound;
@@ -38,12 +33,5 @@ public class Stats implements Serializable {
         this.roundShares = roundShares;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 
 }

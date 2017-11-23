@@ -78,7 +78,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         //controllo se manca qualcuno
                         if (notifyBlock
                                 &&
-                                ultimi.get(ultimi.get(0)).getImmatureTotal().compareTo(ultimi.get(ultimi.get(1)).getImmatureTotal()) > 0 ) {
+                                ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0 ) {
                             sendBlockNotification(ctx, "NoobPool has a new immature blocks.");
                         }
 

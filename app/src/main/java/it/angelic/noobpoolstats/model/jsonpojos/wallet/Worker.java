@@ -47,12 +47,4 @@ public void setHr2(Long hr2) {
 this.hr2 = hr2;
 }
 
-public Map<String, Object> getAdditionalProperties() {
-return this.additionalProperties;
-}
-
-public void setAdditionalProperty(String name, Object value) {
-this.additionalProperties.put(name, value);
-}
-
 }

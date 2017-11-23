@@ -12,7 +12,6 @@ public class Node implements Serializable {
     private String height;
     private Date lastBeat;
     private String name;
-    private final Map<String, Object> additionalProperties = new HashMap<>();
 
     /**
      * No args constructor for use in serialization
@@ -64,14 +63,6 @@ public class Node implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

@@ -18,7 +18,6 @@ public class HomeStats implements Serializable {
     private List<Node> nodes = null;
     private Calendar now;//serve a distinguere timestamp
     private Stats stats;
-    private final Map<String, Object> additionalProperties = new HashMap<>();
 
 
     /**
@@ -35,27 +34,6 @@ public class HomeStats implements Serializable {
         nodes.add(new Node());
     }
 
-    /**
-     * @param minersTotal
-     * @param immatureTotal
-     * @param now
-     * @param stats
-     * @param nodes
-     * @param hashrate
-     * @param maturedTotal
-     * @param candidatesTotal
-     */
-    public HomeStats(Integer candidatesTotal, Long hashrate, Integer immatureTotal, Integer maturedTotal, Integer minersTotal, List<Node> nodes, Calendar now, Stats stats) {
-        super();
-        this.candidatesTotal = candidatesTotal;
-        this.hashrate = hashrate;
-        this.immatureTotal = immatureTotal;
-        this.maturedTotal = maturedTotal;
-        this.minersTotal = minersTotal;
-        this.nodes = nodes;
-        this.now = now;
-        this.stats = stats;
-    }
 
     public Integer getCandidatesTotal() {
         return candidatesTotal;
@@ -119,14 +97,6 @@ public class HomeStats implements Serializable {
 
     public void setStats(Stats stats) {
         this.stats = stats;
-    }
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
     }
 
 }

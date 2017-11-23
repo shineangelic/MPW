@@ -11,7 +11,7 @@ public class Payment implements Serializable
 private Long amount;
 private Date timestamp;
 private String tx;
-private final Map<String, Object> additionalProperties = new HashMap<>();
+
 private final static long serialVersionUID = 9059762457675286124L;
 
 public Long getAmount() {
@@ -36,14 +36,6 @@ return tx;
 
 public void setTx(String tx) {
 this.tx = tx;
-}
-
-public Map<String, Object> getAdditionalProperties() {
-return this.additionalProperties;
-}
-
-public void setAdditionalProperty(String name, Object value) {
-this.additionalProperties.put(name, value);
 }
 
 }
