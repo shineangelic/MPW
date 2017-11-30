@@ -8,19 +8,19 @@ import java.util.Map;
 public class Block implements Serializable
 {
 
-    private Object candidates;
+    private Integer candidates;
     private Integer candidatesTotal;
-    private Object immature;
+    private Integer immature;
     private Integer immatureTotal;
     private List<Matured> matured = null;
     private Integer maturedTotal;
     private final static long serialVersionUID = -3934007317307697902L;
 
-    public Object getCandidates() {
+    public Integer getCandidates() {
         return candidates;
     }
 
-    public void setCandidates(Object candidates) {
+    public void setCandidates(Integer candidates) {
         this.candidates = candidates;
     }
 
@@ -32,11 +32,11 @@ public class Block implements Serializable
         this.candidatesTotal = candidatesTotal;
     }
 
-    public Object getImmature() {
+    public Integer getImmature() {
         return immature;
     }
 
-    public void setImmature(Object immature) {
+    public void setImmature(Integer immature) {
         this.immature = immature;
     }
 

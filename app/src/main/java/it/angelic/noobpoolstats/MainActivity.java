@@ -1,18 +1,13 @@
 package it.angelic.noobpoolstats;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -274,16 +269,21 @@ public class MainActivity extends DrawerActivity {
             e.printStackTrace();
         }
         try {
-            final Date firstBlockDate = new Date();//2017/07/15
-            firstBlockDate.setTime(1500099900000L);
-            long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
+            long dtDiff = getAverageBlockSecondsSincePoolsBirth(lastHit);
             textViewAvgBlockTime.setText("It takes an average of "
-                    + Utils.getScaledTime(datediffFirst / lastHit.getMaturedTotal()) + " to find a block");
+                    + Utils.getScaledTime(dtDiff) + " to find a block. See blocks section for more accurate stats");
 
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
+        final Date firstBlockDate = new Date();//2017/07/15
+        firstBlockDate.setTime(1500099900000L);
+        long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
+        return datediffFirst / lastHit.getMaturedTotal();
     }
 
     @Override
