@@ -64,7 +64,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_HOME_IDX);
     }
 
-    public void cleanOldDate(SQLiteDatabase db) {
+    public void cleanOldData(SQLiteDatabase db) {
         Log.w("DB", "SQL_ TODO ");
         Calendar oneMonthAgo = Calendar.getInstance();
         oneMonthAgo.add(Calendar.MONTH, -1);
@@ -97,11 +97,12 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
     // Adding new contact
     public void logHomeStats(HomeStats contact) {
+        Gson gson = builder.create();
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM, contact.getNow().getTime().getTime()); // Contact Name
-        values.put(NoobDataBaseContract.HomeStats_.COLUMN_NAME_JSON, new Gson().toJson(contact)); // Serializza
+        values.put(NoobDataBaseContract.HomeStats_.COLUMN_NAME_JSON, gson.toJson(contact)); // Serializza
 
         // Inserting Row
         db.insert(NoobDataBaseContract.HomeStats_.TABLE_NAME, null, values);
@@ -109,11 +110,11 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
     public void logWalletStats(Wallet retrieved) {
+        Gson gson = builder.create();
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM, new Date().getTime()); // Contact Name
-        values.put(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON, new Gson().toJson(retrieved)); // Serializza
+        values.put(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON, gson.toJson(retrieved)); // Serializza
 
         // Inserting Row
         db.insert(NoobDataBaseContract.Wallet_.TABLE_NAME, null, values);

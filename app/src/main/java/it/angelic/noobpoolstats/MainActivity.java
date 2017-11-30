@@ -77,7 +77,7 @@ public class MainActivity extends DrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
-        mDbHelper.cleanOldDate(mDbHelper.getWritableDatabase());
+        mDbHelper.cleanOldData(mDbHelper.getWritableDatabase());
 
         builder = new GsonBuilder();
         //gestione UNIX time lungo e non
@@ -284,7 +284,8 @@ public class MainActivity extends DrawerActivity {
         final Date firstBlockDate = new Date();//2017/07/15
         firstBlockDate.setTime(1500099900000L);
         long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
-        return datediffFirst / lastHit.getMaturedTotal();
+        //meno uno perche` il conto parte dal secondo blocco. Il primo boh
+        return datediffFirst / (lastHit.getMaturedTotal() - 1);
     }
 
     @Override

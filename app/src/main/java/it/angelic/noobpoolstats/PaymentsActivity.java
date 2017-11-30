@@ -64,6 +64,8 @@ public class PaymentsActivity extends DrawerActivity {
 
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
         builder = new GsonBuilder();
+        builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
+        builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
         lineViewTotalIncome = (LineView) findViewById(R.id.lineViewPaymentss);
@@ -77,8 +79,6 @@ public class PaymentsActivity extends DrawerActivity {
             }
         });
 
-        builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
-        builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
