@@ -18,6 +18,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         final android.support.v7.preference.ListPreference listFreqPreference = (ListPreference) findPreference("pref_sync_freq");
         final android.support.v7.preference.SwitchPreferenceCompat offlineNotifications =(SwitchPreferenceCompat) findPreference("pref_notify_offline");
         final android.support.v7.preference.SwitchPreferenceCompat blockNotifications =(SwitchPreferenceCompat) findPreference("pref_notify_block");
+        final android.support.v7.preference.SwitchPreferenceCompat paymentNotifications =(SwitchPreferenceCompat) findPreference("pref_notify_payment");
 
         //Service Enabled listener
         Preference.OnPreferenceChangeListener listenerServ = new Preference.OnPreferenceChangeListener() {
@@ -37,6 +38,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 // newValue is the value you choose
                 blockNotifications.setEnabled( (Boolean) newValue);
                 offlineNotifications.setEnabled( (Boolean) newValue);
+                paymentNotifications.setEnabled( (Boolean) newValue);
                 return true;
             }
         };
