@@ -93,8 +93,9 @@ class Utils {
         return formatBigNumber(bytes, PrecisionEnum.TWO_DIGIT);
     }
 
-    public static int condenseHashRate(Long aLong) {
+    public static float condenseHashRate(Long aLong) {
         // Kilobyte Check
+        //double roundOff = Math.round(a * 100.0) / 100.0;
         float kilo = aLong / 1024f;
         float mega = kilo / 1024f;
         float giga = mega / 1024f;
@@ -103,17 +104,17 @@ class Utils {
 
         // Determine which value to send back
         if(peta > 1)
-            return (int) peta;
+            return  peta;
         else if (tera > 1)
-            return (int) tera;
+            return  Math.round(tera * 100.0) / 100.0f;
         else if(giga > 1)
-            return (int) giga;
+            return Math.round(giga * 100.0) / 100.0f;
         else if(mega > 1)
-            return (int) mega;
+            return Math.round(mega * 100.0) / 100.0f;
         else if(kilo > 1)
-            return (int) kilo;
+            return Math.round(kilo * 100.0) / 100.0f;
         else
-            return aLong.intValue();
+            return Math.round(aLong * 100.0) / 100.0f;
     }
 
     /**

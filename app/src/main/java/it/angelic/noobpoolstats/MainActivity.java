@@ -171,6 +171,7 @@ public class MainActivity extends DrawerActivity {
                                 //dati semi grezzi
                                 storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
                                 updateCurrentStats();
+
                                 NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
                                         NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
                                         (LineView) findViewById(R.id.line_view_difficulty), radioGroupChartGranularity.getCheckedRadioButtonId());

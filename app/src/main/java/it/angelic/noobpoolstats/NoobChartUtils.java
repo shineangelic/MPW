@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.widget.TextView;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -19,47 +20,67 @@ import it.angelic.noobpoolstats.model.jsonpojos.wallet.Wallet;
 
 /**
  * Utils class to fill charts backing objects
- *
+ * <p>
  * Created by shine@angelic.it on 11/09/2017.
  */
 
 class NoobChartUtils {
     static void drawHashrateHistory(TextView titleTextView, LinkedMap<Date, HomeStats> storia, LineView chart, int grane) {
-        ArrayList<Integer> dataList = new ArrayList<>();
+        SummaryStatistics stats = new SummaryStatistics();
+        ArrayList<Float> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
-        Set<Date> dates = storia.keySet();
+        List<Date> dates = storia.asList();
         HomeStats campione = storia.values().iterator().next();
         for (Date date2 : dates) {
             labelsArr.add(getLabelFormat(grane, date2));
             dataList.add(Utils.condenseHashRate(storia.get(date2).getHashrate()));
+            stats.addValue(storia.get(date2).getHashrate());
         }
-        titleTextView.setText("Pool Hashrate History (now: " + Utils.formatHashrate(campione.getHashrate()) + ")");
-        ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
+
+            titleTextView.setText("Wallet Hashrate History "
+                    + "(avg: " + Utils.formatHashrate((long) stats.getMean())
+                    + ", max: " + Utils.formatHashrate((long) stats.getMax())
+                    + ", min: " + Utils.formatHashrate((long) stats.getMin())
+                    + ", now: " + Utils.formatHashrate((long) storia.get(dates.get(dataList.size()-1)).getHashrate())
+                    + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
+                    + ")");
+
+        ArrayList<ArrayList<Float>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
         chart.setShowPopup(LineView.SHOW_POPUPS_All);
         chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
         chart.setColorArray(new int[]{Color.DKGRAY, Color.CYAN});
-        chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+        chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
     public static void drawWalletHashRateHistory(TextView titleTextView, LineView chart, LinkedMap<Date, Wallet> dateWalletLinkedMap, int grane) {
-        ArrayList<Integer> dataList = new ArrayList<>();
+        SummaryStatistics stats = new SummaryStatistics();
+        ArrayList<Float> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
-        Set<Date> dates = dateWalletLinkedMap.keySet();
+        List<Date> dates = dateWalletLinkedMap.asList();
         Wallet campione = dateWalletLinkedMap.values().iterator().next();
         for (Date date2 : dates) {
             labelsArr.add(getLabelFormat(grane, date2));
             dataList.add(Utils.condenseHashRate(dateWalletLinkedMap.get(date2).getHashrate()));
+            stats.addValue(dateWalletLinkedMap.get(date2).getHashrate());
         }
-        titleTextView.setText("Wallet Hashrate History (now: " + Utils.formatHashrate(campione.getHashrate()) + ")");
-        ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
+
+        titleTextView.setText("Wallet Hashrate History "
+                + "(avg: " + Utils.formatHashrate((long) stats.getMean())
+                + ", max: " + Utils.formatHashrate((long) stats.getMax())
+                + ", min: " + Utils.formatHashrate((long) stats.getMin())
+                + ", now: " + Utils.formatHashrate((long) dateWalletLinkedMap.get(dates.get(dataList.size()-1)).getHashrate())
+                + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
+                + ")");
+
+        ArrayList<ArrayList<Float>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
         chart.setShowPopup(LineView.SHOW_POPUPS_All);
         chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
         chart.setColorArray(new int[]{Color.DKGRAY, Color.CYAN});
-        chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+        chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
     private static String getLabelFormat(int radioId, Date date2) {
@@ -110,6 +131,7 @@ class NoobChartUtils {
             dataList.add((storia.get(date2).getWorkersOnline()));
             labelsArr.add(getLabelFormat(checkedRadioButtonId, date2));
         }
+
         chart.setShowPopup(LineView.SHOW_POPUPS_All);
         ArrayList<ArrayList<Integer>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
@@ -126,8 +148,8 @@ class NoobChartUtils {
         float accumulator = 0;
         List<Payment> paymnts = retrieved.getPayments();
         Collections.reverse(paymnts);//mostro in ordine
-        for (final Payment thispay :paymnts) {
-            accumulator+=thispay.getAmount() / 1000000000F;
+        for (final Payment thispay : paymnts) {
+            accumulator += thispay.getAmount() / 1000000000F;
             dataList.add(accumulator);
             labelsArr.add(MainActivity.dayFormat.format(thispay.getTimestamp()));
         }

@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
@@ -136,7 +137,7 @@ public class MinerActivity extends DrawerActivity {
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
         radioGroupChartGranularity.setOnCheckedChangeListener(mescola);
 
-        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view_miner));
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_miner));
 
     }
 
@@ -160,7 +161,7 @@ public class MinerActivity extends DrawerActivity {
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
-        JsonObjectRequest jsonObjReq = new  JsonObjectRequest(
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 url, null,
                 new Response.Listener<JSONObject>() {
 
@@ -318,7 +319,6 @@ public class MinerActivity extends DrawerActivity {
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = mDbHelper.getLastWallet();
             avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());
-
             return "Executed";
         }
 
