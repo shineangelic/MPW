@@ -8,8 +8,8 @@ android {
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 16
-        versionName "1.4.2"
+        versionCode 17
+        versionName "1.4.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,7 +30,7 @@ dependencies {
     compile 'com.android.support:preference-v7:27.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.code.gson:gson:2.8.2'
     compile 'im.dacer:AndroidCharts:1.0.4'
     compile 'org.apache.commons:commons-collections4:4.1'
     compile 'org.apache.commons:commons-math3:3.6.1'
