@@ -56,11 +56,11 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class BlockViewHolder extends RecyclerView.ViewHolder {
+    static class BlockViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public final TextView mTextView;
-        public final CheckBox isOrphan;
-        public final CheckBox isUncle;
+        private final TextView mTextView;
+        private final CheckBox isOrphan;
+        private final CheckBox isUncle;
         private final TextView textViewBlockWhenValue;
         private final TextView textViewBlockSharesValue;
         private final TextView textViewBlockDiffValue;
@@ -106,7 +106,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockSharesValue.setText(Utils.formatBigNumber(game.getShares()));
             textViewBlockDiffValue.setText(Utils.formatBigNumber(game.getDifficulty()));
             textViewBlockHeightValue.setText("" + game.getHeight());
-            textViewBlockRewardValue.setText(Utils.formatEthCurrency(game.getReward() / 1000000000));
+            textViewBlockRewardValue.setText(Utils.formatEthCurrency(Long.valueOf(game.getReward()) / 1000000000));
             if (!game.getUncle()) {
                 isUncle.setVisibility(View.INVISIBLE);
                 textViewBlockUncleHeight.setVisibility(View.INVISIBLE);

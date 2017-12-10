@@ -48,6 +48,7 @@ public class PaymentsActivity extends DrawerActivity {
     private GsonBuilder builder;
     private TextView textViewWalletValue;
     private LineView lineViewTotalIncome;
+    private TextView textViewPaymentsTitle;
 
 
     @Override
@@ -68,6 +69,7 @@ public class PaymentsActivity extends DrawerActivity {
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
+        textViewPaymentsTitle= (TextView) findViewById(R.id.textViewPaymentsTitle);
         lineViewTotalIncome = (LineView) findViewById(R.id.lineViewPaymentss);
         textViewWalletValue.setText(minerAddr.toUpperCase());
         textViewWalletValue.setOnClickListener(new View.OnClickListener() {
@@ -113,11 +115,13 @@ public class PaymentsActivity extends DrawerActivity {
                         Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
                         mDbHelper.logWalletStats(retrieved);
                         //dati semi grezzi
-
-                        drawPaymentsTable(retrieved);
-                        //la seguente inverte ordine lista
-                        NoobChartUtils.drawPaymentsHistory(lineViewTotalIncome, retrieved);
-
+                        if (retrieved.getPayments() != null) {
+                            drawPaymentsTable(retrieved);
+                            //la seguente inverte ordine lista
+                            NoobChartUtils.drawPaymentsHistory(lineViewTotalIncome, retrieved);
+                        }else{
+                            textViewPaymentsTitle.setText("No payment Yet");
+                        }
                     }
                 }, new Response.ErrorListener() {
 
@@ -139,22 +143,23 @@ public class PaymentsActivity extends DrawerActivity {
         TableRow row = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
         (row.findViewById(R.id.buttonPay)).setVisibility(View.INVISIBLE);
         minersTable.addView(row);
-        for (final Payment thispay : retrieved.getPayments()) {
-            //one row for each payment
-            TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
-            ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
-            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatEthCurrency(thispay.getAmount()));
-            rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //mostra transazione pagamento
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse("https://etherscan.io/tx/" + thispay.getTx()));
-                    startActivity(i);
-                }
-            });
-            minersTable.addView(rowt);
-        }
+
+            for (final Payment thispay : retrieved.getPayments()) {
+                //one row for each payment
+                TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
+                ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
+                ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatEthCurrency(thispay.getAmount()));
+                rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //mostra transazione pagamento
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse("https://etherscan.io/tx/" + thispay.getTx()));
+                        startActivity(i);
+                    }
+                });
+                minersTable.addView(rowt);
+            }
     }
 
 

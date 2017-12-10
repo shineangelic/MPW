@@ -8,7 +8,7 @@ import java.util.Map;
 public class Block implements Serializable
 {
 
-    private Integer candidates;
+    private List<Matured> candidates;
     private Integer candidatesTotal;
     private Integer immature;
     private Integer immatureTotal;
@@ -16,11 +16,11 @@ public class Block implements Serializable
     private Integer maturedTotal;
     private final static long serialVersionUID = -3934007317307697902L;
 
-    public Integer getCandidates() {
+    public List<Matured> getCandidates() {
         return candidates;
     }
 
-    public void setCandidates(Integer candidates) {
+    public void setCandidates(List<Matured> candidates) {
         this.candidates = candidates;
     }
 

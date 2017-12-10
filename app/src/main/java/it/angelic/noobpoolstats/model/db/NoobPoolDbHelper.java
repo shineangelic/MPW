@@ -157,8 +157,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
+            Gson gson = builder.create();
             do {
-                Gson gson = builder.create();
                 // Register an adapter to manage the date types as long values
                 HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.HomeStats_.COLUMN_NAME_JSON)), HomeStats.class);
                 cnt++;
@@ -216,9 +216,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
+            Gson gson = builder.create();
             do {
-                Gson gson = builder.create();
-                // Register an adapter to manage the date types as long values
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
 
                 Long curPending = retrieved.getStats().getBalance().longValue();
@@ -274,8 +273,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
+            Gson gson = builder.create();
             do {
-                Gson gson = builder.create();
                 // Register an adapter to manage the date types as long values
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
                 cnt++;
@@ -307,9 +306,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
+            Gson gson = builder.create();
             do {
-                Gson gson = builder.create();
-                // Register an adapter to manage the date types as long values
                 HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), HomeStats.class);
                 cnt++;
                 // Adding contact to list
@@ -344,14 +342,17 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
+            Gson gson = builder.create();
             do {
-                Gson gson = builder.create();
-                // Register an adapter to manage the date types as long values
-                Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-                cnt++;
-                // Adding contact to list
-                Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM)));
-                ret.put(curDate, retrieved);
+                try {
+                    Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
+                    cnt++;
+                    // Adding contact to list
+                    Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM)));
+                    ret.put(curDate, retrieved);
+                }catch (Exception ce){
+                    Log.e(TAG,"Cant read wallet entry: " + ce.getMessage());
+                }
             } while (cursor.moveToNext());
         }
         Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);

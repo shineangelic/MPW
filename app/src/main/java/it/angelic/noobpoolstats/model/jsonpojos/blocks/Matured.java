@@ -16,7 +16,7 @@ public class Matured implements Serializable
     private Integer uncleHeight;
     private Boolean orphan;
     private String hash;
-    private Long reward;
+    private String reward;
     private final static long serialVersionUID = 8304553049716471516L;
 
     public Integer getHeight() {
@@ -83,11 +83,11 @@ public class Matured implements Serializable
         this.hash = hash;
     }
 
-    public Long getReward() {
+    public String getReward() {
         return reward;
     }
 
-    public void setReward(Long reward) {
+    public void setReward(String reward) {
         this.reward = reward;
     }
 
