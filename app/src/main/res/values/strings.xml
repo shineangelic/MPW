@@ -1,13 +1,27 @@
 <resources>
-    <string name="app_name">NoobPool Stats</string>
+    <string name="app_name">Mining Pool Watcher</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="last_block_found">Last Block:</string>
-    <string name="tot_block_found">NoobPool found %d matured blocks</string>
+    <string name="tot_block_found">Found %d matured blocks</string>
     <string name="last_share_found">Last share sent</string>
     <string name="title_activity_encourage">EncourageActivity</string>
-    <string name="title_activity_blocks">NoobPool Blocks</string>
+    <string name="title_activity_blocks">Blocks</string>
+    <string name="title_activity_choose_pool">Choose your Pool</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Wallet (public address)</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This Wallet address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 </resources>

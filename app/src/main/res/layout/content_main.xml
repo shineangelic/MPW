@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="20dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="it.angelic.noobpoolstats.MainActivity"
+    tools:context="it.angelic.mpw.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
 

@@ -2,11 +2,11 @@
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:key="pref_key_cat_general"
-        android:title="NoobPool Settings">
+        android:title="Watcher Settings">
         <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_sync"
-            android:summary="Noobpool app will connect to noobpool in background every hour to retrieve fresh data"
+            android:summary="app will connect to currently selected pool in background every hour to retrieve fresh data"
             android:title="Service enabled" />
         <android.support.v7.preference.ListPreference
             android:entries="@array/freq_names"
