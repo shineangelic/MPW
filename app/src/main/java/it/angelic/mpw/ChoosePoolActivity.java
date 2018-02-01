@@ -10,22 +10,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URL;
+import java.net.URLConnection;
 
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
@@ -41,7 +40,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mWalletView;
+    private TextView mWalletView;
     private View mProgressView;
     private View mLoginFormView;
     private Spinner poolSpinner;
@@ -55,20 +54,26 @@ public class ChoosePoolActivity extends AppCompatActivity {
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
 
         // Set up the login form.
-        mWalletView = (AutoCompleteTextView) findViewById(R.id.wallet);
+        mWalletView = (TextView) findViewById(R.id.wallet);
         // populateAutoComplete();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
 
         poolSpinner = (Spinner) findViewById(R.id.spinnerPoolChooser);
-        poolSpinner.setAdapter(new ArrayAdapter<PoolEnum>(this, android.R.layout.simple_spinner_item, PoolEnum.values()));
+        ArrayAdapter poolSpinnerAdapter =new ArrayAdapter<PoolEnum>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
+        poolSpinnerAdapter.setDropDownViewResource(R.layout.spinner);
+        poolSpinner.setAdapter(poolSpinnerAdapter);
 
         currencySpinner = (Spinner) findViewById(R.id.spinnerCurrencyChooser);
-        currencySpinner.setAdapter(new ArrayAdapter<CurrencyEnum>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values()));
+        ArrayAdapter curAdapter= new ArrayAdapter<CurrencyEnum>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
+        curAdapter.setDropDownViewResource(R.layout.spinner);
+        currencySpinner.setAdapter(curAdapter);
 
         poolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                currencySpinner.setAdapter(new ArrayAdapter<CurrencyEnum>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies()));
+                ArrayAdapter arra= new ArrayAdapter<CurrencyEnum>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies());
+                arra.setDropDownViewResource(R.layout.spinner);
+                currencySpinner.setAdapter(arra);
                 String prevWallet = prefs.getString("wallet_addr_" + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name() + "_" + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
                 mWalletView.setText(prevWallet);
             }
@@ -82,6 +87,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                //read saved wallet from pref
                 String xCode = "wallet_addr_" + ((PoolEnum) poolSpinner.getSelectedItem()).name() + "_" + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
                 mWalletView.setText(prevWallet);
@@ -108,7 +114,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 + "_"
                 + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), ""));
 
-        resetLastSettings(prefs);
+        restoreLastSettings(prefs);
 
 
         mLoginFormView = findViewById(R.id.login_form);
@@ -120,7 +126,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
-    private void resetLastSettings(SharedPreferences prefs) {
+    private void restoreLastSettings(SharedPreferences prefs) {
 
         String prevPool = prefs.getString("poolEnum", "");
         String prevCur = prefs.getString("curEnum", "");
@@ -156,11 +162,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mWalletView.setError(getString(R.string.error_field_required));
-            focusView = mWalletView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
+        if (!isWalletValid(email)) {
             mWalletView.setError(getString(R.string.error_invalid_email));
             focusView = mWalletView;
             cancel = true;
@@ -179,8 +181,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+    private boolean isWalletValid(String email) {
+        //se non va bene son cazzi delle preference
         return email.contains("0x");
     }
 
@@ -221,16 +223,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
         }
     }
 
-
-    private void addWalletsToAutoComplete(List<String> walletsAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(ChoosePoolActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, walletsAddressCollection);
-
-        mWalletView.setAdapter(adapter);
-    }
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -240,6 +232,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         private final String mWalletAddr;
         private final PoolEnum mPool;
         private final CurrencyEnum mCur;
+        private boolean connectError = false;
 
         UserLoginTask(String email, PoolEnum pool, CurrencyEnum cur) {
             mWalletAddr = email;
@@ -251,23 +244,26 @@ public class ChoosePoolActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            //TODO test connessione?
-            try {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
                 prefs.edit().putString("poolEnum", mPool.name()).commit();
                 prefs.edit().putString("curEnum", mCur.name()).commit();
-                prefs.edit().putString("wallet_addr_" + mPool.name() + "_" + mCur.name(), mWalletAddr).commit();
+                //wallet can be empty, changed in preference
                 //retrocompatibility
-                prefs.edit().putString("wallet_addr", mWalletAddr).commit();
+                if (mWalletAddr != null && mWalletAddr.length() > 0)
+                    prefs.edit().putString("wallet_addr", mWalletAddr).commit();
             } catch (Exception e) {
                 Log.e(Constants.TAG, "ERROR writing base pref", e);
                 return false;
+            }
+
+            try {
+                URL myUrl = new URL(MainActivity.getHomeStatsURL(ChoosePoolActivity.this));
+                URLConnection connection = myUrl.openConnection();
+                connection.setConnectTimeout(2000);
+                connection.connect();
+
+            } catch (Exception e) {
+                connectError = true;
             }
             return true;
         }
@@ -279,15 +275,14 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
             if (success) {
                 finish();
-                addWalletsToAutoComplete(new ArrayList<String>() {{
-                    add(mWalletAddr);
-                }});
+                // addWalletsToAutoComplete(new ArrayList<String>() {{
+                //    add(mWalletAddr);
+                // }});
                 Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
                 startActivity(miner);
 
-            } else {
-                // mPasswordView.setError(getString(R.string.error_incorrect_password));
-                // mPasswordView.requestFocus();
+            } else if (connectError) {
+                //TODO show err
             }
         }
 
