@@ -159,7 +159,7 @@ public class MainActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view));
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view),mPool);
     }
 
     @Override
@@ -270,17 +270,16 @@ public class MainActivity extends DrawerActivity {
             lastFoundTextLabel.setText(getString(R.string.last_block_found) + " " + Utils.getTimeAgo(when));
             textViewNetDiffValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getDifficulty())));
             Calendar lastB = Calendar.getInstance();
-            //lastB.setTimeZone(TimeZone.getDefault());
             lastB.setTime(lastHit.getNodes().get(0).getLastBeat());
             yearFormatExtended.setTimeZone(TimeZone.getDefault());
-           // Log.i(Constants.TAG, "TimeZone   " + yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT) + " Timezon id :: " + yearFormatExtended.getTimeZone().getID());
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
             lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
             onlineMinersText.setText("" + lastHit.getMinersTotal());
+
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
-            noobText.setText(String.format(getString(R.string.tot_block_found),mPool.toString(), lastHit.getMaturedTotal(), mCur.toString() ));
+            noobText.setText(String.format(getString(R.string.tot_block_found),mPool.toString(), lastHit.getMaturedTotal(), mCur.name()));
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();

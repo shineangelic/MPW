@@ -116,7 +116,7 @@ public class BlocksActivity extends DrawerActivity {
 
 
 
-        Utils.fillEthereumStats(this, mDbHelper, navigationView);
+        Utils.fillEthereumStats(this, mDbHelper, navigationView,mPool);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {

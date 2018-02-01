@@ -63,27 +63,30 @@ public class ChoosePoolActivity extends AppCompatActivity {
         skipIntro = (CheckBox) findViewById(R.id.skipIntro);
         skipIntro.setChecked(prefs.getBoolean("skipIntro", false));
 
-        if (skipIntro.isChecked())
+        if (skipIntro.isChecked()) {
+            Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
+            startActivity(miner);
             finish();
+        }
+
 
         //admob
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
 
-        ArrayAdapter poolSpinnerAdapter =new ArrayAdapter<PoolEnum>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
+        ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<PoolEnum>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
         poolSpinnerAdapter.setDropDownViewResource(R.layout.spinner);
         poolSpinner.setAdapter(poolSpinnerAdapter);
 
 
-
         currencySpinner = (Spinner) findViewById(R.id.spinnerCurrencyChooser);
-        ArrayAdapter curAdapter= new ArrayAdapter<CurrencyEnum>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
+        ArrayAdapter curAdapter = new ArrayAdapter<CurrencyEnum>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
         curAdapter.setDropDownViewResource(R.layout.spinner);
         currencySpinner.setAdapter(curAdapter);
 
         poolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                ArrayAdapter arra= new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies());
+                ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies());
                 arra.setDropDownViewResource(R.layout.spinner);
                 currencySpinner.setAdapter(arra);
                 String prevWallet = prefs.getString("wallet_addr_"
@@ -91,6 +94,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         + "_"
                         + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
                 mWalletView.setText(prevWallet);
+                Log.i(Constants.TAG, "poolSpinner list: " + (PoolEnum) poolSpinner.getSelectedItem());
             }
 
             @Override
@@ -108,7 +112,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         + "_"
                         + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
-                mWalletView.setText(prevWallet.length() == 0? getString(R.string.no_wallet_set):prevWallet);
+                mWalletView.setText(prevWallet.length() == 0 ? getString(R.string.no_wallet_set) : prevWallet);
+                Log.i(Constants.TAG, "currencySpinner list: " + (CurrencyEnum) currencySpinner.getSelectedItem());
             }
 
             @Override
@@ -131,7 +136,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 + ((PoolEnum) poolSpinner.getSelectedItem()).name()
                 + "_"
                 + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), ""));
-*/
+        */
         restoreLastSettings(prefs);
 
 
@@ -144,18 +149,45 @@ public class ChoosePoolActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
+    /**
+     * BEWARE listeners!! your souls shall be called in your absence as well
+     * @param prefs
+     */
     private void restoreLastSettings(SharedPreferences prefs) {
 
         String prevPool = prefs.getString("poolEnum", "");
-        String prevCur = prefs.getString("curEnum", "");
+        final String prevCur = prefs.getString("curEnum", "");
+        Log.i(Constants.TAG, "Restoring previous pool: " + prevPool + "Restoring previous currency: " + prevCur);
+        try {//cur dipende da pool, quindi tutto o nulla
+            for (int u = 0; u < poolSpinner.getAdapter().getCount(); u++) {
+                if (prevPool.equalsIgnoreCase(((PoolEnum) poolSpinner.getItemAtPosition(u)).name())) {
+                    poolSpinner.setSelection(u);
+                    Log.i(Constants.TAG, "Restoring previous pool: " + (PoolEnum) poolSpinner.getSelectedItem());
+                    break;
+                }
+            }
+            //take a breath THEN re-set currency
+            //currency reneed DELAYED adapter
+            poolSpinner.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PoolEnum pp = (PoolEnum) poolSpinner.getSelectedItem();
+                    ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, pp.getSupportedCurrencies());
+                    arra.setDropDownViewResource(R.layout.spinner);
+                    currencySpinner.setAdapter(arra);
 
-        int prevPoolIdx = 0;
-        for (int u = 0; u < poolSpinner.getAdapter().getCount(); u++) {
-            if (prevPool.equalsIgnoreCase(((PoolEnum) poolSpinner.getItemAtPosition(u)).name()))
-                prevPoolIdx = u;
+                    for (int u = 0; u < currencySpinner.getAdapter().getCount(); u++) {
+                        if (prevCur.equalsIgnoreCase(((CurrencyEnum) currencySpinner.getItemAtPosition(u)).name())) {
+                            currencySpinner.setSelection(u);
+                            Log.i(Constants.TAG, "Restoring previous cur: " + (CurrencyEnum) currencySpinner.getSelectedItem());
+                        }
+                    }
+                }
+            }, 500);
+
+        } catch (Exception ce) {
+            Log.e(Constants.TAG, "Could not restore pool settings: " + ce.getMessage());
         }
-
-        poolSpinner.setSelection(prevPoolIdx);
 
     }
 
@@ -180,11 +212,11 @@ public class ChoosePoolActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid email address.
-        if (!isWalletValid(email)) {
+       /* if (!isWalletValid(email)) {
             mWalletView.setError(getString(R.string.error_invalid_email));
             focusView = mWalletView;
             cancel = true;
-        }
+        }*/
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -265,7 +297,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
                 prefs.edit().putString("poolEnum", mPool.name()).apply();
                 prefs.edit().putString("curEnum", mCur.name()).apply();
-                prefs.edit().putBoolean("skipIntro",skipIntro.isChecked()).apply();
+                prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).commit();
+                Log.w(Constants.TAG, "SAVED  pool: " + mPool.name() + " currency: " +  mCur.name());
                 //wallet can be empty, changed in preference
                 //retrocompatibility
                 if (mWalletAddr != null && mWalletAddr.length() > 0)
@@ -293,13 +326,9 @@ public class ChoosePoolActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                finish();
-                // addWalletsToAutoComplete(new ArrayList<String>() {{
-                //    add(mWalletAddr);
-                // }});
                 Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
                 startActivity(miner);
-
+                finish();
             } else if (connectError) {
                 //TODO show err
             }

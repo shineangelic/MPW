@@ -142,7 +142,7 @@ public class MinerActivity extends DrawerActivity {
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
         radioGroupChartGranularity.setOnCheckedChangeListener(mescola);
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_miner));
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_miner),mPool);
 
     }
 

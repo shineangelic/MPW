@@ -28,4 +28,5 @@
     <string name="wallet_info">Currently selected pool is %1$s (%2$s mining). Changing it means losing previous wallet\'s data.</string>
     <string name="confirm">Confirm</string>
     <string name="no_wallet_set">No wallet set. Use preferences later to choose one</string>
+    <string name="paid_out">%1$s paid out</string>
 </resources>

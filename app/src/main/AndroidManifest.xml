@@ -45,17 +45,17 @@
         </activity>
         <activity
             android:name=".MinerActivity"
-            android:label="NoobPool Wallet/Workers"
+            android:label="Wallet/Workers"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PaymentsActivity"
-            android:label="NoobPool Payments"
+            android:label="Payments"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
-            android:label="NoobPool Settings"
+            android:label="Settings"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
 

@@ -14,6 +14,7 @@ import java.util.IllegalFormatException;
 import java.util.Locale;
 
 import it.angelic.mpw.model.CurrencyEnum;
+import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.etherscan.Result;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -196,18 +197,20 @@ class Utils {
 
     }
 
-    public static void fillEthereumStats(Context ctx, NoobPoolDbHelper mDbHelper, NavigationView navigationView) {
+    public static void fillEthereumStats(Context ctx, NoobPoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool) {
 
         TextView eth = navigationView.findViewById(R.id.textViewEthValue);
         TextView ethC = navigationView.findViewById(R.id.textViewEthCourtesy);
         TextView textViewCurbalance = navigationView.findViewById(R.id.textViewCurbalance);
+        TextView textViewWhoPaid = navigationView.findViewById(R.id.textViewWhoPaid);
         SharedPreferences settings = ctx.getSharedPreferences("ETHERSCAN", MODE_PRIVATE);
         try {
             String val = settings.getString("ETHUSD", "---");
             eth.setText(val);
             ethC.setText("Courtesy of etherscan.io. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("ETHTIMESTAMP", 0))));
+            textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out), activePool.toString()));
         }catch (Exception e){
-            Log.e(TAG,"Errore aggiornamento eth currency panel:"+e.getMessage());
+            Log.e(TAG,"Error eth currency panel:"+e.getMessage());
             eth.setVisibility(View.INVISIBLE);
             ethC.setVisibility(View.INVISIBLE);
         }

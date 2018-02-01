@@ -49,7 +49,7 @@ public class PaymentsActivity extends DrawerActivity {
     private String minerAddr;
     private GsonBuilder builder;
     private TextView textViewWalletValue;
-    private LineView lineViewTotalIncome;
+    private LineView paymentsChart;
     private TextView textViewPaymentsTitle;
     private PoolEnum mPool;
     private CurrencyEnum mCur;
@@ -76,7 +76,7 @@ public class PaymentsActivity extends DrawerActivity {
 
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
         textViewPaymentsTitle= (TextView) findViewById(R.id.textViewPaymentsTitle);
-        lineViewTotalIncome = (LineView) findViewById(R.id.lineViewPaymentss);
+        paymentsChart = (LineView) findViewById(R.id.lineViewPaymentss);
         textViewWalletValue.setText(minerAddr.toUpperCase());
         textViewWalletValue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +93,7 @@ public class PaymentsActivity extends DrawerActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view));
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view),mPool);
     }
 
     @Override
@@ -124,7 +124,8 @@ public class PaymentsActivity extends DrawerActivity {
                         if (retrieved.getPayments() != null) {
                             drawPaymentsTable(retrieved);
                             //la seguente inverte ordine lista
-                            NoobChartUtils.drawPaymentsHistory(lineViewTotalIncome, retrieved);
+                            NoobChartUtils.drawPaymentsHistory(paymentsChart, retrieved);
+                            textViewPaymentsTitle.setText(String.format(getString(R.string.paid_out), mPool.toString()));
                         }else{
                             textViewPaymentsTitle.setText("No payment Yet");
                         }
