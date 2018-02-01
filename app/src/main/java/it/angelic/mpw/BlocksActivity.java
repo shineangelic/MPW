@@ -114,8 +114,6 @@ public class BlocksActivity extends DrawerActivity {
         poolT.setText(mPool.toString());
         poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
 
-
-
         Utils.fillEthereumStats(this, mDbHelper, navigationView,mPool);
     }
 

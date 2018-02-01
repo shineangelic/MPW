@@ -63,7 +63,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         //Listener x controllo correttezza
         walletAddr.setOnPreferenceChangeListener(new WalletPrefChangeListener(getActivity(), mPool, mCur));
         walletAddr.setSummary(getString(R.string.wallet_info, mPool.toString(), mCur.toString()));
-        walletAddr.setDialogTitle(mPool.toString()+" Login");
+        walletAddr.setDialogTitle(mPool.toString()+" Network Login");
 
     }
     @Override

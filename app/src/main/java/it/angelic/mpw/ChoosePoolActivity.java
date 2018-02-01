@@ -166,6 +166,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                     break;
                 }
             }
+            poolSpinner.invalidate();
             //take a breath THEN re-set currency
             //currency reneed DELAYED adapter
             poolSpinner.postDelayed(new Runnable() {
@@ -175,6 +176,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                     ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, pp.getSupportedCurrencies());
                     arra.setDropDownViewResource(R.layout.spinner);
                     currencySpinner.setAdapter(arra);
+                    currencySpinner.invalidate();
 
                     for (int u = 0; u < currencySpinner.getAdapter().getCount(); u++) {
                         if (prevCur.equalsIgnoreCase(((CurrencyEnum) currencySpinner.getItemAtPosition(u)).name())) {
@@ -183,7 +185,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         }
                     }
                 }
-            }, 500);
+            }, 1000);
 
         } catch (Exception ce) {
             Log.e(Constants.TAG, "Could not restore pool settings: " + ce.getMessage());

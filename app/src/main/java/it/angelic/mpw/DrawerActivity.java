@@ -15,6 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import it.angelic.mpw.model.CurrencyEnum;
+import it.angelic.mpw.model.PoolEnum;
 
 /**
  * Created by shine@angelic.it on 20/11/2017.
@@ -23,9 +27,21 @@ import android.view.View;
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    private PoolEnum mPool;
+    private CurrencyEnum mCur;
+    private TextView poolT;
+    private TextView poolTW;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @Override

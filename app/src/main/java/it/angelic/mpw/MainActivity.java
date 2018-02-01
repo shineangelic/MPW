@@ -159,6 +159,11 @@ public class MainActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView poolT = headerLayout.findViewById(R.id.navTextPool);
+        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
+        poolT.setText(mPool.toString());
+        poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
         Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view),mPool);
     }
 
