@@ -15,12 +15,10 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        android:text="NoobPool client is a free app made by a blochchain noob enthusiast. Please send some support to encourage further developments, 0.05 would be enought if you like the app and want additional functionalities. Many thanks to Alfred, MrMartha and Noob for donations"
+        android:text="Miner Pool Watcher is a free app made by a blochchain noob enthusiast. Please send some support to encourage further developments, 0.01ETH would be nice if you like the app and want additional functionalities. Many thanks to Alfred, MrMartha and Noob for donations"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
         android:id="@+id/textView5"

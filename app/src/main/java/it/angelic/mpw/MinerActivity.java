@@ -56,7 +56,7 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 import it.angelic.mpw.model.jsonpojos.wallet.Worker;
 
 public class MinerActivity extends DrawerActivity {
-    private static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
+
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
     private TextView walletValueText;
     private TextView hashRateChartTitleText;
@@ -80,10 +80,14 @@ public class MinerActivity extends DrawerActivity {
     private LineView lineViewRate;
     private GsonBuilder builder;
     private FloatingActionButton fab;
-    private PoolEnum mPool;
-    private CurrencyEnum mCur;
     private TextView walletTitleText;
 
+    public static String getMinerStatsUrl(Context ctx) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        return "http://" + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.MINER_STATS_URL;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +96,9 @@ public class MinerActivity extends DrawerActivity {
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         minerAddr = pref.getString("wallet_addr", null);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
-        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
 
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
+
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -104,8 +106,8 @@ public class MinerActivity extends DrawerActivity {
 
 
         hashRateChartTitleText = findViewById(R.id.hashrateText);
-        walletTitleText =  findViewById(R.id.textViewWalletTitle);
-        walletValueText =  findViewById(R.id.textViewWalletValue);
+        walletTitleText = findViewById(R.id.textViewWalletTitle);
+        walletValueText = findViewById(R.id.textViewWalletValue);
         walCurHashrateText = (TextView) findViewById(R.id.textViewWalCurHashrateValue);
         walCurHashrate3HText = (TextView) findViewById(R.id.textViewWalHashrate3hValue);
         walTotSharesText = (TextView) findViewById(R.id.textViewWalSharesValue);
@@ -152,14 +154,14 @@ public class MinerActivity extends DrawerActivity {
         poolT.setText(mPool.toString());
         poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_miner),mPool);
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_miner), mPool);
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         issueRefresh(mDbHelper, builder, getMinerStatsUrl(this) + minerAddr);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -173,13 +175,6 @@ public class MinerActivity extends DrawerActivity {
         navigationViewInterna.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_wallet);
 
-    }
-
-    public static String getMinerStatsUrl(Context ctx) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String mPool = prefs.getString("poolEnum", "");
-        String mCur = prefs.getString("curEnum", "");
-        return "http://"+ mCur + "." +  PoolEnum.valueOf(mPool).getWebRoot() + Constants.MINER_STATS_URL;
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -337,7 +332,7 @@ public class MinerActivity extends DrawerActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            mDbHelper = new NoobPoolDbHelper(MinerActivity.this,mPool,mCur);
+            mDbHelper = new NoobPoolDbHelper(MinerActivity.this, mPool, mCur);
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = mDbHelper.getLastWallet();
             avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());

@@ -75,8 +75,8 @@ public class MainActivity extends DrawerActivity {
     private TextView textViewVarianceValue;
     private TextView textViewAvgBlockTime;
     private GsonBuilder builder;
-    private PoolEnum mPool;
-    private CurrencyEnum mCur;
+    private NoobPoolDbHelper mDbHelper;
+
 
     private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
         final Date firstBlockDate = new Date();//2017/07/15
@@ -90,13 +90,9 @@ public class MainActivity extends DrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
-         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
 
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool ,mCur);
-        mDbHelper.cleanOldData(mDbHelper.getWritableDatabase());
 
+        mDbHelper = new NoobPoolDbHelper(this,mPool ,mCur);
         builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -156,14 +152,7 @@ public class MainActivity extends DrawerActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
-        View headerLayout = navigationView.getHeaderView(0);
-        TextView poolT = headerLayout.findViewById(R.id.navTextPool);
-        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
-        poolT.setText(mPool.toString());
-        poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
         Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view),mPool);
     }
 
@@ -172,9 +161,8 @@ public class MainActivity extends DrawerActivity {
         super.onStart();
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);
-
-
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
+        //importante refresh
+        mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         issueRefresh(mDbHelper, builder);
     }
 

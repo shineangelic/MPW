@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -15,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import it.angelic.mpw.model.CurrencyEnum;
@@ -27,20 +28,53 @@ import it.angelic.mpw.model.PoolEnum;
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private PoolEnum mPool;
-    private CurrencyEnum mCur;
-    private TextView poolT;
-    private TextView poolTW;
+    PoolEnum mPool;
+    CurrencyEnum mCur;
+
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        navigationView.setNavigationItemSelectedListener(this);
+        //set proper pool info
+        View headerLayout = navigationView.getHeaderView(0);
+        ImageView poolLogo = headerLayout.findViewById(R.id.imageView);
+        ImageView backgroundPool = headerLayout.findViewById(R.id.backgroundPool);
+        LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
+        TextView poolT = headerLayout.findViewById(R.id.navTextPool);
+        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
+        poolT.setText(mPool.toString());
+        poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
+
+        switch (mPool){
+            case VICPOOL:
+                backgroundPool.setImageResource(R.mipmap.ic_hashparty_foreground);
+                poolLogo.setImageResource(R.mipmap.ic_hashparty_launcher);
+                break;
+            case NOOBPOOL:
+                backgroundPool.setImageResource(R.drawable.side_nav_bar);
+                poolLogo.setImageResource(R.mipmap.ic_noobpool_launcher);
+                break;
+            case CRYPTOPOOL:
+                backgroundPool.setImageResource(R.drawable.side_nav_bar);
+                break;
+
+        }
+
+
 
     }
 
@@ -76,7 +110,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             String minerAddr = pref.getString("wallet_addr", null);
 
             if (minerAddr == null || minerAddr.length() == 0) {
-                Snackbar.make( findViewById(android.R.id.content), "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
+                Snackbar.make(findViewById(android.R.id.content), "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
                         .setAction("GO", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -95,7 +129,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
             if (Utils.isAppAvailable(this.getApplicationContext(), appName)) {
                 i.setPackage(appName);
-            }else{//tg not available
+            } else {//tg not available
                 i.setData(Uri.parse("http://www.t.me/noobpool"));
             }
 

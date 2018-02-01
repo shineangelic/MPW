@@ -55,16 +55,15 @@ public class BlocksActivity extends DrawerActivity {
     private TextView textViewMinBlockTimeValue;
     private TextView textViewMeanBlockTimeValue;
     private TextView textViewBlockTimeStdDevValue;
-    private PoolEnum mPool;
-    private CurrencyEnum mCur;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blocks);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
-        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+
+
         mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
 
@@ -109,10 +108,6 @@ public class BlocksActivity extends DrawerActivity {
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_blocks);
         View headerLayout = navigationViewInterna.getHeaderView(0);
-        TextView poolT = headerLayout.findViewById(R.id.navTextPool);
-        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
-        poolT.setText(mPool.toString());
-        poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
 
         Utils.fillEthereumStats(this, mDbHelper, navigationView,mPool);
     }
@@ -132,7 +127,7 @@ public class BlocksActivity extends DrawerActivity {
                                 Gson gson = builder.create();
                                 // Register an adapter to manage the date types as long values
                                 Block retrieved = gson.fromJson(response.toString(), Block.class);
-                                textViewBlocksTitle.setText(retrieved.getMaturedTotal() + " Blocks found");
+                                textViewBlocksTitle.setText(retrieved.getMaturedTotal() + " "+mCur.toString()+" "+"Blocks found on "+ mPool.toString());
 
                                 Matured[] maturi = new Matured[retrieved.getMaturedTotal()];
 

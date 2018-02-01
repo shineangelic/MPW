@@ -29,6 +29,7 @@ import java.net.URLConnection;
 
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.db.NoobPoolDbHelper;
 
 /**
  * A login screen that offers login via email/password.
@@ -151,6 +152,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
     /**
      * BEWARE listeners!! your souls shall be called in your absence as well
+     *
      * @param prefs
      */
     private void restoreLastSettings(SharedPreferences prefs) {
@@ -300,16 +302,27 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 prefs.edit().putString("poolEnum", mPool.name()).apply();
                 prefs.edit().putString("curEnum", mCur.name()).apply();
                 prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).apply();
-                Log.w(Constants.TAG, "SAVED  pool: " + mPool.name() + " currency: " +  mCur.name());
+                Log.w(Constants.TAG, "SAVED  pool: " + mPool.name() + " currency: " + mCur.name());
                 //wallet can be empty, changed in preference
                 //retrocompatibility
                 if (mWalletAddr != null && mWalletAddr.length() > 0 && !mWalletAddr.equalsIgnoreCase(getString(R.string.no_wallet_set)))
                     prefs.edit().putString("wallet_addr", mWalletAddr).commit();
                 else//remove &let user choose
                     prefs.edit().remove("wallet_addr").commit();
+
+
             } catch (Exception e) {
                 Log.e(Constants.TAG, "ERROR writing base pref", e);
                 return false;
+            }
+
+            //la chiusa del DB serve
+            try {
+                NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ChoosePoolActivity.this, mPool, mCur);
+                mDbHelper.cleanOldData(mDbHelper.getWritableDatabase());
+                mDbHelper.close();
+            } catch (Exception e) {
+                Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
             }
 
             try {

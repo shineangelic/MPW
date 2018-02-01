@@ -41,13 +41,12 @@
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="Wallet: "
+                android:text="Choose your pool: "
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             <Spinner
                 android:id="@+id/spinnerPoolChooser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="12dp"
                 android:layout_weight="1"
                 android:paddingVertical="12dp"
                 android:tooltipText="Select your mining" />
@@ -61,13 +60,12 @@
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="Wallet: "
+                android:text="Currency: "
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             <Spinner
                 android:id="@+id/spinnerCurrencyChooser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="12dp"
                 android:layout_weight="1"
                 android:paddingVertical="12dp" />
 

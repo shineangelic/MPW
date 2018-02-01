@@ -15,6 +15,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import java.util.Calendar;
 import java.util.Date;
 
+import it.angelic.mpw.Constants;
 import it.angelic.mpw.R;
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
@@ -54,6 +55,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
     public NoobPoolDbHelper(Context context, PoolEnum pool, CurrencyEnum cur) {
         super(context, pool.name()+"_"+cur.name()+"_"+DATABASE_NAME, null, DATABASE_VERSION);
+        Log.i(Constants.TAG, "Using DB: "+ getDatabaseName());
         builder = new GsonBuilder();
     }
 
@@ -64,9 +66,10 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
     public void cleanOldData(SQLiteDatabase db) {
-        Log.w("DB", "SQL_ TODO ");
+
         Calendar oneMonthAgo = Calendar.getInstance();
         oneMonthAgo.add(Calendar.MONTH, -1);
+        Log.w("DB", "SQL_ CLEANING older than: "+oneMonthAgo.getTime());
         db.delete(NoobDataBaseContract.HomeStats_.TABLE_NAME,
                  NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
         db.delete(NoobDataBaseContract.Wallet_.TABLE_NAME,

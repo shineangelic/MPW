@@ -66,9 +66,7 @@ public class PaymentsActivity extends DrawerActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
-        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());

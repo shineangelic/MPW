@@ -14,14 +14,19 @@ public enum PoolEnum {
         add(CurrencyEnum.ETC);
     }}),
 
-    CRYPTOPOOL("Crypto Pool", "cryptopool.network", new ArrayList<CurrencyEnum>() {{
+    CRYPTOPOOL("CryptoPool Network", "cryptopool.network", new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ETC);
+        add(CurrencyEnum.MUSIC);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBQ);
     }}),
 
     VICPOOL("Hashing Party", "hashing.party", new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ETC);
+        add(CurrencyEnum.UBQ);
+        add(CurrencyEnum.DBIX);
         add(CurrencyEnum.VIC);
     }});
     private String friendlyName;
