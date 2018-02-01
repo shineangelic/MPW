@@ -1,17 +1,29 @@
 package it.angelic.mpw;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
+import it.angelic.mpw.model.CurrencyEnum;
+import it.angelic.mpw.model.PoolEnum;
+
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+    private PoolEnum mPool;
+    private CurrencyEnum mCur;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.preferences);
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
 
         final android.support.v7.preference.SwitchPreferenceCompat globalNotifications = (SwitchPreferenceCompat) findPreference("pref_notify");
         final android.support.v7.preference.SwitchPreferenceCompat service = (SwitchPreferenceCompat) findPreference("pref_sync");
@@ -48,7 +60,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         //Listener x controllo correttezza
         EditTextPreference walletAddrPref = (EditTextPreference) findPreference("wallet_addr");
-        walletAddrPref.setOnPreferenceChangeListener(new EthereumFormatWatcher(getActivity()));
+        walletAddrPref.setOnPreferenceChangeListener(new EthereumFormatWatcher(getActivity(), mPool, mCur));
 
         /////
 

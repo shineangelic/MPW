@@ -35,8 +35,10 @@ import java.util.Date;
 import java.util.Locale;
 
 import im.dacer.androidcharts.LineView;
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
+import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -49,6 +51,8 @@ public class PaymentsActivity extends DrawerActivity {
     private TextView textViewWalletValue;
     private LineView lineViewTotalIncome;
     private TextView textViewPaymentsTitle;
+    private PoolEnum mPool;
+    private CurrencyEnum mCur;
 
 
     @Override
@@ -62,8 +66,10 @@ public class PaymentsActivity extends DrawerActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
-
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
@@ -97,8 +103,8 @@ public class PaymentsActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_payment);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
-        issueRefresh(mDbHelper, builder, Constants.MINER_STATS_URL + minerAddr);
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
+        issueRefresh(mDbHelper, builder, mCur.name()+"."+mPool.getWebRoot()+Constants.MINER_STATS_URL + minerAddr);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {

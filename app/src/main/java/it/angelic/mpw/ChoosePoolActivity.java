@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -69,6 +70,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 currencySpinner.setAdapter(new ArrayAdapter<CurrencyEnum>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies()));
+                String prevWallet = prefs.getString("wallet_addr_" + ((PoolEnum)poolSpinner.getAdapter().getItem(position)).name() + "_" + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
+                mWalletView.setText(prevWallet);
             }
 
             @Override
@@ -80,7 +83,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
         currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String prevWallet = prefs.getString("wallet_addr_" + PoolEnum.values()[position].name() + "_" + CurrencyEnum.values()[position].name(), "");
+                String xCode = "wallet_addr_" + ((PoolEnum) poolSpinner.getSelectedItem()).name() + "_" +((CurrencyEnum)currencySpinner.getAdapter().getItem(position)).name();
+                String prevWallet = prefs.getString(xCode, "");
                 mWalletView.setText(prevWallet);
             }
 
@@ -100,7 +104,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         });
 
         //convoluto
-        mWalletView.setText(prefs.getString("wallet_addr"
+        mWalletView.setText(prefs.getString("wallet_addr_"
                 + ((PoolEnum) poolSpinner.getSelectedItem()).name()
                 + "_"
                 + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), ""));
@@ -232,11 +236,17 @@ public class ChoosePoolActivity extends AppCompatActivity {
             }
 
             //TODO test connessione?
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
-            prefs.edit().putString("poolEnum", mPool.name()).commit();
-            prefs.edit().putString("curEnum", mCur.name()).commit();
-            prefs.edit().putString("wallet_addr" + mPool.name() + "_" + mCur.name(), mWalletAddr).commit();
+            try {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
+                prefs.edit().putString("poolEnum", mPool.name()).commit();
+                prefs.edit().putString("curEnum", mCur.name()).commit();
+                prefs.edit().putString("wallet_addr_" + mPool.name() + "_" + mCur.name(), mWalletAddr).commit();
+                //retrocompatibility
+                prefs.edit().putString("wallet_addr", mWalletAddr).commit();
+            } catch (Exception e) {
+                Log.e(Constants.TAG, "ERROR writing base pref", e);
+                return false;
+            }
             return true;
         }
 

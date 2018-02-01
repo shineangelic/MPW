@@ -5,10 +5,12 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -25,8 +27,10 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
+import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -48,8 +52,11 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context ctx, final Intent intent) {
-        Log.i(Constants.TAG, "NoobPool Service call");
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ctx);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+        Log.i(Constants.TAG, "Miner Pool Watcher Service call:" + MainActivity.getHomeStatsURL(ctx));
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ctx, mPool, mCur);
         final NotificationManager mNotifyMgr =
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         final GsonBuilder builder = new GsonBuilder();
@@ -63,7 +70,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         final Boolean notifyPayment = intent.getBooleanExtra("NOTIFY_PAYMENT", false);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Constants.HOME_STATS_URL, null,
+                MainActivity.getHomeStatsURL(ctx), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -78,7 +85,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         //controllo se manca qualcuno
                         if (notifyBlock
                                 &&
-                                ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0 ) {
+                                ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
                             sendBlockNotification(ctx, "NoobPool has found a new block");
                         }
 
@@ -111,7 +118,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             if (notifyOffline && ultimi.keySet().size() >= LAST_TWO) {
                                 if (ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
                                     sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
-                                } else if (ultimi.get(ultimi.firstKey()).getWorkersOnline() > ultimi.get(ultimi.get(1)).getWorkersOnline()){
+                                } else if (ultimi.get(ultimi.firstKey()).getWorkersOnline() > ultimi.get(ultimi.get(1)).getWorkersOnline()) {
                                     //togli notifiche di offline
                                     mNotifyMgr.cancel(NOTIFICATION_MINER_OFFLINE);
                                 } // else uguali, fa nulla

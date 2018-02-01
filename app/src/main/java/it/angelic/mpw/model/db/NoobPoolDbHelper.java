@@ -16,6 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import it.angelic.mpw.R;
+import it.angelic.mpw.model.CurrencyEnum;
+import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -25,7 +27,7 @@ import static android.content.ContentValues.TAG;
 public class NoobPoolDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION =3;
-    private static final String DATABASE_NAME = "FeedReader.db";
+    private static final String DATABASE_NAME = "MinerPoolWatcher.db";
     private static final String SQL_CREATE_HomeSTATS =
             "CREATE TABLE " + NoobDataBaseContract.HomeStats_.TABLE_NAME + " (" +
                     NoobDataBaseContract.HomeStats_._ID + " INTEGER PRIMARY KEY," +
@@ -50,10 +52,9 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     private final GsonBuilder builder;
 
 
-    public NoobPoolDbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public NoobPoolDbHelper(Context context, PoolEnum pool, CurrencyEnum cur) {
+        super(context, pool.name()+"_"+cur.name()+"_"+DATABASE_NAME, null, DATABASE_VERSION);
         builder = new GsonBuilder();
-
     }
 
     public void onCreate(SQLiteDatabase db) {

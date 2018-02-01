@@ -11,17 +11,20 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 
 /**
  * Created by shine@angelic.it on 01/11/2017.
  */
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
+    private final CurrencyEnum cur;
     private Matured[] blocksArray;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BlockAdapter(Matured[] myDataset) {
+    public BlockAdapter(Matured[] myDataset, CurrencyEnum curr) {
         blocksArray = myDataset;
+        cur = curr;
     }
 
     // Create new views (invoked by the layout manager)
@@ -39,7 +42,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     public void onBindViewHolder(BlockViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.bindBlock(blocksArray[position]);
+        holder.bindBlock(blocksArray[position], cur);
 
     }
 
@@ -88,7 +91,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
 
         }
 
-        public void bindBlock(final Matured game) {
+        public void bindBlock(final Matured game, CurrencyEnum cur) {
             mTextView.setText(game.getHash().toUpperCase());
             View.OnClickListener list = new View.OnClickListener() {
                 @Override
@@ -106,7 +109,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockSharesValue.setText(Utils.formatBigNumber(game.getShares()));
             textViewBlockDiffValue.setText(Utils.formatBigNumber(game.getDifficulty()));
             textViewBlockHeightValue.setText("" + game.getHeight());
-            textViewBlockRewardValue.setText(Utils.formatEthCurrency(Long.valueOf(game.getReward()) / 1000000000));
+            textViewBlockRewardValue.setText(Utils.formatCurrency(Long.valueOf(game.getReward()) / 1000000000, cur));
             if (!game.getUncle()) {
                 isUncle.setVisibility(View.INVISIBLE);
                 textViewBlockUncleHeight.setVisibility(View.INVISIBLE);

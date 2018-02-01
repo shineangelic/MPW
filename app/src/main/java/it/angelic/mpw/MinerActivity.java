@@ -44,8 +44,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import im.dacer.androidcharts.LineView;
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
+import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.db.NoobPoolQueryGrouper;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
@@ -78,6 +80,8 @@ public class MinerActivity extends DrawerActivity {
     private LineView lineViewRate;
     private GsonBuilder builder;
     private FloatingActionButton fab;
+    private PoolEnum mPool;
+    private CurrencyEnum mCur;
 
 
     @Override
@@ -87,9 +91,11 @@ public class MinerActivity extends DrawerActivity {
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         minerAddr = pref.getString("wallet_addr", null);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
 
-
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         builder = new GsonBuilder();
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -143,7 +149,7 @@ public class MinerActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -314,7 +320,7 @@ public class MinerActivity extends DrawerActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            mDbHelper = new NoobPoolDbHelper(MinerActivity.this);
+            mDbHelper = new NoobPoolDbHelper(MinerActivity.this,mPool,mCur);
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = mDbHelper.getLastWallet();
             avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());

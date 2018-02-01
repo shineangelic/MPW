@@ -1,11 +1,13 @@
 package it.angelic.mpw;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -32,8 +35,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
+import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.blocks.Block;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
@@ -50,13 +55,17 @@ public class BlocksActivity extends DrawerActivity {
     private TextView textViewMinBlockTimeValue;
     private TextView textViewMeanBlockTimeValue;
     private TextView textViewBlockTimeStdDevValue;
+    private PoolEnum mPool;
+    private CurrencyEnum mCur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blocks);
-
-        mDbHelper = new NoobPoolDbHelper(this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+        mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
 
         textViewMaxBlockTimeValue = findViewById(R.id.textViewMaxBlockTimeValue);
@@ -99,6 +108,13 @@ public class BlocksActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_blocks);
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_blocks);
+        View headerLayout = navigationViewInterna.getHeaderView(0);
+        TextView poolT = headerLayout.findViewById(R.id.navTextPool);
+        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
+        poolT.setText(mPool.toString());
+        poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
+
+
 
         Utils.fillEthereumStats(this, mDbHelper, navigationView);
     }
@@ -106,7 +122,7 @@ public class BlocksActivity extends DrawerActivity {
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                BLOCKS_URL, null,
+                "http://"+ mCur.name()+"."+mPool.getWebRoot() + BLOCKS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -126,7 +142,7 @@ public class BlocksActivity extends DrawerActivity {
                                 retrieved.getMatured().toArray(maturi);
 
                                 if (mAdapter == null) {
-                                    mAdapter = new BlockAdapter(maturi);
+                                    mAdapter = new BlockAdapter(maturi,mCur);
                                     mRecyclerView.setAdapter(mAdapter);
                                 }
                                 textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));

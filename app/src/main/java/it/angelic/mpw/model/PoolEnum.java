@@ -9,31 +9,34 @@ import it.angelic.mpw.Constants;
  */
 
 public enum PoolEnum {
-    NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com",new ArrayList<CurrencyEnum>() {{
+    NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com", new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}),
 
-    CRYPTOPOOL("Crypto Pool", "cryptopool.network",new ArrayList<CurrencyEnum>() {{
+    CRYPTOPOOL("Crypto Pool", "cryptopool.network", new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBQ);
     }}),
 
-    VICPOOL("Hashing Party", "hashing.party",new ArrayList<CurrencyEnum>() {{
+    VICPOOL("Hashing Party", "hashing.party", new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.VIC);
     }});
     private String friendlyName;
     private String webRoot;
     private ArrayList<CurrencyEnum> supportedCurrencies;
-
     private PoolEnum(String friendlyName, String wr, ArrayList sfp) {
         this.friendlyName = friendlyName;
         this.webRoot = wr;
         supportedCurrencies = sfp;
     }
 
-    public ArrayList<CurrencyEnum> getSupportedCurrencies(){
+    public String getWebRoot() {
+        return webRoot;
+    }
+
+    public ArrayList<CurrencyEnum> getSupportedCurrencies() {
         return supportedCurrencies;
     }
 

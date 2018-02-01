@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.etherscan.Result;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -171,8 +172,12 @@ class Utils {
         }
     }
 
+    public static String formatCurrency(Long balance, CurrencyEnum cur) {
+        return String.format(Locale.getDefault(),PrecisionEnum.SIX_DIGIT.getFormat() + " " + cur.name(), (balance / 1000000000F));
+    }
+
     public static String formatEthCurrency(Long balance) {
-        return String.format(Locale.getDefault(),PrecisionEnum.SIX_DIGIT.getFormat() + " ETH", (balance / 1000000000F));
+        return formatCurrency(balance, CurrencyEnum.ETH);
     }
 
     public static void saveEtherValues(Result result, Context ctx) {

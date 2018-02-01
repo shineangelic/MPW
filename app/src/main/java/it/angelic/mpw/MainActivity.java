@@ -1,6 +1,8 @@
 package it.angelic.mpw;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -8,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -37,8 +40,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import im.dacer.androidcharts.LineView;
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
+import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.db.NoobPoolQueryGrouper;
 import it.angelic.mpw.model.jsonpojos.etherscan.EtherscanStats;
@@ -70,13 +75,26 @@ public class MainActivity extends DrawerActivity {
     private TextView textViewVarianceValue;
     private TextView textViewAvgBlockTime;
     private GsonBuilder builder;
+    private PoolEnum mPool;
+    private CurrencyEnum mCur;
 
+    private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
+        final Date firstBlockDate = new Date();//2017/07/15
+        firstBlockDate.setTime(1500099900000L);
+        long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
+        //meno uno perche` il conto parte dal secondo blocco. Il primo boh
+        return datediffFirst / (lastHit.getMaturedTotal() - 1);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool ,mCur);
         mDbHelper.cleanOldData(mDbHelper.getWritableDatabase());
 
         builder = new GsonBuilder();
@@ -141,7 +159,7 @@ public class MainActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Utils.fillEthereumStats(this,mDbHelper,(NavigationView) findViewById(R.id.nav_view));
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view));
     }
 
     @Override
@@ -149,13 +167,15 @@ public class MainActivity extends DrawerActivity {
         super.onStart();
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this);
+
+
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
         issueRefresh(mDbHelper, builder);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Constants.HOME_STATS_URL, null,
+                getHomeStatsURL(MainActivity.this), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -229,6 +249,14 @@ public class MainActivity extends DrawerActivity {
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonEtherObjReq);
     }
 
+    public static String getHomeStatsURL(Context ctx) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
+        return "http://"+ mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.HOME_STATS_URL;
+    }
+
     /**
      * Update header with last persisted DB row
      */
@@ -278,14 +306,6 @@ public class MainActivity extends DrawerActivity {
             Log.e(Constants.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
-        final Date firstBlockDate = new Date();//2017/07/15
-        firstBlockDate.setTime(1500099900000L);
-        long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
-        //meno uno perche` il conto parte dal secondo blocco. Il primo boh
-        return datediffFirst / (lastHit.getMaturedTotal() - 1);
     }
 
     @Override
