@@ -70,7 +70,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 currencySpinner.setAdapter(new ArrayAdapter<CurrencyEnum>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies()));
-                String prevWallet = prefs.getString("wallet_addr_" + ((PoolEnum)poolSpinner.getAdapter().getItem(position)).name() + "_" + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
+                String prevWallet = prefs.getString("wallet_addr_" + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name() + "_" + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
                 mWalletView.setText(prevWallet);
             }
 
@@ -83,7 +83,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String xCode = "wallet_addr_" + ((PoolEnum) poolSpinner.getSelectedItem()).name() + "_" +((CurrencyEnum)currencySpinner.getAdapter().getItem(position)).name();
+                String xCode = "wallet_addr_" + ((PoolEnum) poolSpinner.getSelectedItem()).name() + "_" + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
                 mWalletView.setText(prevWallet);
             }
@@ -108,8 +108,27 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 + ((PoolEnum) poolSpinner.getSelectedItem()).name()
                 + "_"
                 + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), ""));
+
+        resetLastSettings(prefs);
+
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    private void resetLastSettings(SharedPreferences prefs) {
+
+        String prevPool = prefs.getString("poolEnum", "");
+        String prevCur = prefs.getString("curEnum", "");
+
+        int prevPoolIdx = 0;
+        for (int u = 0; u < poolSpinner.getAdapter().getCount(); u++) {
+            if (prevPool.equalsIgnoreCase(((PoolEnum) poolSpinner.getItemAtPosition(u)).name()))
+                prevPoolIdx = u;
+        }
+
+        poolSpinner.setSelection(prevPoolIdx);
+
     }
 
 
