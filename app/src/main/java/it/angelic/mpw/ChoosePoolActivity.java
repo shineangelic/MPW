@@ -20,6 +20,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +34,6 @@ import it.angelic.mpw.model.PoolEnum;
  * A login screen that offers login via email/password.
  */
 public class ChoosePoolActivity extends AppCompatActivity {
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -55,6 +51,9 @@ public class ChoosePoolActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_pool);
+        //admob
+        MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
+
         // Set up the login form.
         mWalletView = (AutoCompleteTextView) findViewById(R.id.wallet);
         // populateAutoComplete();
@@ -114,6 +113,11 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        //ADS
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void resetLastSettings(SharedPreferences prefs) {
@@ -165,7 +169,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
-            focusView.requestFocus();
+            //focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -245,7 +249,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
                 // Simulate network access.

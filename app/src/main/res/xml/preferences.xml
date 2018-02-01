@@ -3,17 +3,24 @@
     <PreferenceCategory
         android:key="pref_key_cat_general"
         android:title="Watcher Settings">
+        <it.angelic.mpw.PoolDialogPreference
+            android:dialogMessage="Are you sure to change Pool/currency?"
+            android:key="resetPool"
+            android:negativeButtonText="Cancel"
+            android:positiveButtonText="OK"
+            android:summary="Change pool and/or currency, without losing current data."
+            android:title="Change Pool" />
         <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_sync"
             android:summary="app will connect to currently selected pool in background every hour to retrieve fresh data"
             android:title="Service enabled" />
         <android.support.v7.preference.ListPreference
+            android:defaultValue="1800000"
             android:entries="@array/freq_names"
             android:entryValues="@array/freq"
             android:key="pref_sync_freq"
-            android:title="Update Frequency"
-            android:defaultValue="1800000" />
+            android:title="Update Frequency" />
         <android.support.v7.preference.EditTextPreference
             android:hint="0x"
             android:key="wallet_addr"

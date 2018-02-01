@@ -11,6 +11,7 @@ import it.angelic.mpw.Constants;
 public enum PoolEnum {
     NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com", new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ETC);
     }}),
 
     CRYPTOPOOL("Crypto Pool", "cryptopool.network", new ArrayList<CurrencyEnum>() {{

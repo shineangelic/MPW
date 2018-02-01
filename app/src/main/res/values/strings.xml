@@ -24,4 +24,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="wallet_info">Currently selected pool is %1$s (%2$s mining). Changing it means losing previous wallet\'s data.</string>
 </resources>
