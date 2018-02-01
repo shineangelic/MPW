@@ -49,15 +49,28 @@
                 android:layout_weight="1"
                 android:paddingVertical="12dp" />
 
+            <TextView
+                android:id="@+id/walletInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="12dp"
+                android:layout_margin="4dp"
+                android:padding="2dp"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Wallet: "
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
                 android:id="@+id/wallet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="2dp"
                 android:layout_weight="1"
-                android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress"
                 android:maxLines="1"
+                android:text="@string/no_wallet_set"
                 android:singleLine="true" />
 
 
@@ -67,14 +80,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
+                android:text="@string/confirm"
                 android:textStyle="bold" />
 
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/skipIntro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Don't show again" />
+                android:text="Don't show this screen again" />
 
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"

@@ -1,8 +1,10 @@
 package it.angelic.mpw;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 
 public class PoolDialogPrefFragCompat extends PreferenceDialogFragmentCompat {
     public static PoolDialogPrefFragCompat newInstance(String key) {
@@ -16,6 +18,8 @@ public class PoolDialogPrefFragCompat extends PreferenceDialogFragmentCompat {
     @Override
     public void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            prefs.edit().putBoolean("skipIntro",false).apply();
             // do things
             Intent opzioni = new Intent(getActivity(), ChoosePoolActivity.class);
             startActivity(opzioni);

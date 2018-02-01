@@ -104,7 +104,7 @@ public class PaymentsActivity extends DrawerActivity {
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
-        issueRefresh(mDbHelper, builder, mCur.name()+"."+mPool.getWebRoot()+Constants.MINER_STATS_URL + minerAddr);
+        issueRefresh(mDbHelper, builder, "http://" +mCur.name()+"."+mPool.getWebRoot()+Constants.MINER_STATS_URL + minerAddr);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {

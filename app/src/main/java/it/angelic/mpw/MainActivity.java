@@ -273,14 +273,14 @@ public class MainActivity extends DrawerActivity {
             //lastB.setTimeZone(TimeZone.getDefault());
             lastB.setTime(lastHit.getNodes().get(0).getLastBeat());
             yearFormatExtended.setTimeZone(TimeZone.getDefault());
-            Log.i(Constants.TAG, "TimeZone   " + yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT) + " Timezon id :: " + yearFormatExtended.getTimeZone().getID());
+           // Log.i(Constants.TAG, "TimeZone   " + yearFormatExtended.getTimeZone().getDisplayName(false, TimeZone.SHORT) + " Timezon id :: " + yearFormatExtended.getTimeZone().getID());
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
             lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
             onlineMinersText.setText("" + lastHit.getMinersTotal());
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
-            noobText.setText(String.format(getString(R.string.tot_block_found), lastHit.getMaturedTotal()));
+            noobText.setText(String.format(getString(R.string.tot_block_found),mPool.toString(), lastHit.getMaturedTotal(), mCur.toString() ));
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();

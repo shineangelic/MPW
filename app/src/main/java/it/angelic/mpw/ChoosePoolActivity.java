@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -45,13 +46,12 @@ public class ChoosePoolActivity extends AppCompatActivity {
     private View mLoginFormView;
     private Spinner poolSpinner;
     private Spinner currencySpinner;
+    private CheckBox skipIntro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_pool);
-        //admob
-        MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
 
         // Set up the login form.
         mWalletView = (TextView) findViewById(R.id.wallet);
@@ -59,9 +59,21 @@ public class ChoosePoolActivity extends AppCompatActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
 
         poolSpinner = (Spinner) findViewById(R.id.spinnerPoolChooser);
+
+        skipIntro = (CheckBox) findViewById(R.id.skipIntro);
+        skipIntro.setChecked(prefs.getBoolean("skipIntro", false));
+
+        if (skipIntro.isChecked())
+            finish();
+
+        //admob
+        MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
+
         ArrayAdapter poolSpinnerAdapter =new ArrayAdapter<PoolEnum>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
         poolSpinnerAdapter.setDropDownViewResource(R.layout.spinner);
         poolSpinner.setAdapter(poolSpinnerAdapter);
+
+
 
         currencySpinner = (Spinner) findViewById(R.id.spinnerCurrencyChooser);
         ArrayAdapter curAdapter= new ArrayAdapter<CurrencyEnum>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
@@ -71,10 +83,13 @@ public class ChoosePoolActivity extends AppCompatActivity {
         poolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                ArrayAdapter arra= new ArrayAdapter<CurrencyEnum>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies());
+                ArrayAdapter arra= new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies());
                 arra.setDropDownViewResource(R.layout.spinner);
                 currencySpinner.setAdapter(arra);
-                String prevWallet = prefs.getString("wallet_addr_" + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name() + "_" + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
+                String prevWallet = prefs.getString("wallet_addr_"
+                        + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name()
+                        + "_"
+                        + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
                 mWalletView.setText(prevWallet);
             }
 
@@ -88,9 +103,12 @@ public class ChoosePoolActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //read saved wallet from pref
-                String xCode = "wallet_addr_" + ((PoolEnum) poolSpinner.getSelectedItem()).name() + "_" + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
+                String xCode = "wallet_addr_"
+                        + ((PoolEnum) poolSpinner.getSelectedItem()).name()
+                        + "_"
+                        + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
-                mWalletView.setText(prevWallet);
+                mWalletView.setText(prevWallet.length() == 0? getString(R.string.no_wallet_set):prevWallet);
             }
 
             @Override
@@ -109,11 +127,11 @@ public class ChoosePoolActivity extends AppCompatActivity {
         });
 
         //convoluto
-        mWalletView.setText(prefs.getString("wallet_addr_"
+       /* mWalletView.setText(prefs.getString("wallet_addr_"
                 + ((PoolEnum) poolSpinner.getSelectedItem()).name()
                 + "_"
                 + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), ""));
-
+*/
         restoreLastSettings(prefs);
 
 
@@ -245,8 +263,9 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
             try {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
-                prefs.edit().putString("poolEnum", mPool.name()).commit();
-                prefs.edit().putString("curEnum", mCur.name()).commit();
+                prefs.edit().putString("poolEnum", mPool.name()).apply();
+                prefs.edit().putString("curEnum", mCur.name()).apply();
+                prefs.edit().putBoolean("skipIntro",skipIntro.isChecked()).apply();
                 //wallet can be empty, changed in preference
                 //retrocompatibility
                 if (mWalletAddr != null && mWalletAddr.length() > 0)
