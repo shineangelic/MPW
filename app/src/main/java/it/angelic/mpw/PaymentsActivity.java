@@ -75,7 +75,7 @@ public class PaymentsActivity extends DrawerActivity {
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
-        textViewPaymentsTitle= (TextView) findViewById(R.id.textViewPaymentsTitle);
+        textViewPaymentsTitle= (TextView) findViewById(R.id.textViewPaymentTitle);
         paymentsChart = (LineView) findViewById(R.id.lineViewPaymentss);
         textViewWalletValue.setText(minerAddr.toUpperCase());
         textViewWalletValue.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +155,7 @@ public class PaymentsActivity extends DrawerActivity {
                 //one row for each payment
                 TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
                 ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
-                ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatEthCurrency(thispay.getAmount()));
+                ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatCurrency(thispay.getAmount(),mCur));
                 rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

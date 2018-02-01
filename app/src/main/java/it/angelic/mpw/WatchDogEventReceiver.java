@@ -102,7 +102,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         if (minerAddr != null) {
             Log.i(Constants.TAG, "refreshing wallet " + minerAddr + " notify: " + notifyBlock);
             JsonObjectRequest jsonObjReqWallet = new JsonObjectRequest(Request.Method.GET,
-                    MinerActivity.minerStatsUrl + minerAddr, null,
+                    MinerActivity.getMinerStatsUrl(ctx) + minerAddr, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

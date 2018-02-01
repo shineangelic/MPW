@@ -103,7 +103,7 @@ public class MainActivity extends DrawerActivity {
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
 
-        noobText = (TextView) findViewById(R.id.textViewPaymentsTitle);
+        noobText = (TextView) findViewById(R.id.textViewWalletTitle);
         hashText = (TextView) findViewById(R.id.hashrateText);
         textViewNetDiffTitle = (TextView) findViewById(R.id.textViewWalHashrateTitle);
         poolLastBeat = (TextView) findViewById(R.id.textViewWalLastShareValue);
@@ -253,7 +253,7 @@ public class MainActivity extends DrawerActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
-        prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
+        //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
         return "http://"+ mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.HOME_STATS_URL;
     }
 

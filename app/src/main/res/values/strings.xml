@@ -29,4 +29,5 @@
     <string name="confirm">Confirm</string>
     <string name="no_wallet_set">No wallet set. Use preferences later to choose one</string>
     <string name="paid_out">%1$s paid out</string>
+    <string name="wallet_stats_title">Wallet Stats (%1$s - %2$s)</string>
 </resources>

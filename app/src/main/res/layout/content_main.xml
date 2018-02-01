@@ -12,13 +12,14 @@
 
 
     <TextView
-        android:id="@+id/textViewPaymentsTitle"
+        android:id="@+id/textViewWalletTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="Current Stats"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -48,7 +49,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPaymentsTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalletTitle" />
 
     <RadioGroup
         android:id="@+id/radioDifficultyGranularity"

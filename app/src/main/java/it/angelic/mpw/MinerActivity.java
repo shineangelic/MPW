@@ -1,5 +1,6 @@
 package it.angelic.mpw;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -55,7 +56,6 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 import it.angelic.mpw.model.jsonpojos.wallet.Worker;
 
 public class MinerActivity extends DrawerActivity {
-    public static final String minerStatsUrl = "http://www.noobpool.com/api/accounts/";
     private static final SimpleDateFormat yearFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.US);
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
     private TextView walletValueText;
@@ -82,6 +82,7 @@ public class MinerActivity extends DrawerActivity {
     private FloatingActionButton fab;
     private PoolEnum mPool;
     private CurrencyEnum mCur;
+    private TextView walletTitleText;
 
 
     @Override
@@ -102,9 +103,9 @@ public class MinerActivity extends DrawerActivity {
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
 
-        hashRateChartTitleText = (TextView) findViewById(R.id.hashrateText);
-
-        walletValueText = (TextView) findViewById(R.id.textViewWalletValue);
+        hashRateChartTitleText = findViewById(R.id.hashrateText);
+        walletTitleText =  findViewById(R.id.textViewWalletTitle);
+        walletValueText =  findViewById(R.id.textViewWalletValue);
         walCurHashrateText = (TextView) findViewById(R.id.textViewWalCurHashrateValue);
         walCurHashrate3HText = (TextView) findViewById(R.id.textViewWalHashrate3hValue);
         walTotSharesText = (TextView) findViewById(R.id.textViewWalSharesValue);
@@ -125,7 +126,7 @@ public class MinerActivity extends DrawerActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
+                issueRefresh(mDbHelper, builder, getMinerStatsUrl(MinerActivity.this) + minerAddr);
             }
         });
 
@@ -150,7 +151,7 @@ public class MinerActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
-        issueRefresh(mDbHelper, builder, minerStatsUrl + minerAddr);
+        issueRefresh(mDbHelper, builder, getMinerStatsUrl(this) + minerAddr);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,6 +164,13 @@ public class MinerActivity extends DrawerActivity {
         navigationViewInterna.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_wallet);
 
+    }
+
+    public static String getMinerStatsUrl(Context ctx) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        return "http://"+ mCur + "." +  PoolEnum.valueOf(mPool).getWebRoot() + Constants.MINER_STATS_URL;
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -263,14 +271,14 @@ public class MinerActivity extends DrawerActivity {
             e.printStackTrace();
         }
         try {
-            textViewPendingBalanceValue.setText(Utils.formatEthCurrency(lastHit.getStats().getBalance().longValue()));
-            textViewPaidValue.setText(Utils.formatEthCurrency(lastHit.getStats().getPaid()));
+            textViewPendingBalanceValue.setText(Utils.formatCurrency(lastHit.getStats().getBalance().longValue(), mCur));
+            textViewPaidValue.setText(Utils.formatCurrency(lastHit.getStats().getPaid(), mCur));
         } catch (Exception ie) {
             Log.e(Constants.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
         }
 
         try {
-            textViewAvgPending.setText(Utils.formatEthCurrency(avgPending));
+            textViewAvgPending.setText(Utils.formatCurrency(avgPending, mCur));
         } catch (Exception mie) {
             Log.e(Constants.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
         }
@@ -329,6 +337,7 @@ public class MinerActivity extends DrawerActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            walletTitleText.setText(String.format(MinerActivity.this.getString(R.string.wallet_stats_title), mPool.toString(), mCur.toString()));
             updateCurrentStats(last, mDbHelper, avg);
             NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), radioGroupChartGranularity.getCheckedRadioButtonId());
             NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
