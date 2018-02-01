@@ -247,7 +247,8 @@ public class MainActivity extends DrawerActivity {
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
         //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
-        return "http://"+ mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.HOME_STATS_URL;
+        PoolEnum puil = PoolEnum.valueOf(mPool);
+        return puil.getTransportProtocolBase()+ mCur + "." + puil.getWebRoot() + Constants.HOME_STATS_URL;
     }
 
     /**

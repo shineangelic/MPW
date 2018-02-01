@@ -86,7 +86,7 @@ public class BlocksActivity extends DrawerActivity {
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
-        issueRefresh(mDbHelper, builder);
+        issueRefresh(builder);
     }
 
     @Override
@@ -112,10 +112,10 @@ public class BlocksActivity extends DrawerActivity {
         Utils.fillEthereumStats(this, mDbHelper, navigationView,mPool);
     }
 
-    private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
+    private void issueRefresh(final GsonBuilder builder) {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                "http://"+ mCur.name()+"."+mPool.getWebRoot() + BLOCKS_URL, null,
+                mPool.getTransportProtocolBase()+ mCur.name()+"."+mPool.getWebRoot() + BLOCKS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override

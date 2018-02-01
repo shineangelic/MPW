@@ -51,8 +51,6 @@ public class PaymentsActivity extends DrawerActivity {
     private TextView textViewWalletValue;
     private LineView paymentsChart;
     private TextView textViewPaymentsTitle;
-    private PoolEnum mPool;
-    private CurrencyEnum mCur;
 
 
     @Override
@@ -98,11 +96,11 @@ public class PaymentsActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_payment);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
-        issueRefresh(mDbHelper, builder, "http://" +mCur.name()+"."+mPool.getWebRoot()+Constants.MINER_STATS_URL + minerAddr);
+        issueRefresh(mDbHelper, builder, mPool.getTransportProtocolBase() +mCur.name()+"."+mPool.getWebRoot()+Constants.MINER_STATS_URL + minerAddr);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -123,7 +121,7 @@ public class PaymentsActivity extends DrawerActivity {
                             drawPaymentsTable(retrieved);
                             //la seguente inverte ordine lista
                             NoobChartUtils.drawPaymentsHistory(paymentsChart, retrieved);
-                            textViewPaymentsTitle.setText(String.format(getString(R.string.paid_out), mPool.toString()));
+                            textViewPaymentsTitle.setText(String.format(getString(R.string.paid_out), mPool.toString()) + " "+retrieved.getPayments().size()+" times");
                         }else{
                             textViewPaymentsTitle.setText("No payment Yet");
                         }

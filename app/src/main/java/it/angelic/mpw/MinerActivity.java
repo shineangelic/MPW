@@ -86,7 +86,7 @@ public class MinerActivity extends DrawerActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
-        return "http://" + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.MINER_STATS_URL;
+        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.MINER_STATS_URL;
     }
 
     @Override

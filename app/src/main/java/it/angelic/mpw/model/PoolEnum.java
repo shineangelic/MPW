@@ -9,12 +9,12 @@ import it.angelic.mpw.Constants;
  */
 
 public enum PoolEnum {
-    NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com", new ArrayList<CurrencyEnum>() {{
+    NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
     }}),
 
-    CRYPTOPOOL("CryptoPool Network", "cryptopool.network", new ArrayList<CurrencyEnum>() {{
+    CRYPTOPOOL("CryptoPool Network", "cryptopool.network",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.MUSIC);
@@ -22,7 +22,7 @@ public enum PoolEnum {
         add(CurrencyEnum.UBQ);
     }}),
 
-    VICPOOL("Hashing Party", "hashing.party", new ArrayList<CurrencyEnum>() {{
+    VICPOOL("Hashing Party", "hashing.party",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.UBQ);
@@ -31,11 +31,22 @@ public enum PoolEnum {
     }});
     private String friendlyName;
     private String webRoot;
+
+    public Boolean getHttpsOnly() {
+        return httpsOnly;
+    }
+
+    public String getTransportProtocolBase() {
+        return httpsOnly?"https://":"http://";
+    }
+
+    private Boolean httpsOnly;
     private ArrayList<CurrencyEnum> supportedCurrencies;
-    private PoolEnum(String friendlyName, String wr, ArrayList sfp) {
+    private PoolEnum(String friendlyName, String wr,Boolean https, ArrayList sfp) {
         this.friendlyName = friendlyName;
         this.webRoot = wr;
         supportedCurrencies = sfp;
+        httpsOnly = https;
     }
 
     public String getWebRoot() {
