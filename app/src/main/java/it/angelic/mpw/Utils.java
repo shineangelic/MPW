@@ -197,7 +197,7 @@ class Utils {
 
     }
 
-    public static void fillEthereumStats(Context ctx, NoobPoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool) {
+    public static void fillEthereumStats(Context ctx, NoobPoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool, CurrencyEnum cur) {
 
         TextView eth = navigationView.findViewById(R.id.textViewEthValue);
         TextView ethC = navigationView.findViewById(R.id.textViewEthCourtesy);
@@ -215,9 +215,8 @@ class Utils {
             ethC.setVisibility(View.INVISIBLE);
         }
         try {
-            String val = settings.getString("ETHUSD", "---");
             Wallet last = mDbHelper.getLastWallet();
-            textViewCurbalance.setText("" + (last.getStats().getPaid() / 1000000000F) * Float.valueOf(val));
+            textViewCurbalance.setText(Utils.formatCurrency(last.getStats().getPaid() ,cur));
         }catch (Exception e){
             Log.e(TAG,"Errore aggiornamento eth paid panel: "+e.getMessage());
             textViewCurbalance.setVisibility(View.INVISIBLE);

@@ -45,7 +45,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import im.dacer.androidcharts.LineView;
-import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.PoolEnum;
@@ -86,7 +85,7 @@ public class MinerActivity extends DrawerActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
-        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.MINER_STATS_URL;
+        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.ACCOUNTS_STATS_URL;
     }
 
     @Override
@@ -148,13 +147,7 @@ public class MinerActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View headerLayout = navigationView.getHeaderView(0);
-        TextView poolT = headerLayout.findViewById(R.id.navTextPool);
-        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
-        poolT.setText(mPool.toString());
-        poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
-
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_miner), mPool);
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_miner), mPool, mCur);
 
     }
 

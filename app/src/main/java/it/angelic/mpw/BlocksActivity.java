@@ -1,13 +1,11 @@
 package it.angelic.mpw;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,10 +33,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.blocks.Block;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
@@ -57,14 +53,13 @@ public class BlocksActivity extends DrawerActivity {
     private TextView textViewBlockTimeStdDevValue;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blocks);
 
 
-        mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
+        mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
 
         textViewMaxBlockTimeValue = findViewById(R.id.textViewMaxBlockTimeValue);
@@ -109,13 +104,13 @@ public class BlocksActivity extends DrawerActivity {
         navigationViewInterna.setCheckedItem(R.id.nav_blocks);
         View headerLayout = navigationViewInterna.getHeaderView(0);
 
-        Utils.fillEthereumStats(this, mDbHelper, navigationView,mPool);
+        Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
     }
 
     private void issueRefresh(final GsonBuilder builder) {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                mPool.getTransportProtocolBase()+ mCur.name()+"."+mPool.getWebRoot() + BLOCKS_URL, null,
+                mPool.getTransportProtocolBase() + mCur.name() + "." + mPool.getWebRoot() + BLOCKS_URL, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -127,7 +122,7 @@ public class BlocksActivity extends DrawerActivity {
                                 Gson gson = builder.create();
                                 // Register an adapter to manage the date types as long values
                                 Block retrieved = gson.fromJson(response.toString(), Block.class);
-                                textViewBlocksTitle.setText(retrieved.getMaturedTotal() + " "+mCur.toString()+" "+"Blocks found on "+ mPool.toString());
+                                textViewBlocksTitle.setText(retrieved.getMaturedTotal() + " " + mCur.toString() + " " + "Blocks found on " + mPool.toString());
 
                                 Matured[] maturi = new Matured[retrieved.getMaturedTotal()];
 
@@ -135,7 +130,7 @@ public class BlocksActivity extends DrawerActivity {
                                 retrieved.getMatured().toArray(maturi);
 
                                 if (mAdapter == null) {
-                                    mAdapter = new BlockAdapter(maturi,mCur);
+                                    mAdapter = new BlockAdapter(maturi, mCur);
                                     mRecyclerView.setAdapter(mAdapter);
                                 }
                                 textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));

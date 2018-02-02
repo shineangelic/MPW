@@ -25,7 +25,7 @@
         android:textSize="10sp"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWhoPaid"
         android:layout_marginLeft="24dp" />
 
     <ImageView

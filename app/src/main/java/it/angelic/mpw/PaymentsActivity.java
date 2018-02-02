@@ -35,10 +35,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import im.dacer.androidcharts.LineView;
-import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -65,13 +63,13 @@ public class PaymentsActivity extends DrawerActivity {
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
 
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
         textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
-        textViewPaymentsTitle= (TextView) findViewById(R.id.textViewPaymentTitle);
+        textViewPaymentsTitle = (TextView) findViewById(R.id.textViewPaymentTitle);
         paymentsChart = (LineView) findViewById(R.id.lineViewPaymentss);
         textViewWalletValue.setText(minerAddr.toUpperCase());
         textViewWalletValue.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +87,7 @@ public class PaymentsActivity extends DrawerActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view),mPool);
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
     }
 
     @Override
@@ -99,8 +97,8 @@ public class PaymentsActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
-        issueRefresh(mDbHelper, builder, mPool.getTransportProtocolBase() +mCur.name()+"."+mPool.getWebRoot()+Constants.MINER_STATS_URL + minerAddr);
+        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        issueRefresh(mDbHelper, builder, mPool.getTransportProtocolBase() + mCur.name() + "." + mPool.getWebRoot() + Constants.ACCOUNTS_STATS_URL + minerAddr);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -121,8 +119,8 @@ public class PaymentsActivity extends DrawerActivity {
                             drawPaymentsTable(retrieved);
                             //la seguente inverte ordine lista
                             NoobChartUtils.drawPaymentsHistory(paymentsChart, retrieved);
-                            textViewPaymentsTitle.setText(String.format(getString(R.string.paid_out), mPool.toString()) + " "+retrieved.getPayments().size()+" times");
-                        }else{
+                            textViewPaymentsTitle.setText(String.format(getString(R.string.paid_out), mPool.toString()) + " " + retrieved.getPayments().size() + " times");
+                        } else {
                             textViewPaymentsTitle.setText("No payment Yet");
                         }
                     }
@@ -147,22 +145,22 @@ public class PaymentsActivity extends DrawerActivity {
         (row.findViewById(R.id.buttonPay)).setVisibility(View.INVISIBLE);
         minersTable.addView(row);
 
-            for (final Payment thispay : retrieved.getPayments()) {
-                //one row for each payment
-                TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
-                ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
-                ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatCurrency(thispay.getAmount(),mCur));
-                rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //mostra transazione pagamento
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse("https://etherscan.io/tx/" + thispay.getTx()));
-                        startActivity(i);
-                    }
-                });
-                minersTable.addView(rowt);
-            }
+        for (final Payment thispay : retrieved.getPayments()) {
+            //one row for each payment
+            TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
+            ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
+            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatCurrency(thispay.getAmount(), mCur));
+            rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //mostra transazione pagamento
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse("https://etherscan.io/tx/" + thispay.getTx()));
+                    startActivity(i);
+                }
+            });
+            minersTable.addView(rowt);
+        }
     }
 
 

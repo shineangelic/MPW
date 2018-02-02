@@ -24,7 +24,7 @@ public class WatchDogSetupReceiver extends BroadcastReceiver {
         Boolean synchActive = pref.getBoolean("pref_sync", false);
         Log.i(TAG, "NoobPool Watchdog action:" + intent.getAction());
         if (synchActive) {
-            Log.i(TAG + ":WDSetup", "LifeCheckerSetupReceiver.onReceive() called. Checking every:"+pref.getString("pref_sync_freq",""+AlarmManager.INTERVAL_HALF_HOUR)
+            Log.i(TAG, "LifeCheckerSetupReceiver.onReceive() called. Checking every:"+pref.getString("pref_sync_freq",""+AlarmManager.INTERVAL_HALF_HOUR)
                      + " Walletaddr: " + pref.getString("wallet_addr", null));
             AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(ctx, WatchDogEventReceiver.class); // explicit

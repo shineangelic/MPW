@@ -12,7 +12,8 @@ public class Constants {
     public static final String TAG = "MinerPoolWatcher";
     //SHARED PATHS
     public static final String HOME_STATS_URL = "/api/stats";
-    public static final String MINER_STATS_URL = "/api/accounts/";
+    public static final String MINERS_STATS_URL = "/api/miners";
+    public static final String ACCOUNTS_STATS_URL = "/api/accounts/";
     public static final String BLOCKS_URL = "/api/blocks";
 
     public static final String BASE_WEBSITE_URL = "http://www.";

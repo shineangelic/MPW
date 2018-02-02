@@ -53,7 +53,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context ctx, final Intent intent) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         Log.i(Constants.TAG, "Miner Pool Watcher Service call:" + MainActivity.getHomeStatsURL(ctx));
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ctx, mPool, mCur);
@@ -86,7 +86,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         if (notifyBlock
                                 &&
                                 ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
-                            sendBlockNotification(ctx, "NoobPool has found a new block");
+                            sendBlockNotification(ctx, "NoobPool has found a new block", mPool);
                         }
 
                     }
@@ -117,7 +117,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             //controllo se manca qualcuno
                             if (notifyOffline && ultimi.keySet().size() >= LAST_TWO) {
                                 if (ultimi.get(ultimi.firstKey()).getWorkersOnline() < ultimi.get(ultimi.get(1)).getWorkersOnline()) {
-                                    sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline());
+                                    sendOfflineNotification(ctx, "A Worker has gone OFFLINE. Online Workers: " + ultimi.get(ultimi.firstKey()).getWorkersOnline(), mPool);
                                 } else if (ultimi.get(ultimi.firstKey()).getWorkersOnline() > ultimi.get(ultimi.get(1)).getWorkersOnline()) {
                                     //togli notifiche di offline
                                     mNotifyMgr.cancel(NOTIFICATION_MINER_OFFLINE);
@@ -144,7 +144,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
     }
 
-    private void sendOfflineNotification(Context ctx, String contentText) {
+    private void sendOfflineNotification(Context ctx, String contentText, PoolEnum pool) {
         Intent resultIntent = new Intent(ctx, MinerActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
@@ -159,7 +159,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.ic_money_off_black_24dp)
-                        .setContentTitle("One of your workers went offline")
+                        .setContentTitle("One of your "+pool.toString() +" workers went offline")
                         .setCategory(CATEGORY_SERVICE)
                         .setAutoCancel(true)
                         .setPriority(PRIORITY_LOW)
@@ -180,7 +180,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
 
     }
 
-    private void sendBlockNotification(Context ctx, String contentText) {
+    private void sendBlockNotification(Context ctx, String contentText, PoolEnum pool) {
         Intent resultIntent = new Intent(ctx, BlocksActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
@@ -195,7 +195,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.ic_insert_link_chain_24dp)
-                        .setContentTitle("NoobPool Block Found")
+                        .setContentTitle("Block Found on " + pool.toString())
                         .setCategory(CATEGORY_PROGRESS)
                         .setAutoCancel(true)
                         .setContentText(contentText);

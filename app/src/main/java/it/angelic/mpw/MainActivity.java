@@ -40,7 +40,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import im.dacer.androidcharts.LineView;
-import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.PoolEnum;
@@ -86,13 +85,22 @@ public class MainActivity extends DrawerActivity {
         return datediffFirst / (lastHit.getMaturedTotal() - 1);
     }
 
+    public static String getHomeStatsURL(Context ctx) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
+        PoolEnum puil = PoolEnum.valueOf(mPool);
+        return puil.getTransportProtocolBase() + mCur + "." + puil.getWebRoot() + Constants.HOME_STATS_URL;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        mDbHelper = new NoobPoolDbHelper(this,mPool ,mCur);
+        mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -153,7 +161,7 @@ public class MainActivity extends DrawerActivity {
         toggle.syncState();
 
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view),mPool);
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
     }
 
     @Override
@@ -162,7 +170,7 @@ public class MainActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);
         //importante refresh
-        mDbHelper = new NoobPoolDbHelper(this,mPool,mCur);
+        mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         issueRefresh(mDbHelper, builder);
     }
 
@@ -242,15 +250,6 @@ public class MainActivity extends DrawerActivity {
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonEtherObjReq);
     }
 
-    public static String getHomeStatsURL(Context ctx) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String mPool = prefs.getString("poolEnum", "");
-        String mCur = prefs.getString("curEnum", "");
-        //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
-        PoolEnum puil = PoolEnum.valueOf(mPool);
-        return puil.getTransportProtocolBase()+ mCur + "." + puil.getWebRoot() + Constants.HOME_STATS_URL;
-    }
-
     /**
      * Update header with last persisted DB row
      */
@@ -273,7 +272,7 @@ public class MainActivity extends DrawerActivity {
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
-            noobText.setText(String.format(getString(R.string.tot_block_found),mPool.toString(), lastHit.getMaturedTotal(), mCur.name()));
+            noobText.setText(String.format(getString(R.string.tot_block_found), mPool.toString(), lastHit.getMaturedTotal(), mCur.name()));
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();
