@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_noobpool_launcher"
@@ -44,8 +43,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MinerActivity"
-            android:label="Wallet/Workers"
+            android:name=".WalletActivity"
+            android:label="Miners"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -78,6 +77,10 @@
         </activity>
         <activity
             android:name=".BlocksActivity"
+            android:label="@string/title_activity_blocks"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MinersActivity"
             android:label="@string/title_activity_blocks"
             android:theme="@style/AppTheme.NoActionBar" />
 

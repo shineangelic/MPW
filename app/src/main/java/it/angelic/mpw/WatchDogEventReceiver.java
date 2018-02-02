@@ -102,7 +102,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         if (minerAddr != null) {
             Log.i(Constants.TAG, "refreshing wallet " + minerAddr + " notify: " + notifyBlock);
             JsonObjectRequest jsonObjReqWallet = new JsonObjectRequest(Request.Method.GET,
-                    MinerActivity.getMinerStatsUrl(ctx) + minerAddr, null,
+                    WalletActivity.getMinerStatsUrl(ctx) + minerAddr, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -145,7 +145,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
     }
 
     private void sendOfflineNotification(Context ctx, String contentText, PoolEnum pool) {
-        Intent resultIntent = new Intent(ctx, MinerActivity.class);
+        Intent resultIntent = new Intent(ctx, WalletActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
         PendingIntent resultPendingIntent =

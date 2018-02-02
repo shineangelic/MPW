@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="20dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="it.angelic.mpw.MinerActivity"
+    tools:context="it.angelic.mpw.MinersActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp"
     tools:showIn="@layout/app_bar_miner">

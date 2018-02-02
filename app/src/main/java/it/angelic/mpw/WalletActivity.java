@@ -54,7 +54,7 @@ import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 import it.angelic.mpw.model.jsonpojos.wallet.Worker;
 
-public class MinerActivity extends DrawerActivity {
+public class WalletActivity extends DrawerActivity {
 
     private static final SimpleDateFormat yearFormatExtended = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
     private TextView walletValueText;
@@ -127,7 +127,7 @@ public class MinerActivity extends DrawerActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                issueRefresh(mDbHelper, builder, getMinerStatsUrl(MinerActivity.this) + minerAddr);
+                issueRefresh(mDbHelper, builder, getMinerStatsUrl(WalletActivity.this) + minerAddr);
             }
         });
 
@@ -202,18 +202,18 @@ public class MinerActivity extends DrawerActivity {
         TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayoutWorkers);
         minersTable.removeAllViews();
         //table header
-        TableRow row = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
+        TableRow row = (TableRow) LayoutInflater.from(WalletActivity.this).inflate(R.layout.row_miner, null);
         (row.findViewById(R.id.buttonworkerOnline)).setVisibility(View.INVISIBLE);
         minersTable.addView(row);
         for (String workerName : retrieved.getWorkers().keySet()) {
             Worker worker = retrieved.getWorkers().get(workerName);
 
-            TableRow rowt = (TableRow) LayoutInflater.from(MinerActivity.this).inflate(R.layout.row_miner, null);
+            TableRow rowt = (TableRow) LayoutInflater.from(WalletActivity.this).inflate(R.layout.row_miner, null);
             ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(workerName);
             ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatHashrate(worker.getHr()));
             ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate3h)).setText(Utils.formatHashrate(worker.getHr2()));
             if (worker.getOffline()) {
-                (rowt.findViewById(R.id.buttonworkerOnline)).setBackgroundColor(ContextCompat.getColor(MinerActivity.this, R.color.colorAccent));
+                (rowt.findViewById(R.id.buttonworkerOnline)).setBackgroundColor(ContextCompat.getColor(WalletActivity.this, R.color.colorAccent));
             }
             Calendar workBeat = Calendar.getInstance();
             workBeat.setTime(worker.getLastBeat());
@@ -325,7 +325,7 @@ public class MinerActivity extends DrawerActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            mDbHelper = new NoobPoolDbHelper(MinerActivity.this, mPool, mCur);
+            mDbHelper = new NoobPoolDbHelper(WalletActivity.this, mPool, mCur);
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = mDbHelper.getLastWallet();
             avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());
@@ -334,7 +334,7 @@ public class MinerActivity extends DrawerActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            walletTitleText.setText(String.format(MinerActivity.this.getString(R.string.wallet_stats_title), mPool.toString(), mCur.toString()));
+            walletTitleText.setText(String.format(WalletActivity.this.getString(R.string.wallet_stats_title), mPool.toString(), mCur.toString()));
             updateCurrentStats(last, mDbHelper, avg);
             NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), radioGroupChartGranularity.getCheckedRadioButtonId());
             NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,

@@ -102,7 +102,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                             }
                         }).show();
             } else {
-                Intent miner = new Intent(this, MinerActivity.class);
+                Intent miner = new Intent(this, WalletActivity.class);
                 startActivity(miner);
             }
         } else if (id == R.id.nav_payment) {
@@ -139,6 +139,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             startActivity(opzioni);
         } else if (id == R.id.nav_blocks) {
             Intent bb = new Intent(DrawerActivity.this, BlocksActivity.class);
+            startActivity(bb);
+        } else if (id == R.id.nav_miners) {
+            Intent bb = new Intent(DrawerActivity.this, MinersActivity.class);
             startActivity(bb);
         } else {
             Snackbar.make(findViewById(android.R.id.content), "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
