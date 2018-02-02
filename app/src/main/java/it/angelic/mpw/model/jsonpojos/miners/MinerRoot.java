@@ -8,16 +8,16 @@ import it.angelic.mpw.model.jsonpojos.wallet.Worker;
 
 public class MinerRoot {
 
-    private Integer hashrate;
+    private Long hashrate;
     private HashMap<String, Miner> miners;
     private Integer minersTotal;
     private Calendar now;
 
-    public Integer getHashrate() {
+    public Long getHashrate() {
         return hashrate;
     }
 
-    public void setHashrate(Integer hashrate) {
+    public void setHashrate(Long hashrate) {
         this.hashrate = hashrate;
     }
 
