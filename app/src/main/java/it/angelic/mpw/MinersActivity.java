@@ -54,7 +54,6 @@ public class MinersActivity extends DrawerActivity {
     private NoobPoolDbHelper mDbHelper;
     private TextView textViewHighestHashrateValue;
     private TextView textViewMostPaidMinerValue;
-    private TextView textViewhighActiveWorkersValue;
     private TextView textViewolde;
     private GsonBuilder builder;
     private TextView textViewOldestMinerValue;
@@ -129,7 +128,6 @@ public class MinersActivity extends DrawerActivity {
         textViewHighestHashrateValue = findViewById(R.id.textViewHighestHashrateValue);
 
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
-        textViewhighActiveWorkersValue = findViewById(R.id.textViewhighActiveWorkersValue);
         textViewOldestMinerValue = findViewById(R.id.textViewOldestMinerValue);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.miners_recycler_view);
@@ -210,9 +208,7 @@ public class MinersActivity extends DrawerActivity {
         HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
         long hihr = 0;
         Long hiPaid = new Long(0);
-        Long hiMinersNum = new Long(0);
         Integer hiPaidIdx = null;
-        Integer hiMinersNumIdx = null;
         Date oldestDt = new Date();
         Integer minDateSeeIdx = null;
         int hihrIdx = 0;
@@ -233,11 +229,6 @@ public class MinersActivity extends DrawerActivity {
             if (minp > hiPaid) {
                 hiPaid = minp;
                 hiPaidIdx = cnt;
-            }
-            long hiMin = minerDbrec.getTopMiners() == null ? 0 : minerDbrec.getTopMiners();
-            if (hiMin > hiMinersNum) {
-                hiMinersNum = hiMin;
-                hiMinersNumIdx = cnt;
             }
             Date minDateSee = minerDbrec.getFirstSeen();
             if (minDateSee.before(oldestDt)) {
@@ -270,17 +261,6 @@ public class MinersActivity extends DrawerActivity {
         textViewHighestHashrateValue.setText(Utils.formatBigNumber(hihr));
 
         //Based on these final copied values, we scroll to winner
-        final Integer hiMinersNumIdxCopy = hiMinersNumIdx;
-        if (hiMinersNumIdxCopy != null) {
-            textViewhighActiveWorkersValue.setText(""+hiMinersNumIdxCopy);
-            ImageButton link = findViewById(R.id.textViewhighActiveWorkersLink);
-            link.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hiMinersNumIdxCopy, 20);
-                }
-            });
-        }
         final Integer hiPaidIdxCopy = hiPaidIdx;
         if (hiPaidIdx != null) {
             textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid, mCur));

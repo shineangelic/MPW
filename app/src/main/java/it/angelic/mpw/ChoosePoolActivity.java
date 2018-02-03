@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -27,6 +26,7 @@ import com.google.android.gms.ads.MobileAds;
 import java.net.URL;
 import java.net.URLConnection;
 
+import fr.ganfra.materialspinner.MaterialSpinner;
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
@@ -45,8 +45,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
     private TextView mWalletView;
     private View mProgressView;
     private View mLoginFormView;
-    private Spinner poolSpinner;
-    private Spinner currencySpinner;
+    private MaterialSpinner poolSpinner;
+    private MaterialSpinner currencySpinner;
     private CheckBox skipIntro;
 
     @Override
@@ -59,7 +59,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         // populateAutoComplete();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
 
-        poolSpinner = (Spinner) findViewById(R.id.spinnerPoolChooser);
+        poolSpinner = findViewById(R.id.spinnerPoolChooser);
 
         skipIntro = (CheckBox) findViewById(R.id.skipIntro);
         skipIntro.setChecked(prefs.getBoolean("skipIntro", false));
@@ -75,27 +75,28 @@ public class ChoosePoolActivity extends AppCompatActivity {
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
 
         ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<PoolEnum>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
-        poolSpinnerAdapter.setDropDownViewResource(R.layout.spinner);
+        poolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         poolSpinner.setAdapter(poolSpinnerAdapter);
 
 
-        currencySpinner = (Spinner) findViewById(R.id.spinnerCurrencyChooser);
+        currencySpinner = findViewById(R.id.spinnerCurrencyChooser);
         ArrayAdapter curAdapter = new ArrayAdapter<CurrencyEnum>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
-        curAdapter.setDropDownViewResource(R.layout.spinner);
+        curAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinner.setAdapter(curAdapter);
 
         poolSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, PoolEnum.values()[position].getSupportedCurrencies());
-                arra.setDropDownViewResource(R.layout.spinner);
+                ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item,
+                        ((PoolEnum) poolSpinner.getAdapter().getItem(position)).getSupportedCurrencies());
+               arra.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 currencySpinner.setAdapter(arra);
                 String prevWallet = prefs.getString("wallet_addr_"
                         + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name()
                         + "_"
-                        + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), "");
+                        + ((CurrencyEnum) currencySpinner.getAdapter().getItem(currencySpinner.getSelectedItemPosition())).name(), "");
                 mWalletView.setText(prevWallet);
-                Log.i(Constants.TAG, "poolSpinner list: " + (PoolEnum) poolSpinner.getSelectedItem());
+                Log.i(Constants.TAG, "poolSpinner list: " + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name());
             }
 
             @Override
@@ -109,12 +110,12 @@ public class ChoosePoolActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //read saved wallet from pref
                 String xCode = "wallet_addr_"
-                        + ((PoolEnum) poolSpinner.getSelectedItem()).name()
+                        + ((PoolEnum) poolSpinner.getItemAtPosition(poolSpinner.getSelectedItemPosition())).name()
                         + "_"
                         + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
                 mWalletView.setText(prevWallet.length() == 0 ? getString(R.string.no_wallet_set) : prevWallet);
-                Log.i(Constants.TAG, "currencySpinner list: " + (CurrencyEnum) currencySpinner.getSelectedItem());
+                Log.i(Constants.TAG, "currencySpinner list: " + (CurrencyEnum) currencySpinner.getItemAtPosition(poolSpinner.getSelectedItemPosition()));
             }
 
             @Override
@@ -164,6 +165,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
             for (int u = 0; u < poolSpinner.getAdapter().getCount(); u++) {
                 if (prevPool.equalsIgnoreCase(((PoolEnum) poolSpinner.getItemAtPosition(u)).name())) {
                     poolSpinner.setSelection(u);
+                    currencySpinner.setSelection(0);
                     Log.i(Constants.TAG, "Restoring previous pool: " + (PoolEnum) poolSpinner.getSelectedItem());
                     break;
                 }
@@ -174,16 +176,18 @@ public class ChoosePoolActivity extends AppCompatActivity {
             poolSpinner.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    PoolEnum pp = (PoolEnum) poolSpinner.getSelectedItem();
-                    ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, pp.getSupportedCurrencies());
-                    arra.setDropDownViewResource(R.layout.spinner);
-                    currencySpinner.setAdapter(arra);
-                    currencySpinner.invalidate();
+                    PoolEnum pp = (PoolEnum) poolSpinner.getItemAtPosition(poolSpinner.getSelectedItemPosition());
+                    if (pp != null) {
+                        ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, pp.getSupportedCurrencies());
+                        arra.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        currencySpinner.setAdapter(arra);
+                        currencySpinner.invalidate();
 
-                    for (int u = 0; u < currencySpinner.getAdapter().getCount(); u++) {
-                        if (prevCur.equalsIgnoreCase(((CurrencyEnum) currencySpinner.getItemAtPosition(u)).name())) {
-                            currencySpinner.setSelection(u);
-                            Log.i(Constants.TAG, "Restoring previous cur: " + (CurrencyEnum) currencySpinner.getSelectedItem());
+                        for (int u = 0; u < currencySpinner.getAdapter().getCount(); u++) {
+                            if (prevCur.equalsIgnoreCase(((CurrencyEnum) currencySpinner.getItemAtPosition(u)).name())) {
+                                currencySpinner.setSelection(u);
+                                Log.i(Constants.TAG, "Restoring previous cur: " + (CurrencyEnum) currencySpinner.getSelectedItem());
+                            }
                         }
                     }
                 }
@@ -230,7 +234,9 @@ public class ChoosePoolActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, (PoolEnum) poolSpinner.getSelectedItem(), (CurrencyEnum) currencySpinner.getSelectedItem());
+            mAuthTask = new UserLoginTask(email,
+                    (PoolEnum) poolSpinner.getItemAtPosition(poolSpinner.getSelectedItemPosition()),
+                    (CurrencyEnum) currencySpinner.getItemAtPosition(currencySpinner.getSelectedItemPosition()));
             mAuthTask.execute((Void) null);
         }
     }

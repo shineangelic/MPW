@@ -12,7 +12,6 @@
     tools:layout_editor_absoluteY="81dp"
     tools:showIn="@layout/app_bar_wallet">
 
-
     <TextView
         android:id="@+id/textViewWalletTitle"
         android:layout_width="wrap_content"
@@ -21,19 +20,19 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/wallet_stats_title"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="frase molto lunga e scapocchiosa nervi eijvp kd palle" />
+        tools:text="@string/wallet_stats_title" />
 
     <TextView
         android:id="@+id/WalletChartsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         android:text="Wallet Charts"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintHorizontal_bias="0.557"
@@ -41,8 +40,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableLayoutWorkers"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        android:layout_marginTop="0dp" />
+        tools:layout_constraintRight_creator="1" />
 
     <TextView
         android:id="@+id/textViewOnlineWorkersTitle"
@@ -184,15 +182,15 @@
         android:id="@+id/hashrateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:text="Hashrate History"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"  />
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollRateView"
@@ -204,6 +202,7 @@
         app:layout_constraintTop_toBottomOf="@+id/hashrateText"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1">
+
         <view
             android:id="@+id/line_view_hrate"
             class="im.dacer.androidcharts.LineView"
@@ -215,10 +214,10 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="24dp"
-        tools:text="PLACEHOLDER"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollRateView"/>
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollRateView"
+        tools:text="PLACEHOLDER" />
 
     <TextView
         android:id="@+id/textViewWorkersTitle"
@@ -243,7 +242,7 @@
         android:layout_marginRight="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWorkersTitle" >
+        app:layout_constraintTop_toBottomOf="@+id/textViewWorkersTitle">
 
     </TableLayout>
 
