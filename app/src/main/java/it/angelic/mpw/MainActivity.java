@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.db.NoobPoolQueryGrouper;
 import it.angelic.mpw.model.jsonpojos.etherscan.EtherscanStats;
@@ -136,6 +138,8 @@ public class MainActivity extends DrawerActivity {
         //i grafici hanno controlli globali
         radioGroupChartGranularity = (RadioGroup) findViewById(R.id.radioDifficultyGranularity);
         radioGroupBackTo = (RadioGroup) findViewById(R.id.radioBackto);
+        final RadioButton radioDay = findViewById(R.id.radioButtonDay);
+        final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
 
         final RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -143,9 +147,14 @@ public class MainActivity extends DrawerActivity {
                 radioGroupBackTo.post(new Runnable() {
                     @Override
                     public void run() {
+                        GranularityEnum granoEnum=  GranularityEnum.HOUR;
+                        if (radioDay.isChecked())
+                            granoEnum=  GranularityEnum.DAY;
+                        else if (radioMin.isChecked())
+                            granoEnum=  GranularityEnum.MINUTE;
                         LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-                        NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), (LineView) findViewById(R.id.line_view_difficulty), radioGroupChartGranularity.getCheckedRadioButtonId());
-                        NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), (LineView) findViewById(R.id.line_view_hashrate), radioGroupChartGranularity.getCheckedRadioButtonId());
+                        NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, NoobPoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
+                        NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
                     }
                 });
             }
@@ -193,14 +202,22 @@ public class MainActivity extends DrawerActivity {
                                 //dati semi grezzi
                                 storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
                                 updateCurrentStats();
+                                final RadioButton radioDay = findViewById(R.id.radioButtonDay);
+                                final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
+                                GranularityEnum granoEnum=  GranularityEnum.HOUR;
+                                if (radioDay.isChecked())
+                                    granoEnum=  GranularityEnum.DAY;
+                                else if (radioMin.isChecked())
+                                    granoEnum=  GranularityEnum.MINUTE;
 
                                 NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
-                                        NoobPoolQueryGrouper.groupAvgQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()),
-                                        (LineView) findViewById(R.id.line_view_difficulty), radioGroupChartGranularity.getCheckedRadioButtonId());
+                                        NoobPoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
+                                        (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
+
                                 NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia,
-                                        radioGroupChartGranularity.getCheckedRadioButtonId()),
+                                        granoEnum),
                                         (LineView) findViewById(R.id.line_view_hashrate),
-                                        radioGroupChartGranularity.getCheckedRadioButtonId());
+                                        granoEnum);
                             }
                         });
                     }

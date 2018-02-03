@@ -52,18 +52,7 @@
                 android:layout_gravity="center"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-            <TextView
-                android:id="@+id/spinnerPoolInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="12dp"
-                android:layout_margin="4dp"
-                android:padding="2dp"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="Choose your pool: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
             <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/spinnerPoolChooser"
                 android:layout_width="match_parent"
@@ -72,18 +61,6 @@
                 android:layout_weight="1"
                 android:paddingVertical="12dp"  />
 
-            <TextView
-                android:id="@+id/spinnerCurrencyInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="12dp"
-                android:layout_margin="4dp"
-                android:padding="2dp"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="Currency: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/spinnerCurrencyChooser"
                 android:layout_width="match_parent"

@@ -16,7 +16,7 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 public class NoobPoolQueryGrouper {
 
 
-    public static LinkedMap<Date, HomeStats> groupAvgQueryResult(LinkedMap<Date, HomeStats> queryResult, int radioCheckedId) {
+    public static LinkedMap<Date, HomeStats> groupAvgQueryResult(LinkedMap<Date, HomeStats> queryResult, GranularityEnum radioCheckedId) {
 
         if (queryResult.isEmpty())
             return queryResult;
@@ -28,12 +28,12 @@ public class NoobPoolQueryGrouper {
         firstDateOut.setTime(firstDate.getTime());
         int calendarGranularity = Calendar.DATE;
         switch (radioCheckedId) {
-            case R.id.radioButtonDay:
+            case DAY:
                 break;
-            case R.id.radioButtonHours:
+            case HOUR:
                 calendarGranularity = Calendar.HOUR;
                 break;
-            case R.id.radioButtonMinutes:
+            case MINUTE:
                 calendarGranularity = Calendar.MINUTE;
                 break;
         }

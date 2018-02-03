@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import im.dacer.androidcharts.LineView;
+import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -25,7 +26,7 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
  */
 
 class NoobChartUtils {
-    static void drawHashrateHistory(TextView titleTextView, LinkedMap<Date, HomeStats> storia, LineView chart, int grane) {
+    static void drawHashrateHistory(TextView titleTextView, LinkedMap<Date, HomeStats> storia, LineView chart, GranularityEnum grane) {
         SummaryStatistics stats = new SummaryStatistics();
         ArrayList<Float> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
@@ -54,7 +55,7 @@ class NoobChartUtils {
         chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
-    public static void drawWalletHashRateHistory(TextView titleTextView, LineView chart, LinkedMap<Date, Wallet> dateWalletLinkedMap, int grane) {
+    public static void drawWalletHashRateHistory(TextView titleTextView, LineView chart, LinkedMap<Date, Wallet> dateWalletLinkedMap, GranularityEnum grane) {
         SummaryStatistics stats = new SummaryStatistics();
         ArrayList<Float> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
@@ -83,19 +84,19 @@ class NoobChartUtils {
         chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
-    private static String getLabelFormat(int radioId, Date date2) {
+    private static String getLabelFormat(GranularityEnum radioId, Date date2) {
         switch (radioId) {
-            case R.id.radioButtonMinutes:
-                return MainActivity.yearFormat.format(date2);
-            case R.id.radioButtonHours:
-                return MainActivity.hourFormat.format(date2);
-            case R.id.radioButtonDay:
+            case DAY:
                 return MainActivity.dayFormat.format(date2);
+            case HOUR:
+                return MainActivity.hourFormat.format(date2);
+            case MINUTE:
+                return MainActivity.yearFormat.format(date2);
         }
         return date2.toString();
     }
 
-    static void drawDifficultyHistory(TextView textViewNetDiffTitle, LinkedMap<Date, HomeStats> storia, LineView chart, int grane) {
+    static void drawDifficultyHistory(TextView textViewNetDiffTitle, LinkedMap<Date, HomeStats> storia, LineView chart, GranularityEnum grane) {
         ArrayList<Integer> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         Set<Date> dates = storia.keySet();
@@ -122,7 +123,7 @@ class NoobChartUtils {
         chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
-    static void drawWorkersHistory(LineView chart, LinkedMap<Date, Wallet> storia, int checkedRadioButtonId) {
+    static void drawWorkersHistory(LineView chart, LinkedMap<Date, Wallet> storia, GranularityEnum checkedRadioButtonId) {
         ArrayList<Integer> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         Set<Date> dates = storia.keySet();

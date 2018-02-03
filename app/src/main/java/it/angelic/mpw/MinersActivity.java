@@ -282,7 +282,7 @@ public class MinersActivity extends DrawerActivity {
             link.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mRecyclerView.smoothScrollToPosition(minDateSeeIdxCopy);
+                    ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(minDateSeeIdxCopy, 20);
                 }
             });
         }
@@ -292,7 +292,7 @@ public class MinersActivity extends DrawerActivity {
             @Override
             public void onClick(View view) {
                 // +1 per 'centrarlo
-                mRecyclerView.smoothScrollToPosition(hihrIdxCopy);
+                ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hihrIdxCopy, 20);
             }
         });
         return minerDbList;

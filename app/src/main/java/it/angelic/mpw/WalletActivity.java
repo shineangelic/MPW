@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -48,6 +49,7 @@ import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.db.NoobPoolQueryGrouper;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
@@ -330,11 +332,18 @@ public class WalletActivity extends DrawerActivity {
         protected void onPostExecute(String result) {
             walletTitleText.setText(String.format(WalletActivity.this.getString(R.string.wallet_stats_title), mPool.toString(), mCur.toString()));
             updateCurrentStats(last, mDbHelper, avg);
-            NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), radioGroupChartGranularity.getCheckedRadioButtonId());
+            final RadioButton radioDay = findViewById(R.id.radioButtonDay);
+            final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
+            GranularityEnum granoEnum=  GranularityEnum.HOUR;
+            if (radioDay.isChecked())
+                granoEnum=  GranularityEnum.DAY;
+            else if (radioMin.isChecked())
+                granoEnum=  GranularityEnum.MINUTE;
+            NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), granoEnum);
             NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
                     NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
                             radioGroupChartGranularity.getCheckedRadioButtonId()),
-                    radioGroupChartGranularity.getCheckedRadioButtonId());
+                    granoEnum);
             drawMinersTable(last);
             fab.setPressed(false);
         }

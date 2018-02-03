@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
@@ -48,7 +50,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        navigationView.setNavigationItemSelectedListener(this);
+       final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+         navigationView.setNavigationItemSelectedListener(this);
         //set proper pool info
         View headerLayout = navigationView.getHeaderView(0);
         ImageView poolLogo = headerLayout.findViewById(R.id.imageView);
@@ -56,6 +60,15 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
         TextView poolT = headerLayout.findViewById(R.id.navTextPool);
         TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
+        ImageView imageViewWrench = headerLayout.findViewById(R.id.imageViewWrench);
+        imageViewWrench.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.closeDrawers();
+                Intent miner = new Intent(DrawerActivity.this, SettingsActivity.class);
+                startActivity(miner);
+            }
+        });
         poolT.setText(mPool.toString());
         poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
 
