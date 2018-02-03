@@ -30,7 +30,7 @@ import static it.angelic.mpw.Constants.TAG;
 class Utils {
 
 
-    private static String formatHashrate(long bytes, String precision ) throws IllegalFormatException {
+    private static String formatHashrate(long bytes, String precision) throws IllegalFormatException {
 
         // Kilobyte Check
         float kilo = bytes / 1000f;
@@ -40,59 +40,60 @@ class Utils {
         float peta = tera / 1000f;
 
         // Determine which value to send back
-        if(peta > 1)
-            return String.format(Locale.getDefault(),precision + " P", peta);
+        if (peta > 1)
+            return String.format(Locale.getDefault(), precision + " P", peta);
         else if (tera > 1)
-            return String.format(Locale.getDefault(),precision + " T", tera);
-        else if(giga > 1)
-            return String.format(Locale.getDefault(),precision + " G", giga);
-        else if(mega > 1)
-            return String.format(Locale.getDefault(),precision + " M", mega);
-        else if(kilo > 1)
-            return String.format(Locale.getDefault(),precision + " K", kilo);
+            return String.format(Locale.getDefault(), precision + " T", tera);
+        else if (giga > 1)
+            return String.format(Locale.getDefault(), precision + " G", giga);
+        else if (mega > 1)
+            return String.format(Locale.getDefault(), precision + " M", mega);
+        else if (kilo > 1)
+            return String.format(Locale.getDefault(), precision + " K", kilo);
         else
             return bytes + " b";
 
     }
+
     /**
      * Condense a file size in bytes to its highest form (i.e. KB, MB, GB, etc)
      *
-     * @param bytes         the size in bytes to condense
-     * @param precision     the precision of the decimal place
-     * @return              the condensed file size
+     * @param bytes     the size in bytes to condense
+     * @param precision the precision of the decimal place
+     * @return the condensed file size
      */
-    private static String formatHashrate(long bytes, PrecisionEnum precision){
+    private static String formatHashrate(long bytes, PrecisionEnum precision) {
         return formatHashrate(bytes, precision.getFormat()) + "H";
     }
 
     /**
      * Condense a file size in bytes to its highest form (i.e. KB, MB, GB, etc)
      *
-     * @param bytes		the size in bytes
-     * @return			the condensed string
+     * @param bytes the size in bytes
+     * @return the condensed string
      */
-    public static String formatHashrate(long bytes){
+    public static String formatHashrate(long bytes) {
         return formatHashrate(bytes, PrecisionEnum.TWO_DIGIT);
     }
 
     /**
      * Same as above, without unit
      *
-     * @param bytes         the size in bytes to condense
-     * @param precision     the precision of the decimal place
-     * @return              the condensed file size
+     * @param bytes     the size in bytes to condense
+     * @param precision the precision of the decimal place
+     * @return the condensed file size
      */
-    private static String formatBigNumber(long bytes, PrecisionEnum precision){
+    private static String formatBigNumber(long bytes, PrecisionEnum precision) {
         return formatHashrate(bytes, precision.getFormat());
     }
 
     /**
      * Same as above, without unit
      *
-     * @param bytes		the size in bytes
-     * @return			the condensed string
+     * @param bytes the size in bytes
+     * @return the condensed string
      */
-    public static String formatBigNumber(long bytes){
+    public static String formatBigNumber(long bytes) {
         return formatBigNumber(bytes, PrecisionEnum.TWO_DIGIT);
     }
 
@@ -106,18 +107,24 @@ class Utils {
         float peta = tera / 1024f;
 
         // Determine which value to send back
-        if(peta > 1)
-            return  peta;
+        if (peta > 1)
+            return peta;
         else if (tera > 1)
-            return  Math.round(tera * 100.0) / 100.0f;
-        else if(giga > 1)
+            return Math.round(tera * 100.0) / 100.0f;
+        else if (giga > 1)
             return Math.round(giga * 100.0) / 100.0f;
-        else if(mega > 1)
+        else if (mega > 1)
             return Math.round(mega * 100.0) / 100.0f;
-        else if(kilo > 1)
+        else if (kilo > 1)
             return Math.round(kilo * 100.0) / 100.0f;
         else
             return Math.round(aLong * 100.0) / 100.0f;
+    }
+
+    public static String getTimeAgo(Date ref) {
+        Calendar cp = Calendar.getInstance();
+        cp.setTime(ref);
+        return getTimeAgo(cp);
     }
 
     /**
@@ -136,7 +143,7 @@ class Utils {
         return getScaledTime(diffSeconds) + " ago";
     }
 
-    public  static String getScaledTime(long diffSeconds) {
+    public static String getScaledTime(long diffSeconds) {
         if (diffSeconds < 120)
             return "" + diffSeconds + " sec.";
         long diffMinutes = diffSeconds / 60;
@@ -147,8 +154,9 @@ class Utils {
             return "" + diffHours + " hr.";
 
         float diffDays = diffHours / (24f);
-        return String.format(Locale.getDefault(),"%.2f", diffDays) +" days";
+        return String.format(Locale.getDefault(), "%.2f", diffDays) + " days";
     }
+
     /**
      * Indicates whether the specified app ins installed and can used as an intent. This
      * method checks the package manager for installed packages that can
@@ -157,25 +165,20 @@ class Utils {
      *
      * @param context The application's environment.
      * @param appName The name of the package you want to check
-     *
      * @return True if app is installed
      */
-    public static boolean isAppAvailable(Context context, String appName)
-    {
+    public static boolean isAppAvailable(Context context, String appName) {
         PackageManager pm = context.getPackageManager();
-        try
-        {
+        try {
             pm.getPackageInfo(appName, PackageManager.GET_ACTIVITIES);
             return true;
-        }
-        catch (PackageManager.NameNotFoundException e)
-        {
+        } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
 
     public static String formatCurrency(Long balance, CurrencyEnum cur) {
-        return String.format(Locale.getDefault(),PrecisionEnum.SIX_DIGIT.getFormat() + " " + cur.name(), (balance / 1000000000F));
+        return String.format(Locale.getDefault(), PrecisionEnum.SIX_DIGIT.getFormat() + " " + cur.name(), (balance / 1000000000F));
     }
 
     public static String formatEthCurrency(Long balance) {
@@ -190,7 +193,7 @@ class Utils {
             prefEditor.putString("ETHBTC", result.getEthbtc());
             prefEditor.putLong("ETHTIMESTAMP", result.getEthusd_timestamp().getTime());
         } catch (Exception ie) {
-            Log.e(TAG, "Impossible  to save Ether values: "+ ie.getMessage());
+            Log.e(TAG, "Impossible  to save Ether values: " + ie.getMessage());
         }
 
 
@@ -210,19 +213,20 @@ class Utils {
             eth.setText(val);
             ethC.setText("Courtesy of etherscan.io. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("ETHTIMESTAMP", 0))));
             textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out), activePool.toString()));
-        }catch (Exception e){
-            Log.e(TAG,"Error eth currency panel:"+e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Error eth currency panel:" + e.getMessage());
             eth.setVisibility(View.INVISIBLE);
             ethC.setVisibility(View.INVISIBLE);
         }
         try {
             Wallet last = mDbHelper.getLastWallet();
-            textViewCurbalance.setText(Utils.formatCurrency(last.getStats().getPaid() ,cur));
-        }catch (Exception e){
-            Log.e(TAG,"Errore aggiornamento eth paid panel: "+e.getMessage());
+            textViewCurbalance.setText(Utils.formatCurrency(last.getStats().getPaid(), cur));
+        } catch (Exception e) {
+            Log.e(TAG, "Errore aggiornamento eth paid panel: " + e.getMessage());
             textViewCurbalance.setVisibility(View.INVISIBLE);
         }
     }
+
     public static String getMinerStatsUrl(Context ctx) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String mPool = prefs.getString("poolEnum", "");

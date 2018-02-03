@@ -460,6 +460,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                     ret.setTopHr(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR)));
                     ret.setHashRate(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR)));
                     ret.setOffline(cursor.getInt(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE)) == 1);
+                    if (!cursor.isNull(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPMINERS)))
+                        ret.setTopMiners(cursor.getInt(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPMINERS)));
                     if (!cursor.isNull(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_PAID)))
                         ret.setPaid(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_PAID)));
                     if (!cursor.isNull(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_BLOCKS_FOUND)))

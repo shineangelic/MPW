@@ -21,6 +21,8 @@
         android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
         card_view:cardCornerRadius="4dp"
         card_view:cardUseCompatPadding="true"
         card_view:contentPadding="4dp"
@@ -52,7 +54,8 @@
                 android:contentDescription="payment icon"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+                card_view:srcCompat="@drawable/ic_account_balance_wallet_black_24dp"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/blockMinerAddress"

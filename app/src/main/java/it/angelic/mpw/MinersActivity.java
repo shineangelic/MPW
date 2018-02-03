@@ -55,14 +55,16 @@ public class MinersActivity extends DrawerActivity {
     private TextView textViewHighestHashrateValue;
     private TextView textViewMostPaidMinerValue;
     private TextView textViewhighActiveWorkersValue;
+    private TextView textViewolde;
     private GsonBuilder builder;
+    private TextView textViewOldestMinerValue;
 
 
     private void fetchRandomGuy() {
         ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList();
         //choose a random one if no empty
         if (miners.size() >0) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 5; i++) {
                 final MinerDBRecord rec = miners.get(new Random(new Date().getTime()).nextInt(miners.size()));
                 fetchMinerStats(rec);
             }
@@ -128,6 +130,7 @@ public class MinersActivity extends DrawerActivity {
 
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewhighActiveWorkersValue = findViewById(R.id.textViewhighActiveWorkersValue);
+        textViewOldestMinerValue = findViewById(R.id.textViewOldestMinerValue);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.miners_recycler_view);
 
@@ -159,7 +162,7 @@ public class MinersActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miners);
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_miners);
-        View headerLayout = navigationViewInterna.getHeaderView(0);
+
 
         Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
     }
@@ -179,7 +182,7 @@ public class MinersActivity extends DrawerActivity {
                                 Gson gson = builder.create();
                                 // Register an adapter to manage the date types as long values
                                 MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
-                                textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.toString() + " Miners on " + mPool.toString());
+                                textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.name() + " Miners on " + mPool.toString());
                                 //update DB from JSON
                                 ArrayList<MinerDBRecord> min = fillRecordStats(retrieved);
                                 mAdapter.setMinersArray(min);
@@ -207,7 +210,11 @@ public class MinersActivity extends DrawerActivity {
         HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
         long hihr = 0;
         Long hiPaid = new Long(0);
+        Long hiMinersNum = new Long(0);
         Integer hiPaidIdx = null;
+        Integer hiMinersNumIdx = null;
+        Date oldestDt = new Date();
+        Integer minDateSeeIdx = null;
         int hihrIdx = 0;
         int cnt = 0;
 
@@ -226,6 +233,16 @@ public class MinersActivity extends DrawerActivity {
             if (minp > hiPaid) {
                 hiPaid = minp;
                 hiPaidIdx = cnt;
+            }
+            long hiMin = minerDbrec.getTopMiners() == null ? 0 : minerDbrec.getTopMiners();
+            if (hiMin > hiMinersNum) {
+                hiMinersNum = hiMin;
+                hiMinersNumIdx = cnt;
+            }
+            Date minDateSee = minerDbrec.getFirstSeen();
+            if (minDateSee.before(oldestDt)) {
+                oldestDt = minDateSee;
+                minDateSeeIdx = cnt;
             }
             if (minatoriJSON.containsKey(minerDbrec.getAddress())) {
                 Miner fis = minatoriJSON.get(minerDbrec.getAddress());
@@ -253,6 +270,17 @@ public class MinersActivity extends DrawerActivity {
         textViewHighestHashrateValue.setText(Utils.formatBigNumber(hihr));
 
         //Based on these final copied values, we scroll to winner
+        final Integer hiMinersNumIdxCopy = hiMinersNumIdx;
+        if (hiMinersNumIdxCopy != null) {
+            textViewhighActiveWorkersValue.setText(""+hiMinersNumIdxCopy);
+            ImageButton link = findViewById(R.id.textViewhighActiveWorkersLink);
+            link.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hiMinersNumIdxCopy, 20);
+                }
+            });
+        }
         final Integer hiPaidIdxCopy = hiPaidIdx;
         if (hiPaidIdx != null) {
             textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid, mCur));
@@ -260,8 +288,19 @@ public class MinersActivity extends DrawerActivity {
             link.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // +1 per 'centrarlo
-                    mRecyclerView.scrollToPosition(hiPaidIdxCopy + 1);
+                   // mRecyclerView.smoothScrollToPosition(hiPaidIdxCopy );
+                    ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hiPaidIdxCopy, 20);
+                }
+            });
+        }
+        final Integer minDateSeeIdxCopy = minDateSeeIdx;
+        if (minDateSeeIdx != null) {
+            textViewOldestMinerValue.setText(Utils.getTimeAgo(oldestDt));
+            ImageButton link = findViewById(R.id.textViewOldestMinerLink);
+            link.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mRecyclerView.smoothScrollToPosition(minDateSeeIdxCopy);
                 }
             });
         }
@@ -271,7 +310,7 @@ public class MinersActivity extends DrawerActivity {
             @Override
             public void onClick(View view) {
                 // +1 per 'centrarlo
-                mRecyclerView.scrollToPosition(hihrIdxCopy + 1);
+                mRecyclerView.smoothScrollToPosition(hihrIdxCopy);
             }
         });
         return minerDbList;
