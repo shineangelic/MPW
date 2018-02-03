@@ -80,7 +80,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MinersActivity"
-            android:label="@string/title_activity_blocks"
+            android:label="@string/title_activity_miners"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>

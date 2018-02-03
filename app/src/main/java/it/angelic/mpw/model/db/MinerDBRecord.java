@@ -13,7 +13,7 @@ public class MinerDBRecord {
     private Boolean offline;
     private String address;
     private Long paid;
-    private Long topMiners;
+    private Integer topMiners;
     private Long topHr;
     private Long avgHr;
 
@@ -65,11 +65,11 @@ public class MinerDBRecord {
         this.paid = paid;
     }
 
-    public Long getTopMiners() {
+    public Integer getTopMiners() {
         return topMiners;
     }
 
-    public void setTopMiners(Long topMiners) {
+    public void setTopMiners(Integer topMiners) {
         this.topMiners = topMiners;
     }
 

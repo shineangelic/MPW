@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -24,26 +25,23 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
+import it.angelic.mpw.model.db.MinerDBRecord;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
-import it.angelic.mpw.model.jsonpojos.blocks.Block;
-import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
+import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
-import static it.angelic.mpw.Constants.BLOCKS_URL;
 import static it.angelic.mpw.Constants.MINERS_STATS_URL;
+import static it.angelic.mpw.WalletActivity.getMinerStatsUrl;
 
 public class MinersActivity extends DrawerActivity {
     private TextView textViewBlocksTitle;
@@ -51,11 +49,46 @@ public class MinersActivity extends DrawerActivity {
     private MinerAdapter mAdapter;
 
     private NoobPoolDbHelper mDbHelper;
-    private TextView textViewMaxBlockTimeValue;
-    private TextView textViewMinBlockTimeValue;
-    private TextView textViewMeanBlockTimeValue;
-    private TextView textViewBlockTimeStdDevValue;
+    private TextView textViewHighestHashrateValue;
+    private TextView textViewMostPaidMinerValue;
+    private TextView textViewhighActiveWorkersValue;
 
+
+    private void fetchRandomGuy() {
+        final MinerDBRecord rec = mDbHelper.getMinerList("1").get(0);
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                getMinerStatsUrl(this) + rec.getAddress(), null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(Constants.TAG, response.toString());
+
+                        Gson gson = new GsonBuilder().create();
+                        // Register an adapter to manage the date types as long values
+                        final Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
+
+                        if (retrieved.getWorkersTotal() > rec.getTopMiners())
+                            rec.setTopMiners(retrieved.getWorkersTotal());
+                        if (retrieved.getCurrentHashrate() > rec.getTopHr())
+                            rec.setTopHr(retrieved.getCurrentHashrate());
+                        rec.setPaid(retrieved.getStats().getPaid());
+                        rec.setAvgHr((rec.getAvgHr() + retrieved.getHashrate()) / 2);
+                        // aggiorna UI
+
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+            }
+        });
+
+        // Adding request to request queue
+        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +99,10 @@ public class MinersActivity extends DrawerActivity {
         mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
 
-        textViewMaxBlockTimeValue = findViewById(R.id.textViewMaxBlockTimeValue);
-        textViewMinBlockTimeValue = findViewById(R.id.textViewMinBlockTimeValue);
-        textViewMeanBlockTimeValue = findViewById(R.id.textViewMeanBlockTimeValue);
-        textViewBlockTimeStdDevValue = findViewById(R.id.textViewBlockTimeStdDevValue);
+        textViewHighestHashrateValue = findViewById(R.id.textViewHighestHashrateValue);
+
+        textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
+        textViewhighActiveWorkersValue = findViewById(R.id.textViewhighActiveWorkersValue);
 
         GsonBuilder builder = new GsonBuilder();
         mRecyclerView = (RecyclerView) findViewById(R.id.miners_recycler_view);
@@ -91,7 +124,7 @@ public class MinersActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        fetchRandomGuy();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -103,7 +136,7 @@ public class MinersActivity extends DrawerActivity {
         NavigationView navigationViewInterna = (NavigationView) findViewById(R.id.navigation_view);
         navigationViewInterna.setNavigationItemSelectedListener(this);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_blocks);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miners);
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_miners);
         View headerLayout = navigationViewInterna.getHeaderView(0);
@@ -128,29 +161,64 @@ public class MinersActivity extends DrawerActivity {
                                 MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
                                 textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.toString() + " Miners on " + mPool.toString());
 
-                                HashMap<String, Miner> minatori = retrieved.getMiners();
-                                Miner[] maturi = new Miner[minatori.values().size()];
+                                HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
+                                //Miner[] maturi = new Miner[minatori.values().size()];
+                                long hihr=0,hiPaid=0,getPaidIdx = 0;
+                                int hihrIdx = 0;
+                                int cnt = 0;
 
-                                minatori.values().toArray(maturi);
-                                for (String minK : minatori.keySet()){
+                                //minatori.values().toArray(maturi);
+
+                                ArrayList<MinerDBRecord> minerDbList = mDbHelper.getMinerList(null);
+                                for (MinerDBRecord minK : minerDbList) {
+
+                                    if (minK.getHashRate() > hihr) {
+                                        hihr = minK.getHashRate();
+                                        hihrIdx = cnt;
+                                    }
+                                    if (minK.getPaid() > hiPaid) {
+                                        hiPaid = minK.getPaid();
+                                        getPaidIdx = cnt;
+                                    }
+                                    if (minatoriJSON.containsKey(minK.getAddress())) {
+                                        //aggiornalo sul DB
+                                        mDbHelper.createOrUpdateMiner(minatoriJSON.get(minK));
+                                        //alla fine lo tolgo
+                                        minatoriJSON.remove(minK.getAddress());
+                                    }
+                                    cnt++;
+                                }
+                                //aggiungo i rimanenti, verranno visualizzati alla prox
+                                for (String minK : minatoriJSON.keySet()) {
                                     //ricopio address
-                                    minatori.get(minK).setAddress(minK.toUpperCase());
+                                    minatoriJSON.get(minK).setAddress(minK.toUpperCase());
                                     //aggiorno su DB
-                                    mDbHelper.createOrUpdateMiner(minatori.get(minK));
+                                    mDbHelper.createOrUpdateMiner(minatoriJSON.get(minK));
                                 }
 
                                 if (mAdapter == null) {
-                                    mAdapter = new MinerAdapter(mDbHelper.getMinerList(), mPool);
+                                    mAdapter = new MinerAdapter(minerDbList, mPool);
                                     mRecyclerView.setAdapter(mAdapter);
                                 }
+                                textViewHighestHashrateValue.setText(Utils.formatBigNumber(hihr));
+                                textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid,mCur));
+                                final int meatM = hihrIdx;
+                                ImageButton textViewHighestHashrateLink = findViewById(R.id.textViewHighestHashrateLink);
+                                textViewHighestHashrateLink.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        mRecyclerView.scrollToPosition(meatM);
+                                    }
+                                });
+
 /*
                                 SummaryStatistics sts = doApacheMath(retrieved.getMatured());
-                                textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
-                                textViewMaxBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
-                                textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
+                                textViewhighActiveWorkersValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
+                                textViewHighestHashrateValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
+                                textViewMostPaidMinerValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
                                 textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
 */
-                                mAdapter.setMinersArray(mDbHelper.getMinerList());
+                                mAdapter.setMinersArray(minerDbList);
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
@@ -169,7 +237,6 @@ public class MinersActivity extends DrawerActivity {
         // Adding request to request queue
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,5 +261,7 @@ public class MinersActivity extends DrawerActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
 

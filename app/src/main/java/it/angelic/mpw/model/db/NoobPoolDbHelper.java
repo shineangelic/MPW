@@ -410,7 +410,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
 
 
-    public ArrayList<MinerDBRecord> getMinerList() {
+    public ArrayList<MinerDBRecord> getMinerList(String limit) {
         ArrayList<MinerDBRecord> retL = new ArrayList<>();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -428,7 +428,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 null,// String[] selectionArgs
                 null,
                 null, // HAVING
-                NoobDataBaseContract.Miner_.COLUMN_NAME_PAID + " DESC", null);
+                NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " DESC", limit);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {

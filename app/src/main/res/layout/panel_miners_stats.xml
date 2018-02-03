@@ -9,18 +9,16 @@
 
 
     <TextView
-        android:id="@+id/textViewBlockTimeStdDevValue"
+        android:id="@+id/textViewOldestMinerValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="72dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="NA"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMeanBlockTimeValue" />
+        app:layout_constraintEnd_toStartOf="@+id/textViewOldestMinerLink"
+        app:layout_constraintTop_toBottomOf="@+id/textViewhighActiveWorkersLink" />
 
     <View
         android:id="@+id/viewSeparatorBlocks"
@@ -33,81 +31,114 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewMinBlockTime"
+        android:id="@+id/textViewMostPaidMiner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:text="Most paid miner"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMaxBlockTime" />
+        app:layout_constraintTop_toTopOf="@+id/textViewMostPaidMinerLink" />
 
     <TextView
-        android:id="@+id/textViewMinBlockTimeValue"
+        android:id="@+id/textViewMostPaidMinerValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="NA"
         android:textColor="#337ab7"
         android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMaxBlockTimeValue" />
+        app:layout_constraintEnd_toStartOf="@+id/textViewMostPaidMinerLink"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHighestHashrateLink" />
 
     <TextView
-        android:id="@+id/textViewMeanBlockTime"
+        android:id="@+id/textViewhighActiveWorkers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="More workers "
+        android:text="Highest active workers"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMinBlockTime" />
+        app:layout_constraintTop_toTopOf="@+id/textViewhighActiveWorkersLink" />
 
     <TextView
-        android:id="@+id/textViewMeanBlockTimeValue"
+        android:id="@+id/textViewhighActiveWorkersValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="12dp"
         android:text="NA"
         android:textColor="#337ab7"
         android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMinBlockTimeValue" />
+        app:layout_constraintEnd_toStartOf="@+id/textViewhighActiveWorkersLink"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMostPaidMinerLink" />
 
     <TextView
-        android:id="@+id/textViewMaxBlockTime"
+        android:id="@+id/textViewHighestHashrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Max block time"
+        android:text="Highest Hashrate"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorBlocks" />
+        app:layout_constraintTop_toTopOf="@+id/textViewHighestHashrateLink" />
 
     <TextView
-        android:id="@+id/textViewMaxBlockTimeValue"
+        android:id="@+id/textViewHighestHashrateValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="NA"
         android:textColor="#337ab7"
         android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorBlocks" />
+        app:layout_constraintEnd_toStartOf="@+id/textViewHighestHashrateLink"
+        app:layout_constraintTop_toTopOf="@+id/viewSeparatorBlocks" />
 
     <TextView
-        android:id="@+id/textViewBlockTimeStdDev"
+        android:id="@+id/textViewOldestMiner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Block time Standard deviation"
+        android:text="Oldest Miner"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMeanBlockTime" />
+        app:layout_constraintTop_toTopOf="@+id/textViewOldestMinerLink" />
+
+    <ImageButton
+        android:id="@+id/textViewHighestHashrateLink"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorBlocks"
+        app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/textViewMostPaidMinerLink"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHighestHashrateLink"
+        app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/textViewhighActiveWorkersLink"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMostPaidMinerLink"
+        app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/textViewOldestMinerLink"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewhighActiveWorkersLink"
+        app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
 </android.support.constraint.ConstraintLayout>

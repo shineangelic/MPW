@@ -10,7 +10,7 @@
     tools:context="it.angelic.mpw.MinersActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp"
-    tools:showIn="@layout/app_bar_miner">
+    tools:showIn="@layout/app_bar_wallet">
 
 
     <TextView

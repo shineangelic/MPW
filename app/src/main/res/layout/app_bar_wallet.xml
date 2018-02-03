@@ -26,9 +26,8 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Your scrolling content -->
-        <include layout="@layout/content_miner" />
+        <include layout="@layout/content_wallet" />
     </android.support.v4.widget.NestedScrollView>
-
 
 
     <android.support.design.widget.FloatingActionButton
@@ -38,6 +37,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:tint="@android:color/white"
-        app:srcCompat="@drawable/ic_refresh_black_24dp"/>
+        app:srcCompat="@drawable/ic_refresh_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -63,7 +63,7 @@ public class BlocksActivity extends DrawerActivity {
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
 
         textViewMaxBlockTimeValue = findViewById(R.id.textViewMaxBlockTimeValue);
-        textViewMinBlockTimeValue = findViewById(R.id.textViewMinBlockTimeValue);
+        textViewMinBlockTimeValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewMeanBlockTimeValue = findViewById(R.id.textViewMeanBlockTimeValue);
         textViewBlockTimeStdDevValue = findViewById(R.id.textViewBlockTimeStdDevValue);
 
