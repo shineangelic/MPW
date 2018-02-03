@@ -22,7 +22,7 @@ public enum PoolEnum {
         add(CurrencyEnum.UBQ);
     }}),
 
-    VICPOOL("Hashing Party", "hashing.party",false, new ArrayList<CurrencyEnum>() {{
+    HASHINGPARTY("Hashing Party", "hashing.party",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.UBQ);

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -202,18 +203,19 @@ public class MainActivity extends DrawerActivity {
                                         radioGroupChartGranularity.getCheckedRadioButtonId());
                             }
                         });
-
-
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                // hide the progress dialog
+                Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
+                        .show();
+                // prevent stale data appear
+                updateCurrentStats();
             }
         });
-
+        ///ETH Value From etherscan
         JsonObjectRequest jsonEtherObjReq = new JsonObjectRequest(Request.Method.GET,
                 Constants.ETHER_STATS_URL, null,
                 new Response.Listener<JSONObject>() {
@@ -254,9 +256,8 @@ public class MainActivity extends DrawerActivity {
      * Update header with last persisted DB row
      */
     private void updateCurrentStats() {
-
-        HomeStats lastHit = storia.get(storia.lastKey());
         try {
+            HomeStats lastHit = storia.get(storia.lastKey());
             Calendar when = Calendar.getInstance();
             when.setTimeZone(TimeZone.getDefault());
             when.setTime(lastHit.getStats().getLastBlockFound());
@@ -273,31 +274,33 @@ public class MainActivity extends DrawerActivity {
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
             noobText.setText(String.format(getString(R.string.tot_block_found), mPool.toString(), lastHit.getMaturedTotal(), mCur.name()));
+            try {
+                MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
+                // Variance % = Pool Shares / Network Difficulty Thanks to alfred
+                BigDecimal bigDecX = new BigDecimal(lastHit.getStats().getRoundShares());
+                BigDecimal bigDecY = new BigDecimal(Long.parseLong(lastHit.getNodes().get(0).getDifficulty()));
+                BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
+
+                textViewVarianceValue.setText(bd3.stripTrailingZeros().toPlainString() + "%");
+            } catch (Exception e) {
+                Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
+                e.printStackTrace();
+            }
+            try {
+                long dtDiff = getAverageBlockSecondsSincePoolsBirth(lastHit);
+                textViewAvgBlockTime.setText(String.format(getString(R.string.averages_compute), Utils.getScaledTime(dtDiff), mCur, mPool));
+
+            } catch (Exception e) {
+                Log.e(Constants.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();
+            return;
         }
-        try {
-            MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
-            // Variance % = Pool Shares / Network Difficulty Thanks to alfred
-            BigDecimal bigDecX = new BigDecimal(lastHit.getStats().getRoundShares());
-            BigDecimal bigDecY = new BigDecimal(Long.parseLong(lastHit.getNodes().get(0).getDifficulty()));
-            BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
 
-            textViewVarianceValue.setText(bd3.stripTrailingZeros().toPlainString() + "%");
-        } catch (Exception e) {
-            Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
-            e.printStackTrace();
-        }
-        try {
-            long dtDiff = getAverageBlockSecondsSincePoolsBirth(lastHit);
-            textViewAvgBlockTime.setText("It takes an average of "
-                    + Utils.getScaledTime(dtDiff) + " to find a block. See blocks section for more accurate stats");
 
-        } catch (Exception e) {
-            Log.e(Constants.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     @Override

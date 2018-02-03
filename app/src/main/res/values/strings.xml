@@ -31,4 +31,5 @@
     <string name="paid_out">%1$s paid out</string>
     <string name="wallet_stats_title">Wallet Stats\n(%1$s - %2$s)</string>
     <string name="title_activity_miners">miners</string>
+    <string name="averages_compute">It takes an average of %1$s to find a %2$s block on %3$s. See blocks section for more accurate stats</string>
 </resources>
