@@ -104,6 +104,7 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
             mblockMinerAddress.setOnClickListener(list);
             imageView2.setOnClickListener(list);
             isOffline.setChecked(game.getOffline());
+            isOffline.setVisibility(game.getOffline()?View.VISIBLE:View.INVISIBLE);
             mblockMinerAddress.setText(game.getAddress());
             textViewBlockWhenValue.setText(MainActivity.yearFormatExtended.format(game.getLastSeen()));
             textViewHashrateValue.setText(Utils.formatBigNumber(game.getHashRate()));

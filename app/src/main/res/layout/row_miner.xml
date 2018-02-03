@@ -63,8 +63,12 @@
                 android:text="0xADDRESS"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
                 card_view:layout_constraintStart_toEndOf="@+id/imageView2"
-                card_view:layout_constraintTop_toTopOf="parent" />
+                card_view:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textViewMinerBlockFound"

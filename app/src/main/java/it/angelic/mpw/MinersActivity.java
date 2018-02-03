@@ -3,6 +3,7 @@ package it.angelic.mpw;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
 
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
@@ -53,38 +55,53 @@ public class MinersActivity extends DrawerActivity {
     private TextView textViewHighestHashrateValue;
     private TextView textViewMostPaidMinerValue;
     private TextView textViewhighActiveWorkersValue;
+    private GsonBuilder builder;
 
 
     private void fetchRandomGuy() {
-        final MinerDBRecord rec = mDbHelper.getMinerList("1").get(0);
+        ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList();
+        //choose a random one if no empty
+        if (miners.size() >0) {
+            for (int i = 0; i < 1; i++) {
+                final MinerDBRecord rec = miners.get(new Random(new Date().getTime()).nextInt(miners.size()));
+                fetchMinerStats(rec);
+            }
+        }
+    }
 
+    private void fetchMinerStats(final MinerDBRecord rec) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 Utils.getMinerStatsUrl(this) + rec.getAddress(), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        //update known miners TABLE
                         Log.d(Constants.TAG, response.toString());
 
-                        Gson gson = new GsonBuilder().create();
+                        Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
                         final Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
-                        //compute first paymt
-                        Payment pp = retrieved.getPayments().get(retrieved.getPayments().size() - 1);
 
-                        if (retrieved.getWorkersTotal() > rec.getTopMiners())
+                        if (retrieved.getWorkersTotal() > (rec.getTopMiners()==null?-1:rec.getTopMiners()))
                             rec.setTopMiners(retrieved.getWorkersTotal());
-                        if (retrieved.getCurrentHashrate() > rec.getTopHr())
+                        if (retrieved.getCurrentHashrate() > (rec.getTopHr()==null?-1:rec.getTopHr()))
                             rec.setTopHr(retrieved.getCurrentHashrate());
+
                         rec.setPaid(retrieved.getStats().getPaid());
-                        rec.setFirstSeen(pp.getTimestamp());
-                        rec.setAvgHr((rec.getAvgHr() + retrieved.getHashrate()) / 2);
+                        try {//compute first paymt
+                            Payment pp = retrieved.getPayments().get(retrieved.getPayments().size() - 1);
+                            rec.setFirstSeen(pp.getTimestamp());
+                        }catch (Exception io){
+                            //dont look back in anger
+                        }
+                        rec.setAvgHr(rec.getAvgHr()==null?retrieved.getHashrate():((rec.getAvgHr() + retrieved.getHashrate()) / 2));
                         // aggiorna UI
                         rec.setLastSeen(retrieved.getStats().getLastShare());
                         rec.setBlocksFound(retrieved.getStats().getBlocksFound());
+                        mDbHelper.updateMiner(rec);
                     }
                 }, new Response.ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
@@ -99,7 +116,10 @@ public class MinersActivity extends DrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_miners);
+        builder = new GsonBuilder();
 
+        builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
+        builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
         mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
@@ -109,7 +129,6 @@ public class MinersActivity extends DrawerActivity {
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewhighActiveWorkersValue = findViewById(R.id.textViewhighActiveWorkersValue);
 
-        GsonBuilder builder = new GsonBuilder();
         mRecyclerView = (RecyclerView) findViewById(R.id.miners_recycler_view);
 
         // use this setting to improve performance if you know that changes
@@ -119,17 +138,13 @@ public class MinersActivity extends DrawerActivity {
         LinearLayoutManager mLayoutManager = new GridLayoutManager(this, getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        //gestione UNIX time lungo e non
-        builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
-        builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
-
-        issueRefresh(builder);
+        issueRefresh( );
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // fetchRandomGuy();
+         fetchRandomGuy();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -149,7 +164,7 @@ public class MinersActivity extends DrawerActivity {
         Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
     }
 
-    private void issueRefresh(final GsonBuilder builder) {
+    private void issueRefresh( ) {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 mPool.getTransportProtocolBase() + mCur.name() + "." + mPool.getWebRoot() + MINERS_STATS_URL, null,
@@ -165,82 +180,9 @@ public class MinersActivity extends DrawerActivity {
                                 // Register an adapter to manage the date types as long values
                                 MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
                                 textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.toString() + " Miners on " + mPool.toString());
-
-                                HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
-                                //Miner[] maturi = new Miner[minatori.values().size()];
-                                long hihr = 0;
-                                Long hiPaid = new Long(0);
-                                Integer hiPaidIdx = null;
-                                int hihrIdx = 0;
-                                int cnt = 0;
-
-                                //minatori.values().toArray(maturi);
-
-                                ArrayList<MinerDBRecord> minerDbList = mDbHelper.getMinerList(null);
-                                for (MinerDBRecord minK : minerDbList) {
-
-                                    if (minK.getHashRate() > hihr) {
-                                        hihr = minK.getHashRate();
-                                        hihrIdx = cnt;
-                                    }
-                                    long minp = minK.getPaid() == null ? 0 : minK.getPaid();
-                                    if (minp > hiPaid) {
-                                        hiPaid = minp;
-                                        hiPaidIdx =  cnt;
-                                    }
-                                    if (minatoriJSON.containsKey(minK.getAddress())) {
-                                        //aggiornalo sul DB
-                                        mDbHelper.createOrUpdateMiner(minatoriJSON.get(minK));
-                                        //alla fine lo tolgo
-                                        minatoriJSON.remove(minK.getAddress());
-                                    }
-                                    cnt++;
-                                }
-                                //aggiungo i rimanenti, verranno visualizzati alla prox
-                                for (String minK : minatoriJSON.keySet()) {
-                                    //ricopio address
-                                    minatoriJSON.get(minK).setAddress(minK.toUpperCase());
-                                    //aggiorno su DB
-                                    mDbHelper.createOrUpdateMiner(minatoriJSON.get(minK));
-                                }
-
-                                if (mAdapter == null) {
-                                    mAdapter = new MinerAdapter(minerDbList, mPool, mCur);
-                                    mRecyclerView.setAdapter(mAdapter);
-                                }
-                                textViewHighestHashrateValue.setText(Utils.formatBigNumber(hihr));
-
-                                //Based on these final copied values, we scroll to winner
-                                final Integer hiPaidIdxCopy = hiPaidIdx;
-                                if (hiPaidIdx != null) {
-                                    textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid, mCur));
-                                    ImageButton link = findViewById(R.id.textViewMostPaidMinerLink);
-                                    link.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            // +1 per 'centrarlo
-                                            mRecyclerView.scrollToPosition(hiPaidIdxCopy + 1);
-                                        }
-                                    });
-                                }
-                                final int hihrIdxCopy = hihrIdx;
-                                ImageButton textViewHighestHashrateLink = findViewById(R.id.textViewHighestHashrateLink);
-                                textViewHighestHashrateLink.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        // +1 per 'centrarlo
-                                        mRecyclerView.scrollToPosition(hihrIdxCopy + 1);
-                                    }
-                                });
-
-/*
-                                SummaryStatistics sts = doApacheMath(retrieved.getMatured());
-                                textViewhighActiveWorkersValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
-                                textViewHighestHashrateValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
-                                textViewMostPaidMinerValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
-                                textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
-*/
-                                mAdapter.setMinersArray(minerDbList);
+                                //update DB from JSON
+                                ArrayList<MinerDBRecord> min = fillRecordStats(retrieved);
+                                mAdapter.setMinersArray(min);
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
@@ -258,6 +200,81 @@ public class MinersActivity extends DrawerActivity {
 
         // Adding request to request queue
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+    }
+
+    @NonNull
+    private ArrayList<MinerDBRecord> fillRecordStats(MinerRoot retrieved) {
+        HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
+        long hihr = 0;
+        Long hiPaid = new Long(0);
+        Integer hiPaidIdx = null;
+        int hihrIdx = 0;
+        int cnt = 0;
+
+        ArrayList<MinerDBRecord> minerDbList = mDbHelper.getMinerList();
+        for (MinerDBRecord minerDbrec : minerDbList) {
+            //JSON-also list
+            if (minatoriJSON.containsKey(minerDbrec.getAddress())) {
+                minerDbrec.setHashRate(minatoriJSON.get(minerDbrec.getAddress()).getHr());
+            }
+            if (minerDbrec.getHashRate() > hihr) {
+                hihr = minerDbrec.getHashRate();
+                hihrIdx = cnt;
+            }
+            //DB only
+            long minp = minerDbrec.getPaid() == null ? 0 : minerDbrec.getPaid();
+            if (minp > hiPaid) {
+                hiPaid = minp;
+                hiPaidIdx = cnt;
+            }
+            if (minatoriJSON.containsKey(minerDbrec.getAddress())) {
+                Miner fis = minatoriJSON.get(minerDbrec.getAddress());
+                fis.setAddress(minerDbrec.getAddress());
+                //aggiornalo sul DB
+                mDbHelper.createOrUpdateMiner(fis);
+                //alla fine lo tolgo
+                minatoriJSON.remove(minerDbrec.getAddress());
+            }
+            cnt++;
+        }
+        //aggiungo i rimanenti, ma verranno visualizzati alla prox
+        for (String minK : minatoriJSON.keySet()) {
+            //ricopio address
+            Miner pip = minatoriJSON.get(minK);
+            pip.setAddress(minK);
+            //aggiorno su DB
+            mDbHelper.createOrUpdateMiner(pip);
+        }
+
+        if (mAdapter == null) {
+            mAdapter = new MinerAdapter(minerDbList, mPool, mCur);
+            mRecyclerView.setAdapter(mAdapter);
+        }
+        textViewHighestHashrateValue.setText(Utils.formatBigNumber(hihr));
+
+        //Based on these final copied values, we scroll to winner
+        final Integer hiPaidIdxCopy = hiPaidIdx;
+        if (hiPaidIdx != null) {
+            textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid, mCur));
+            ImageButton link = findViewById(R.id.textViewMostPaidMinerLink);
+            link.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // +1 per 'centrarlo
+                    mRecyclerView.scrollToPosition(hiPaidIdxCopy + 1);
+                }
+            });
+        }
+        final int hihrIdxCopy = hihrIdx;
+        ImageButton textViewHighestHashrateLink = findViewById(R.id.textViewHighestHashrateLink);
+        textViewHighestHashrateLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // +1 per 'centrarlo
+                mRecyclerView.scrollToPosition(hihrIdxCopy + 1);
+            }
+        });
+        return minerDbList;
     }
 
     @Override
