@@ -38,10 +38,11 @@ import it.angelic.mpw.model.db.MinerDBRecord;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
+import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 import static it.angelic.mpw.Constants.MINERS_STATS_URL;
-import static it.angelic.mpw.WalletActivity.getMinerStatsUrl;
+
 
 public class MinersActivity extends DrawerActivity {
     private TextView textViewBlocksTitle;
@@ -58,7 +59,7 @@ public class MinersActivity extends DrawerActivity {
         final MinerDBRecord rec = mDbHelper.getMinerList("1").get(0);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                getMinerStatsUrl(this) + rec.getAddress(), null,
+                Utils.getMinerStatsUrl(this) + rec.getAddress(), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -68,15 +69,19 @@ public class MinersActivity extends DrawerActivity {
                         Gson gson = new GsonBuilder().create();
                         // Register an adapter to manage the date types as long values
                         final Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
+                        //compute first paymt
+                        Payment pp = retrieved.getPayments().get(retrieved.getPayments().size() - 1);
 
                         if (retrieved.getWorkersTotal() > rec.getTopMiners())
                             rec.setTopMiners(retrieved.getWorkersTotal());
                         if (retrieved.getCurrentHashrate() > rec.getTopHr())
                             rec.setTopHr(retrieved.getCurrentHashrate());
                         rec.setPaid(retrieved.getStats().getPaid());
+                        rec.setFirstSeen(pp.getTimestamp());
                         rec.setAvgHr((rec.getAvgHr() + retrieved.getHashrate()) / 2);
                         // aggiorna UI
-
+                        rec.setLastSeen(retrieved.getStats().getLastShare());
+                        rec.setBlocksFound(retrieved.getStats().getBlocksFound());
                     }
                 }, new Response.ErrorListener() {
 
@@ -124,7 +129,7 @@ public class MinersActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        fetchRandomGuy();
+        // fetchRandomGuy();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,7 +168,9 @@ public class MinersActivity extends DrawerActivity {
 
                                 HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
                                 //Miner[] maturi = new Miner[minatori.values().size()];
-                                long hihr=0,hiPaid=0,getPaidIdx = 0;
+                                long hihr = 0;
+                                Long hiPaid = new Long(0);
+                                Integer hiPaidIdx = null;
                                 int hihrIdx = 0;
                                 int cnt = 0;
 
@@ -176,9 +183,10 @@ public class MinersActivity extends DrawerActivity {
                                         hihr = minK.getHashRate();
                                         hihrIdx = cnt;
                                     }
-                                    if (minK.getPaid() > hiPaid) {
-                                        hiPaid = minK.getPaid();
-                                        getPaidIdx = cnt;
+                                    long minp = minK.getPaid() == null ? 0 : minK.getPaid();
+                                    if (minp > hiPaid) {
+                                        hiPaid = minp;
+                                        hiPaidIdx =  cnt;
                                     }
                                     if (minatoriJSON.containsKey(minK.getAddress())) {
                                         //aggiornalo sul DB
@@ -197,17 +205,31 @@ public class MinersActivity extends DrawerActivity {
                                 }
 
                                 if (mAdapter == null) {
-                                    mAdapter = new MinerAdapter(minerDbList, mPool);
+                                    mAdapter = new MinerAdapter(minerDbList, mPool, mCur);
                                     mRecyclerView.setAdapter(mAdapter);
                                 }
                                 textViewHighestHashrateValue.setText(Utils.formatBigNumber(hihr));
-                                textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid,mCur));
-                                final int meatM = hihrIdx;
+
+                                //Based on these final copied values, we scroll to winner
+                                final Integer hiPaidIdxCopy = hiPaidIdx;
+                                if (hiPaidIdx != null) {
+                                    textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid, mCur));
+                                    ImageButton link = findViewById(R.id.textViewMostPaidMinerLink);
+                                    link.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            // +1 per 'centrarlo
+                                            mRecyclerView.scrollToPosition(hiPaidIdxCopy + 1);
+                                        }
+                                    });
+                                }
+                                final int hihrIdxCopy = hihrIdx;
                                 ImageButton textViewHighestHashrateLink = findViewById(R.id.textViewHighestHashrateLink);
                                 textViewHighestHashrateLink.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        mRecyclerView.scrollToPosition(meatM);
+                                        // +1 per 'centrarlo
+                                        mRecyclerView.scrollToPosition(hihrIdxCopy + 1);
                                     }
                                 });
 

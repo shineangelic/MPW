@@ -32,6 +32,29 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textViewMinerBlockFoundValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:text="NA"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/textViewHashrateValue" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="payment icon"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+
+            <TextView
                 android:id="@+id/blockMinerAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,6 +65,16 @@
                 android:textStyle="bold"
                 card_view:layout_constraintStart_toEndOf="@+id/imageView2"
                 card_view:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewMinerBlockFound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Blocks Found"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockShares" />
 
             <TextView
                 android:id="@+id/textViewBlockWhen"
@@ -72,13 +105,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
                 android:enabled="false"
                 android:text="Offline"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewHashrateValue" />
+                card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerBlockFoundValue" />
 
             <TextView
                 android:id="@+id/textViewBlockShares"
@@ -103,16 +135,30 @@
                 card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhenValue"
                 android:layout_marginRight="8dp" />
 
-            <ImageView
-                android:id="@+id/imageView2"
+            <TextView
+                android:id="@+id/textViewMinerPaid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:contentDescription="payment icon"
+                android:text="Total Paid"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+                card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
+
+
+            <TextView
+                android:id="@+id/textViewMinerPaidValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:text="NA"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

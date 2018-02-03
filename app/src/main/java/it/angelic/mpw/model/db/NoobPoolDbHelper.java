@@ -29,7 +29,7 @@ import static android.content.ContentValues.TAG;
 
 public class NoobPoolDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "MinerPoolWatcher.db";
     private static final String SQL_CREATE_HomeSTATS =
             "CREATE TABLE " + NoobDataBaseContract.HomeStats_.TABLE_NAME + " (" +
@@ -48,6 +48,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                     NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " INTEGER," +
                     NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN + " INTEGER," +
                     NoobDataBaseContract.Miner_.COLUMN_NAME_TOPMINERS + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_BLOCKS_FOUND + " INTEGER," +
                     NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR + " INTEGER," +
                     NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR + " INTEGER," +
                     NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR + " INTEGER," +
@@ -152,7 +153,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
         values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN, retrieved.getLastBeat().getTime());
         values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR, retrieved.getHr());
-        values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE, retrieved.getOffline()?1:0);
+        values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE, retrieved.getOffline() ? 1 : 0);
 
         int upd = db.update(NoobDataBaseContract.Miner_.TABLE_NAME, values,
                 NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS + " = CAST('" + retrieved.getAddress() + "' AS TEXT)", null);
@@ -409,7 +410,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
 
-
     public ArrayList<MinerDBRecord> getMinerList(String limit) {
         ArrayList<MinerDBRecord> retL = new ArrayList<>();
         int cnt = 0;
@@ -419,6 +419,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                         NoobDataBaseContract.Miner_.COLUMN_NAME_PAID,
                         NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR,
                         NoobDataBaseContract.Miner_.COLUMN_NAME_TOPMINERS,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_BLOCKS_FOUND,
                         NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR,
                         NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE,
                         NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR,
@@ -436,13 +437,17 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 MinerDBRecord ret = new MinerDBRecord();
                 try {
                     ret.setAddress(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS)));
-                    ret.setPaid(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_PAID)));
+
                     ret.setLastSeen(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN))));
                     ret.setFirstSeen(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN))));
                     ret.setAvgHr(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR)));
                     ret.setTopHr(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR)));
                     ret.setHashRate(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR)));
-                    ret.setOffline(cursor.getInt(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE))==1);
+                    ret.setOffline(cursor.getInt(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE)) == 1);
+                    if (!cursor.isNull(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_PAID)))
+                        ret.setPaid(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_PAID)));
+                    if (!cursor.isNull(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_BLOCKS_FOUND)))
+                    ret.setBlocksFound(cursor.getInt(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_BLOCKS_FOUND)));
                     retL.add(ret);
                     cnt++;
                 } catch (Exception ce) {

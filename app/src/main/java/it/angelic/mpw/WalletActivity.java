@@ -81,12 +81,6 @@ public class WalletActivity extends DrawerActivity {
     private FloatingActionButton fab;
     private TextView walletTitleText;
 
-    public static String getMinerStatsUrl(Context ctx) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String mPool = prefs.getString("poolEnum", "");
-        String mCur = prefs.getString("curEnum", "");
-        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.ACCOUNTS_STATS_URL;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +121,7 @@ public class WalletActivity extends DrawerActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                issueRefresh(mDbHelper, builder, getMinerStatsUrl(WalletActivity.this) + minerAddr);
+                issueRefresh(mDbHelper, builder, Utils.getMinerStatsUrl(WalletActivity.this) + minerAddr);
             }
         });
 
@@ -155,7 +149,7 @@ public class WalletActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
-        issueRefresh(mDbHelper, builder, getMinerStatsUrl(this) + minerAddr);
+        issueRefresh(mDbHelper, builder, Utils.getMinerStatsUrl(this) + minerAddr);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

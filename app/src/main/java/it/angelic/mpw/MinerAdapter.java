@@ -13,23 +13,25 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.MinerDBRecord;
-import it.angelic.mpw.model.jsonpojos.miners.Miner;
 
 /**
  * Created by shine@angelic.it on 02/02/2018.
  */
 
-class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
+class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
 
     private final PoolEnum mPool;
+    private final CurrencyEnum mCur;
     private ArrayList<MinerDBRecord> minersArray;
 
 
-    public MinerAdapter(ArrayList<MinerDBRecord> minatori, PoolEnum mCur) {
+    public MinerAdapter(ArrayList<MinerDBRecord> minatori, PoolEnum pool, CurrencyEnum currencyEnum) {
         super();
-        mPool = mCur;
+        mPool = pool;
+        mCur = currencyEnum;
         minersArray = minatori;
     }
 
@@ -44,12 +46,20 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
     public void onBindViewHolder(MinerViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.bindBlock(minersArray.get(position), mPool);
+        holder.bindBlock(minersArray.get(position), mPool, mCur);
     }
 
     @Override
     public int getItemCount() {
-        return minersArray==null?0:minersArray.size();
+        return minersArray == null ? 0 : minersArray.size();
+    }
+
+    public ArrayList<MinerDBRecord> getMinersArray() {
+        return minersArray;
+    }
+
+    public void setMinersArray(ArrayList<MinerDBRecord> minersArray) {
+        this.minersArray = minersArray;
     }
 
     // Provide a reference to the views for each data item
@@ -64,6 +74,8 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
 
         private final Context ctx;
         private final ImageView imageView2;
+        private final TextView textViewMinerBlockFoundValue;
+        private final TextView textViewMinerPaidValue;
 
         public MinerViewHolder(View v) {
             super(v);
@@ -72,12 +84,14 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
             isOffline = v.findViewById(R.id.checkBoxMinerOffline);
             textViewBlockWhenValue = v.findViewById(R.id.textViewBlockWhenValue);
             textViewHashrateValue = v.findViewById(R.id.textViewHashrateValue);
+            textViewMinerBlockFoundValue = v.findViewById(R.id.textViewMinerBlockFoundValue);
+            textViewMinerPaidValue = v.findViewById(R.id.textViewMinerPaidValue);
 
             imageView2 = v.findViewById(R.id.imageView2);
 
         }
 
-        public void bindBlock(final MinerDBRecord game, PoolEnum cur) {
+        public void bindBlock(final MinerDBRecord game, PoolEnum pool, CurrencyEnum cur) {
             mblockMinerAddress.setText(game.getAddress());
             View.OnClickListener list = new View.OnClickListener() {
                 @Override
@@ -93,14 +107,8 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
             mblockMinerAddress.setText(game.getAddress());
             textViewBlockWhenValue.setText(MainActivity.yearFormatExtended.format(game.getLastSeen()));
             textViewHashrateValue.setText(Utils.formatBigNumber(game.getHashRate()));
-
+            textViewMinerPaidValue.setText(game.getPaid()==null?"NA":Utils.formatCurrency(game.getPaid(), cur));
+            textViewMinerBlockFoundValue.setText(game.getBlocksFound()==null?"NA":"" +game.getBlocksFound());
         }
-    }
-    public ArrayList<MinerDBRecord> getMinersArray() {
-        return minersArray;
-    }
-
-    public void setMinersArray(ArrayList<MinerDBRecord> minersArray) {
-        this.minersArray = minersArray;
     }
 }

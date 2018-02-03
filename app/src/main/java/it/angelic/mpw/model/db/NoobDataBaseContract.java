@@ -43,5 +43,6 @@ class NoobDataBaseContract {
         public static final String COLUMN_NAME_ADDRESS = "text_address";
         public static final String COLUMN_NAME_CURHR = "long_curhr";
         public static final String COLUMN_NAME_CUROFFLINE = "long_curoffline";
+        public static final String COLUMN_NAME_BLOCKS_FOUND = "int_blocksfound";
     }
 }

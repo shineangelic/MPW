@@ -3,6 +3,8 @@ package it.angelic.mpw.model.db;
 import java.util.Date;
 
 /**
+ * Catalogo minatori del pool
+ *
  * Created by shine@angelic.it on 03/02/2018.
  */
 
@@ -16,6 +18,7 @@ public class MinerDBRecord {
     private Integer topMiners;
     private Long topHr;
     private Long avgHr;
+    private Integer blocksFound;
 
     public Date getLastSeen() {
         return lastSeen;
@@ -87,5 +90,13 @@ public class MinerDBRecord {
 
     public void setAvgHr(Long avgHr) {
         this.avgHr = avgHr;
+    }
+
+    public void setBlocksFound(Integer blocksFound) {
+        this.blocksFound = blocksFound;
+    }
+
+    public Integer getBlocksFound() {
+        return blocksFound;
     }
 }

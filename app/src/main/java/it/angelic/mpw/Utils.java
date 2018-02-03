@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.design.widget.NavigationView;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -222,4 +223,11 @@ class Utils {
             textViewCurbalance.setVisibility(View.INVISIBLE);
         }
     }
+    public static String getMinerStatsUrl(Context ctx) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.ACCOUNTS_STATS_URL;
+    }
+
 }
