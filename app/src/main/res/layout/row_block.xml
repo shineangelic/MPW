@@ -51,7 +51,8 @@
                 android:layout_marginTop="8dp"
                 android:text="Block Found"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/blockTransactionId" />
+                card_view:layout_constraintTop_toBottomOf="@+id/blockTransactionId"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockWhenValue"
@@ -64,7 +65,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/blockTransactionId" />
+                card_view:layout_constraintTop_toBottomOf="@+id/blockTransactionId"
+                android:layout_marginRight="8dp" />
 
             <CheckBox
                 android:id="@+id/checkBoxBlockUncle"

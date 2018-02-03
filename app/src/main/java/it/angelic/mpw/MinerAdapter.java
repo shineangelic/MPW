@@ -11,9 +11,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import it.angelic.mpw.model.CurrencyEnum;
+import java.util.ArrayList;
+
 import it.angelic.mpw.model.PoolEnum;
-import it.angelic.mpw.model.jsonpojos.blocks.Matured;
+import it.angelic.mpw.model.db.MinerDBRecord;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 
 /**
@@ -23,18 +24,18 @@ import it.angelic.mpw.model.jsonpojos.miners.Miner;
 class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
 
     private final PoolEnum mPool;
-    private Miner[] minersArray;
+    private ArrayList<MinerDBRecord> minersArray;
 
 
-    public MinerAdapter(Miner[] maturi, PoolEnum mCur) {
+    public MinerAdapter(ArrayList<MinerDBRecord> minatori, PoolEnum mCur) {
         super();
         mPool = mCur;
-        minersArray = maturi;
+        minersArray = minatori;
     }
 
     @Override
     public MinerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_block, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_miner, parent, false);
         // Task 2
         return new MinerAdapter.MinerViewHolder(view);
     }
@@ -43,12 +44,12 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
     public void onBindViewHolder(MinerViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.bindBlock(minersArray[position], mPool);
+        holder.bindBlock(minersArray.get(position), mPool);
     }
 
     @Override
     public int getItemCount() {
-        return minersArray==null?0:minersArray.length;
+        return minersArray==null?0:minersArray.size();
     }
 
     // Provide a reference to the views for each data item
@@ -56,10 +57,10 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
     // you provide access to all the views for a data item in a view holder
     static class MinerViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private final TextView mTextView;
-        private final CheckBox isOrphan;
+        private final TextView mblockMinerAddress;
+        private final CheckBox isOffline;
         private final TextView textViewBlockWhenValue;
-        private final TextView textViewBlockSharesValue;
+        private final TextView textViewHashrateValue;
 
         private final Context ctx;
         private final ImageView imageView2;
@@ -67,17 +68,17 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
         public MinerViewHolder(View v) {
             super(v);
             ctx = v.getContext();
-            mTextView = v.findViewById(R.id.blockTransactionId);
-            isOrphan = v.findViewById(R.id.checkBoxBlockOrphan);
+            mblockMinerAddress = v.findViewById(R.id.blockMinerAddress);
+            isOffline = v.findViewById(R.id.checkBoxMinerOffline);
             textViewBlockWhenValue = v.findViewById(R.id.textViewBlockWhenValue);
-            textViewBlockSharesValue = v.findViewById(R.id.textViewBlockSharesValue);
+            textViewHashrateValue = v.findViewById(R.id.textViewHashrateValue);
 
             imageView2 = v.findViewById(R.id.imageView2);
 
         }
 
-        public void bindBlock(final Miner game, PoolEnum cur) {
-            mTextView.setText(game.getAddress());
+        public void bindBlock(final MinerDBRecord game, PoolEnum cur) {
+            mblockMinerAddress.setText(game.getAddress());
             View.OnClickListener list = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -86,19 +87,20 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder>  {
                     ctx.startActivity(i);
                 }
             };
-            mTextView.setOnClickListener(list);
+            mblockMinerAddress.setOnClickListener(list);
             imageView2.setOnClickListener(list);
-            isOrphan.setChecked(game.getOffline());
-            textViewBlockWhenValue.setText(MainActivity.yearFormatExtended.format(game.getLastBeat()));
-            textViewBlockSharesValue.setText(Utils.formatBigNumber(game.getHr()));
+            isOffline.setChecked(game.getOffline());
+            mblockMinerAddress.setText(game.getAddress());
+            textViewBlockWhenValue.setText(MainActivity.yearFormatExtended.format(game.getLastSeen()));
+            textViewHashrateValue.setText(Utils.formatBigNumber(game.getHashRate()));
 
         }
     }
-    public Miner[] getMinersArray() {
+    public ArrayList<MinerDBRecord> getMinersArray() {
         return minersArray;
     }
 
-    public void setMinersArray(Miner[] minersArray) {
+    public void setMinersArray(ArrayList<MinerDBRecord> minersArray) {
         this.minersArray = minersArray;
     }
 }

@@ -132,9 +132,15 @@ public class MinersActivity extends DrawerActivity {
                                 Miner[] maturi = new Miner[minatori.values().size()];
 
                                 minatori.values().toArray(maturi);
+                                for (String minK : minatori.keySet()){
+                                    //ricopio address
+                                    minatori.get(minK).setAddress(minK.toUpperCase());
+                                    //aggiorno su DB
+                                    mDbHelper.createOrUpdateMiner(minatori.get(minK));
+                                }
 
                                 if (mAdapter == null) {
-                                    mAdapter = new MinerAdapter(maturi, mPool);
+                                    mAdapter = new MinerAdapter(mDbHelper.getMinerList(), mPool);
                                     mRecyclerView.setAdapter(mAdapter);
                                 }
 /*
@@ -144,7 +150,7 @@ public class MinersActivity extends DrawerActivity {
                                 textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
                                 textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
 */
-                                mAdapter.setMinersArray(maturi);
+                                mAdapter.setMinersArray(mDbHelper.getMinerList());
                                 mAdapter.notifyDataSetChanged();
                             }
                         });

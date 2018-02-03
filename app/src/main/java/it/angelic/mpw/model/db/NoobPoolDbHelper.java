@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 
 import org.apache.commons.collections4.map.LinkedMap;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,6 +21,7 @@ import it.angelic.mpw.R;
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
+import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 import static android.content.ContentValues.TAG;
@@ -27,7 +29,7 @@ import static android.content.ContentValues.TAG;
 
 public class NoobPoolDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION =3;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "MinerPoolWatcher.db";
     private static final String SQL_CREATE_HomeSTATS =
             "CREATE TABLE " + NoobDataBaseContract.HomeStats_.TABLE_NAME + " (" +
@@ -39,14 +41,31 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                     NoobDataBaseContract.Wallet_._ID + " INTEGER PRIMARY KEY," +
                     NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " INTEGER," +
                     NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON + " TEXT)";
+    private static final String SQL_CREATE_MINER =
+            "CREATE TABLE " + NoobDataBaseContract.Miner_.TABLE_NAME + " (" +
+                    NoobDataBaseContract.Miner_._ID + " INTEGER PRIMARY KEY," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS + " TEXT UNIQUE," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_TOPMINERS + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE + " INTEGER," +
+                    NoobDataBaseContract.Miner_.COLUMN_NAME_PAID + " INTEGER)";
 
     private static final String SQL_CREATE_HOME_IDX =
             "CREATE INDEX " + NoobDataBaseContract.HomeStats_.TABLE_NAME + "_dtm_idx ON "
                     + NoobDataBaseContract.HomeStats_.TABLE_NAME + "(" + NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + ");";
+    private static final String SQL_CREATE_MINERS_IDX =
+            "CREATE INDEX " + NoobDataBaseContract.Miner_.TABLE_NAME + "_addr_idx ON "
+                    + NoobDataBaseContract.Miner_.TABLE_NAME + "(" + NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS + ");";
     private static final String SQL_DELETE_STATS_TABLE =
             "DROP TABLE IF EXISTS " + NoobDataBaseContract.HomeStats_.TABLE_NAME;
     private static final String SQL_DELETE_WALLET_TABLE =
             "DROP TABLE IF EXISTS " + NoobDataBaseContract.Wallet_.TABLE_NAME;
+    private static final String SQL_DELETE_MINERS_TABLE =
+            "DROP TABLE IF EXISTS " + NoobDataBaseContract.Miner_.TABLE_NAME;
     private static final String SQL_TRUNCATE_WALLET =
             "DELETE FROM " + NoobDataBaseContract.Wallet_.TABLE_NAME;
     private static final String SQL_VACUUM = "VACUUM";
@@ -54,26 +73,28 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
 
     public NoobPoolDbHelper(Context context, PoolEnum pool, CurrencyEnum cur) {
-        super(context, pool.name()+"_"+cur.name()+"_"+DATABASE_NAME, null, DATABASE_VERSION);
-        Log.i(Constants.TAG, "Using DB: "+ getDatabaseName());
+        super(context, pool.name() + "_" + cur.name() + "_" + DATABASE_NAME, null, DATABASE_VERSION);
+        Log.i(Constants.TAG, "Using DB: " + getDatabaseName());
         builder = new GsonBuilder();
     }
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_HomeSTATS);
         db.execSQL(SQL_CREATE_WALLET);
+        db.execSQL(SQL_CREATE_MINER);
         db.execSQL(SQL_CREATE_HOME_IDX);
+        db.execSQL(SQL_CREATE_MINERS_IDX);
     }
 
     public void cleanOldData(SQLiteDatabase db) {
 
         Calendar oneMonthAgo = Calendar.getInstance();
         oneMonthAgo.add(Calendar.MONTH, -1);
-        Log.w("DB", "SQL_ CLEANING older than: "+oneMonthAgo.getTime());
+        Log.w("DB", "SQL_ CLEANING older than: " + oneMonthAgo.getTime());
         db.delete(NoobDataBaseContract.HomeStats_.TABLE_NAME,
-                 NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
+                NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
         db.delete(NoobDataBaseContract.Wallet_.TABLE_NAME,
-                 NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
+                NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
 
         db.execSQL(SQL_VACUUM);
         db.close();
@@ -90,6 +111,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         // to simply to discard the data and start over
         db.execSQL(SQL_DELETE_STATS_TABLE);
         db.execSQL(SQL_DELETE_WALLET_TABLE);
+        db.execSQL(SQL_DELETE_MINERS_TABLE);
         onCreate(db);
     }
 
@@ -120,6 +142,28 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
 
         // Inserting Row
         db.insert(NoobDataBaseContract.Wallet_.TABLE_NAME, null, values);
+        db.close(); // Closing database connection
+    }
+
+    public void createOrUpdateMiner(Miner retrieved) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN, retrieved.getLastBeat().getTime());
+        values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR, retrieved.getHr());
+        values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE, retrieved.getOffline()?1:0);
+
+        int upd = db.update(NoobDataBaseContract.Miner_.TABLE_NAME, values,
+                NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS + " = CAST('" + retrieved.getAddress() + "' AS TEXT)", null);
+        if (upd == 0) {
+            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS, retrieved.getAddress()); // Contact Name
+            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR, retrieved.getHr()); // Contact Name
+            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR, retrieved.getHr()); // Contact Name
+            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN, new Date().getTime()); // Serializza
+            db.insert(NoobDataBaseContract.Miner_.TABLE_NAME, null, values);
+        }
+        // Inserting Row
         db.close(); // Closing database connection
     }
 
@@ -223,10 +267,10 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
 
                 Long curPending = retrieved.getStats().getBalance().longValue();
-                if (curPending > prevPending){
+                if (curPending > prevPending) {
                     cnt++;
                     //pending increased
-                    pendings += ( curPending - prevPending  );
+                    pendings += (curPending - prevPending);
                 }
                 prevPending = curPending;
             } while (cursor.moveToNext());
@@ -322,6 +366,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         db.close();
         return ret;
     }
+
     public Wallet getLastWallet() {
         LinkedMap<Date, Wallet> ret = getLastWallets(1);
         return ret.get(ret.firstKey());
@@ -352,8 +397,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                     // Adding contact to list
                     Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM)));
                     ret.put(curDate, retrieved);
-                }catch (Exception ce){
-                    Log.e(TAG,"Cant read wallet entry: " + ce.getMessage());
+                } catch (Exception ce) {
+                    Log.e(TAG, "Cant read wallet entry: " + ce.getMessage());
                 }
             } while (cursor.moveToNext());
         }
@@ -364,5 +409,51 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
 
+
+    public ArrayList<MinerDBRecord> getMinerList() {
+        ArrayList<MinerDBRecord> retL = new ArrayList<>();
+        int cnt = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(NoobDataBaseContract.Miner_.TABLE_NAME, new String[]{
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_PAID,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_TOPMINERS,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN,
+                        NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN},
+                null,
+                null,// String[] selectionArgs
+                null,
+                null, // HAVING
+                NoobDataBaseContract.Miner_.COLUMN_NAME_PAID + " DESC", null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                MinerDBRecord ret = new MinerDBRecord();
+                try {
+                    ret.setAddress(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS)));
+                    ret.setPaid(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_PAID)));
+                    ret.setLastSeen(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN))));
+                    ret.setFirstSeen(new Date(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN))));
+                    ret.setAvgHr(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR)));
+                    ret.setTopHr(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR)));
+                    ret.setHashRate(cursor.getLong(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR)));
+                    ret.setOffline(cursor.getInt(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE))==1);
+                    retL.add(ret);
+                    cnt++;
+                } catch (Exception ce) {
+                    Log.e(TAG, "Cant read wallet entry: " + ce.getMessage());
+                }
+            } while (cursor.moveToNext());
+        }
+        Log.i(TAG, "SELECT DONE. MINERS SIZE: " + cnt);
+        cursor.close();
+        db.close();
+        return retL;
+    }
 
 }

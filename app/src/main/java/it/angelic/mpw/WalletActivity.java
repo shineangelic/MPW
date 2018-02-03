@@ -202,13 +202,13 @@ public class WalletActivity extends DrawerActivity {
         TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayoutWorkers);
         minersTable.removeAllViews();
         //table header
-        TableRow row = (TableRow) LayoutInflater.from(WalletActivity.this).inflate(R.layout.row_miner, null);
+        TableRow row = (TableRow) LayoutInflater.from(WalletActivity.this).inflate(R.layout.tablerow_miner, null);
         (row.findViewById(R.id.buttonworkerOnline)).setVisibility(View.INVISIBLE);
         minersTable.addView(row);
         for (String workerName : retrieved.getWorkers().keySet()) {
             Worker worker = retrieved.getWorkers().get(workerName);
 
-            TableRow rowt = (TableRow) LayoutInflater.from(WalletActivity.this).inflate(R.layout.row_miner, null);
+            TableRow rowt = (TableRow) LayoutInflater.from(WalletActivity.this).inflate(R.layout.tablerow_miner, null);
             ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(workerName);
             ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatHashrate(worker.getHr()));
             ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate3h)).setText(Utils.formatHashrate(worker.getHr2()));
