@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:srcCompat="@mipmap/ic_hashparty_foreground" />
+            tools:srcCompat="@mipmap/ic_hashparty_foreground"
+            app:srcCompat="@drawable/side_nav_bar"/>
 
 
         <android.support.constraint.ConstraintLayout
@@ -26,17 +27,17 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/imageViewCurrencyLogo"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-
                 android:adjustViewBounds="false"
-                android:contentDescription="NoobPool logo"
+                android:contentDescription="Pool logo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/pool_noob" />
+                app:srcCompat="@drawable/ic_ethereum_logo"
+                android:layout_marginLeft="8dp" />
 
             <View
                 android:id="@+id/surfaceView"
@@ -46,7 +47,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintTop_toBottomOf="@id/imageViewCurrencyLogo" />
 
             <TextView
                 android:id="@+id/navTextPool"
@@ -82,7 +83,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_menu_manage" />
+                app:srcCompat="@drawable/ic_menu_manage"
+                android:layout_marginRight="8dp" />
 
 
         </android.support.constraint.ConstraintLayout>

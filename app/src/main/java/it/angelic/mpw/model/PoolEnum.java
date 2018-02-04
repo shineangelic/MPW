@@ -29,7 +29,6 @@ public enum PoolEnum {
         add(CurrencyEnum.DBIX);
         add(CurrencyEnum.VIC);
     }}, false),
-
     ETHERDIG("etherdig", "etherdig.net", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}, true),
@@ -39,20 +38,18 @@ public enum PoolEnum {
     private String friendlyName;
     private String webRoot;
     private Boolean httpsOnly;
-
-    public Boolean getOmitCurrency() {
-        return omitCurrency;
-    }
-
     private Boolean omitCurrency;
     private ArrayList<CurrencyEnum> supportedCurrencies;
-
-    private PoolEnum(String friendlyName, String wr, Boolean https, ArrayList sfp,Boolean omit) {
+    private PoolEnum(String friendlyName, String wr, Boolean https, ArrayList sfp, Boolean omit) {
         this.friendlyName = friendlyName;
         this.webRoot = wr;
         supportedCurrencies = sfp;
         httpsOnly = https;
         omitCurrency = omit;
+    }
+
+    public Boolean getOmitCurrency() {
+        return omitCurrency;
     }
 
     public Boolean getHttpsOnly() {

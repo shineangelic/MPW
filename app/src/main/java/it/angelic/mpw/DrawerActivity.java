@@ -53,7 +53,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
          navigationView.setNavigationItemSelectedListener(this);
         //set proper pool info
         View headerLayout = navigationView.getHeaderView(0);
-        ImageView poolLogo = headerLayout.findViewById(R.id.imageView);
+        ImageView curLogo = headerLayout.findViewById(R.id.imageViewCurrencyLogo);
         ImageView backgroundPool = headerLayout.findViewById(R.id.backgroundPool);
         LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
         TextView poolT = headerLayout.findViewById(R.id.navTextPool);
@@ -70,19 +70,16 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         poolT.setText(mPool.toString());
         poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
 
+
+        backgroundPool.setImageResource(R.drawable.side_nav_bar);
+        curLogo.setImageResource(R.drawable.ic_ethereum_logo);
         switch (mPool){
             case HASHINGPARTY:
                 backgroundPool.setImageResource(R.mipmap.ic_hashparty_foreground);
-                poolLogo.setImageResource(R.mipmap.pool_hashparty);
+                curLogo.setImageResource(R.mipmap.pool_hashparty);
                 break;
             case NOOBPOOL:
-                backgroundPool.setImageResource(R.drawable.side_nav_bar);
-                poolLogo.setImageResource(R.mipmap.pool_noob);
-                break;
-            case CRYPTOPOOL:
-                backgroundPool.setImageResource(R.drawable.side_nav_bar);
-                break;
-            case ETHERDIG:
+                curLogo.setImageResource(R.mipmap.pool_noob);
                 break;
 
         }
