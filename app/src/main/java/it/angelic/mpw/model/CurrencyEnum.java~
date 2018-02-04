@@ -5,27 +5,14 @@ package it.angelic.mpw.model;
  */
 
 public enum CurrencyEnum {
-    //BTC("Bitcoin"),
-    BTG("Bitcoin Gold"),
-    BCN("Bytecoin"),
-    BTX("Bitcore"),
-    DASH("Dash"),
-	DBIX("Dubai Coin"),
-	DOGE("Dogecoin"),
-	EMC2("Einstenium"), //argh!
-	ETH("Ethereum"),
+    ETH("Ethereum"),
+    EXP("Expanse"),
     ETC("Ethereum Classic"),
-	EXP("Expanse"),
-	KMD("Komodo"),
-	LTC("Litecoin"),
-    MC("Musicoin"),
-    MONA("MonaCoin"), //lol
-    XMR("Monero"),
-    PIRL("Expanse"), //ahah
-    THC("HempCoin"),
     UBQ("Ubiq"),
+    PIRL("Expanse"), //ahah
+    DBIX("Dubai Coin"),
+    MC("Musicoin"),
     VIC("Victorium"),
-    XVG("Verge"),
     ZEN("Zencash"),
     ZEC("ZCash");
 
