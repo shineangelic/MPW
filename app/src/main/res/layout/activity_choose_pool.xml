@@ -15,12 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:alpha="0.5"
-            app:srcCompat="@drawable/ic_gatta_icon" />
         <!-- Login progress -->
         <ProgressBar
             android:id="@+id/login_progress"
@@ -72,14 +66,15 @@
                 android:id="@+id/walletInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="12dp"
                 android:layout_margin="4dp"
-                android:padding="2dp"
+                android:layout_marginVertical="12dp"
                 android:layout_weight="1"
                 android:maxLines="1"
+                android:padding="2dp"
                 android:singleLine="true"
                 android:text="Wallet: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/wallet"
@@ -106,7 +101,7 @@
                 android:id="@+id/skipIntro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Don't show this screen again" />
+                android:text="Skip this screen" />
 
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"

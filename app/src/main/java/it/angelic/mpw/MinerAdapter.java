@@ -76,23 +76,25 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
         private final ImageView imageView2;
         private final TextView textViewMinerBlockFoundValue;
         private final TextView textViewMinerPaidValue;
+        private final TextView textViewMinerFirstSeenValue;
 
         public MinerViewHolder(View v) {
             super(v);
             ctx = v.getContext();
             mblockMinerAddress = v.findViewById(R.id.blockMinerAddress);
             isOffline = v.findViewById(R.id.checkBoxMinerOffline);
+            textViewMinerFirstSeenValue = v.findViewById(R.id.textViewMinerFirstSeenValue);
             textViewBlockWhenValue = v.findViewById(R.id.textViewBlockWhenValue);
             textViewHashrateValue = v.findViewById(R.id.textViewHashrateValue);
             textViewMinerBlockFoundValue = v.findViewById(R.id.textViewMinerBlockFoundValue);
             textViewMinerPaidValue = v.findViewById(R.id.textViewMinerPaidValue);
 
-            imageView2 = v.findViewById(R.id.imageView2);
+            imageView2 = v.findViewById(R.id.imageViewMinersLink);
 
         }
 
         public void bindBlock(final MinerDBRecord game, PoolEnum pool, CurrencyEnum cur) {
-            mblockMinerAddress.setText(game.getAddress());
+            mblockMinerAddress.setText(game.getAddress().toUpperCase());
             View.OnClickListener list = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -105,8 +107,8 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
             imageView2.setOnClickListener(list);
             isOffline.setChecked(game.getOffline());
             isOffline.setVisibility(game.getOffline()?View.VISIBLE:View.INVISIBLE);
-            mblockMinerAddress.setText(game.getAddress());
             textViewBlockWhenValue.setText(MainActivity.yearFormatExtended.format(game.getLastSeen()));
+            textViewMinerFirstSeenValue.setText(MainActivity.yearFormatExtended.format(game.getFirstSeen()));
             textViewHashrateValue.setText(Utils.formatBigNumber(game.getHashRate()));
             textViewMinerPaidValue.setText(game.getPaid()==null?"NA":Utils.formatCurrency(game.getPaid(), cur));
             textViewMinerBlockFoundValue.setText(game.getBlocksFound()==null?"NA":"" +game.getBlocksFound());

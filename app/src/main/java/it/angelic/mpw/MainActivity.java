@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -163,8 +165,12 @@ public class MainActivity extends DrawerActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-
         Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
+
+        //ADS
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -279,7 +285,6 @@ public class MainActivity extends DrawerActivity {
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
             lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
             onlineMinersText.setText("" + lastHit.getMinersTotal());
-
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));

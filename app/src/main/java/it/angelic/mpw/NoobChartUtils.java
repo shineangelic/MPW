@@ -38,7 +38,7 @@ class NoobChartUtils {
             stats.addValue(storia.get(date2).getHashrate());
         }
 
-            titleTextView.setText("Wallet Hashrate History "
+            titleTextView.setText("Hashrate History chart "
                     + "(avg: " + Utils.formatHashrate((long) stats.getMean())
                     + ", max: " + Utils.formatHashrate((long) stats.getMax())
                     + ", min: " + Utils.formatHashrate((long) stats.getMin())

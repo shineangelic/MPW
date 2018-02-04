@@ -14,158 +14,194 @@
         tools:layout_editor_absoluteX="180dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         card_view:cardCornerRadius="4dp"
         card_view:cardUseCompatPadding="true"
-        card_view:contentPadding="4dp"
         card_view:layout_constraintEnd_toEndOf="parent"
         card_view:layout_constraintStart_toStartOf="parent">
 
-        <android.support.constraint.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textViewMinerBlockFoundValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:text="NA"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewHashrateValue" />
+            <ImageView
+                android:id="@+id/imageViewSfondoTest"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+
+                android:adjustViewBounds="true"
+                android:alpha="0.6"
+                card_view:srcCompat="@color/colorPrimary" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/imageViewMinersLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+
                 android:contentDescription="payment icon"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/ic_account_balance_wallet_black_24dp"
-                android:layout_marginLeft="8dp" />
+                card_view:srcCompat="@drawable/ic_account_balance_wallet_white_24dp" />
 
             <TextView
                 android:id="@+id/blockMinerAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="0xADDRESS"
-                android:textColor="@color/colorPrimary"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="-40dp"
+                android:layout_marginTop="-16dp"
+                android:layout_toRightOf="@id/imageViewMinersLink"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="46dp"
                 android:textStyle="bold"
-                android:ellipsize="end"
-                android:lines="1"
-                android:maxLines="1"
-                card_view:layout_constraintStart_toEndOf="@+id/imageView2"
-                card_view:layout_constraintTop_toTopOf="parent"
-                android:layout_marginLeft="8dp" />
+                tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
 
-            <TextView
-                android:id="@+id/textViewMinerBlockFound"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Blocks Found"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockShares" />
+                android:layout_below="@id/imageViewSfondoTest">
 
-            <TextView
-                android:id="@+id/textViewBlockWhen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Last seen"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@id/blockMinerAddress" />
+                <TextView
+                    android:id="@+id/textViewMinerFirstSeen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="First seen"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/textViewBlockWhenValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                <TextView
+                    android:id="@+id/textViewMinerFirstSeenValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="NA"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toTopOf="parent" />
 
-                android:layout_marginTop="8dp"
-                android:text="NA"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/blockMinerAddress"
-                android:layout_marginRight="8dp" />
+                <TextView
+                    android:id="@+id/textViewBlockWhen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Last seen"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerFirstSeen" />
 
-            <CheckBox
-                android:id="@+id/checkBoxMinerOffline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:enabled="false"
-                android:text="Offline"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerBlockFoundValue" />
+                <TextView
+                    android:id="@+id/textViewBlockWhenValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="NA"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerFirstSeenValue" />
 
-            <TextView
-                android:id="@+id/textViewBlockShares"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Hashrate"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhen" />
+                <TextView
+                    android:id="@+id/textViewBlockShares"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Hashrate"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhen" />
 
-            <TextView
-                android:id="@+id/textViewHashrateValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:text="HR VAL"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhenValue"
-                android:layout_marginRight="8dp" />
+                <TextView
+                    android:id="@+id/textViewHashrateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="HR VAL"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhenValue" />
 
-            <TextView
-                android:id="@+id/textViewMinerPaid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="Total Paid"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
+                <TextView
+                    android:id="@+id/textViewMinerBlockFound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Blocks Found"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockShares" />
+
+                <TextView
+                    android:id="@+id/textViewMinerBlockFoundValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="NA"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewHashrateValue" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxMinerOffline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:enabled="false"
+                    android:text="Offline"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerBlockFoundValue" />
+
+                <TextView
+                    android:id="@+id/textViewMinerPaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Total Paid"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    card_view:layout_constraintStart_toStartOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
 
 
-            <TextView
-                android:id="@+id/textViewMinerPaidValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:text="NA"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
-        </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/textViewMinerPaidValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="NA"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    card_view:layout_constraintEnd_toEndOf="parent"
+                    card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
+            </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
+
     </android.support.v7.widget.CardView>
 </LinearLayout>
