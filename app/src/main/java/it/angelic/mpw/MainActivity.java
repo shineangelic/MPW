@@ -88,14 +88,7 @@ public class MainActivity extends DrawerActivity {
         return datediffFirst / (lastHit.getMaturedTotal() - 1);
     }
 
-    public static String getHomeStatsURL(Context ctx) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String mPool = prefs.getString("poolEnum", "");
-        String mCur = prefs.getString("curEnum", "");
-        //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
-        PoolEnum puil = PoolEnum.valueOf(mPool);
-        return puil.getTransportProtocolBase() + mCur + "." + puil.getWebRoot() + Constants.HOME_STATS_URL;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,7 +179,7 @@ public class MainActivity extends DrawerActivity {
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                getHomeStatsURL(MainActivity.this), null,
+                Utils.getHomeStatsURL(MainActivity.this), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override

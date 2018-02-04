@@ -6,7 +6,7 @@ import java.util.Date;
 public class Stats implements Serializable
 {
 
-private Integer balance = 0;
+private Double balance = new Double(0);
 private Integer blocksFound;
 private Integer immature;
 private Date lastShare;
@@ -15,11 +15,11 @@ private Long pending;
 
 private final static long serialVersionUID = -3508834706692198488L;
 
-public Integer getBalance() {
+public Double getBalance() {
 return balance;
 }
 
-public void setBalance(Integer balance) {
+public void setBalance(Double balance) {
 this.balance = balance;
 }
 

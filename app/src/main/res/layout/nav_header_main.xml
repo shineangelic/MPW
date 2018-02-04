@@ -36,7 +36,7 @@
                 android:contentDescription="NoobPool logo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/ic_noobpool_launcher" />
+                app:srcCompat="@mipmap/pool_noob" />
 
             <View
                 android:id="@+id/surfaceView"

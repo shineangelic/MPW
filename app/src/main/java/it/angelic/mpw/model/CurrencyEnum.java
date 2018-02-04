@@ -6,12 +6,15 @@ package it.angelic.mpw.model;
 
 public enum CurrencyEnum {
     ETH("Ethereum"),
+    EXP("Expanse"),
     ETC("Ethereum Classic"),
     UBQ("Ubiq"),
     PIRL("Expanse"), //ahah
     DBIX("Dubai Coin"),
-    MUSIC("Musicoin"),
-    VIC("Victorium");
+    MC("Musicoin"),
+    VIC("Victorium"),
+    ZEN("Zencash"),
+    ZEC("ZCash");
 
     private String friendlyName;
 

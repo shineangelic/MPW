@@ -115,7 +115,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
                 mWalletView.setText(prevWallet.length() == 0 ? getString(R.string.no_wallet_set) : prevWallet);
-                Log.i(Constants.TAG, "currencySpinner list: " + (CurrencyEnum) currencySpinner.getItemAtPosition(poolSpinner.getSelectedItemPosition()));
+                Log.i(Constants.TAG, "currencySpinner list: " + (CurrencyEnum) currencySpinner.getItemAtPosition(currencySpinner.getSelectedItemPosition()));
             }
 
             @Override
@@ -332,7 +332,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
             }
 
             try {
-                URL myUrl = new URL(MainActivity.getHomeStatsURL(ChoosePoolActivity.this));
+                URL myUrl = new URL(Utils.getHomeStatsURL(ChoosePoolActivity.this));
                 URLConnection connection = myUrl.openConnection();
                 connection.setConnectTimeout(2000);
                 connection.connect();

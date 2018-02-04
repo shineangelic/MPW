@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,8 +38,6 @@ import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.blocks.Block;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
-
-import static it.angelic.mpw.Constants.BLOCKS_URL;
 
 public class BlocksActivity extends DrawerActivity {
     private TextView textViewBlocksTitle;
@@ -111,7 +108,7 @@ public class BlocksActivity extends DrawerActivity {
     private void issueRefresh(final GsonBuilder builder) {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                mPool.getTransportProtocolBase() + mCur.name() + "." + mPool.getWebRoot() + BLOCKS_URL, null,
+                Utils.getBlocksURL(BlocksActivity.this), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -123,24 +120,27 @@ public class BlocksActivity extends DrawerActivity {
                                 Gson gson = builder.create();
                                 // Register an adapter to manage the date types as long values
                                 Block retrieved = gson.fromJson(response.toString(), Block.class);
-                                textViewBlocksTitle.setText(retrieved.getMaturedTotal() + " " + mCur.toString() + " " + "Blocks found on " + mPool.toString());
 
-                                Matured[] maturi = new Matured[retrieved.getMaturedTotal()];
+                                if (retrieved.getMaturedTotal() > 0) {
+                                    textViewBlocksTitle.setText(retrieved.getMaturedTotal() + " " + mCur.toString() + " " + "Blocks found on " + mPool.toString());
+                                    Matured[] maturi = new Matured[retrieved.getMaturedTotal()];
 
-                                SummaryStatistics sts = doApacheMath(retrieved.getMatured());
-                                retrieved.getMatured().toArray(maturi);
+                                    SummaryStatistics sts = doApacheMath(retrieved.getMatured());
+                                    retrieved.getMatured().toArray(maturi);
 
-                                if (mAdapter == null) {
-                                    mAdapter = new BlockAdapter(maturi, mCur);
-                                    mRecyclerView.setAdapter(mAdapter);
-                                }
-                                textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
-                                textViewMaxBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
-                                textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
-                                textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
+                                    if (mAdapter == null) {
+                                        mAdapter = new BlockAdapter(maturi, mCur);
+                                        mRecyclerView.setAdapter(mAdapter);
+                                    }
+                                    textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
+                                    textViewMaxBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
+                                    textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
+                                    textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
 
-                                mAdapter.setBlocksArray(maturi);
-                                mAdapter.notifyDataSetChanged();
+                                    mAdapter.setBlocksArray(maturi);
+                                    mAdapter.notifyDataSetChanged();
+                                }else
+                                    textViewBlocksTitle.setText("No Block found on " + mPool.toString());
                             }
                         });
 
@@ -150,7 +150,7 @@ public class BlocksActivity extends DrawerActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                Log.e(Constants.TAG, "Error: " + error.getMessage());
                 Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
                         .show();
             }

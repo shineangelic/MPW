@@ -55,7 +55,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
-        Log.i(Constants.TAG, "Miner Pool Watcher Service call:" + MainActivity.getHomeStatsURL(ctx));
+        Log.i(Constants.TAG, "Miner Pool Watcher Service call:" + Utils.getHomeStatsURL(ctx));
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ctx, mPool, mCur);
         final NotificationManager mNotifyMgr =
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
@@ -70,7 +70,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         final Boolean notifyPayment = intent.getBooleanExtra("NOTIFY_PAYMENT", false);
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                MainActivity.getHomeStatsURL(ctx), null,
+                Utils.getHomeStatsURL(ctx), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override

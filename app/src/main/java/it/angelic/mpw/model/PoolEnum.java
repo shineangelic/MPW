@@ -9,44 +9,58 @@ import it.angelic.mpw.Constants;
  */
 
 public enum PoolEnum {
-    NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com",false, new ArrayList<CurrencyEnum>() {{
+    NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
-    }}),
+    }}, false),
 
-    CRYPTOPOOL("CryptoPool Network", "cryptopool.network",false, new ArrayList<CurrencyEnum>() {{
+    CRYPTOPOOL("CryptoPool Network", "cryptopool.network", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
-        add(CurrencyEnum.MUSIC);
+        add(CurrencyEnum.MC);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBQ);
-    }}),
+    }}, false),
 
-    HASHINGPARTY("Hashing Party", "hashing.party",false, new ArrayList<CurrencyEnum>() {{
+    HASHINGPARTY("Hashing Party", "hashing.party", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.UBQ);
         add(CurrencyEnum.DBIX);
         add(CurrencyEnum.VIC);
-    }});
+    }}, false),
+
+    ETHERDIG("etherdig", "etherdig.net", true, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+    }}, true),
+    ISTPOOL("1spool", "1stpool.com", false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+    }}, false);
     private String friendlyName;
     private String webRoot;
+    private Boolean httpsOnly;
+
+    public Boolean getOmitCurrency() {
+        return omitCurrency;
+    }
+
+    private Boolean omitCurrency;
+    private ArrayList<CurrencyEnum> supportedCurrencies;
+
+    private PoolEnum(String friendlyName, String wr, Boolean https, ArrayList sfp,Boolean omit) {
+        this.friendlyName = friendlyName;
+        this.webRoot = wr;
+        supportedCurrencies = sfp;
+        httpsOnly = https;
+        omitCurrency = omit;
+    }
 
     public Boolean getHttpsOnly() {
         return httpsOnly;
     }
 
     public String getTransportProtocolBase() {
-        return httpsOnly?"https://":"http://";
-    }
-
-    private Boolean httpsOnly;
-    private ArrayList<CurrencyEnum> supportedCurrencies;
-    private PoolEnum(String friendlyName, String wr,Boolean https, ArrayList sfp) {
-        this.friendlyName = friendlyName;
-        this.webRoot = wr;
-        supportedCurrencies = sfp;
-        httpsOnly = https;
+        return httpsOnly ? "https://" : "http://";
     }
 
     public String getWebRoot() {

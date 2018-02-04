@@ -18,9 +18,9 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:alpha="0.5"
-            app:srcCompat="@drawable/ic_icona_minatore" />
+            app:srcCompat="@drawable/ic_gatta_icon" />
         <!-- Login progress -->
         <ProgressBar
             android:id="@+id/login_progress"

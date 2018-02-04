@@ -106,7 +106,7 @@ public class MinersActivity extends DrawerActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                VolleyLog.e(Constants.TAG, "Error: " + error.getMessage());
             }
         });
 
@@ -169,7 +169,7 @@ public class MinersActivity extends DrawerActivity {
     private void issueRefresh( ) {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                mPool.getTransportProtocolBase() + mCur.name() + "." + mPool.getWebRoot() + MINERS_STATS_URL, null,
+                Utils.getMinersStatsUrl(MinersActivity.this), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -195,7 +195,7 @@ public class MinersActivity extends DrawerActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                VolleyLog.e(Constants.TAG, "Error: " + error.getMessage());
                 Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
                         .show();
             }

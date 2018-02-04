@@ -226,12 +226,35 @@ class Utils {
             textViewCurbalance.setVisibility(View.INVISIBLE);
         }
     }
-
+    public static String getHomeStatsURL(Context ctx) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
+        PoolEnum puil = PoolEnum.valueOf(mPool);
+        return puil.getTransportProtocolBase() + (puil.getOmitCurrency()?"":mCur.toLowerCase()+ ".")  + puil.getWebRoot() + Constants.HOME_STATS_URL;
+    }
     public static String getMinerStatsUrl(Context ctx) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
-        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + mCur + "." + PoolEnum.valueOf(mPool).getWebRoot() + Constants.ACCOUNTS_STATS_URL;
+        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + (PoolEnum.valueOf(mPool).getOmitCurrency()?"":mCur.toLowerCase()+ ".")  + PoolEnum.valueOf(mPool).getWebRoot() + Constants.ACCOUNTS_STATS_URL;
     }
 
+    public static String getMinersStatsUrl(Context ctx) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        return PoolEnum.valueOf(mPool).getTransportProtocolBase() + (PoolEnum.valueOf(mPool).getOmitCurrency()?"":mCur.toLowerCase()+ ".")  + PoolEnum.valueOf(mPool).getWebRoot() + Constants.MINERS_STATS_URL;
+    }
+
+    public static String getBlocksURL(Context ctx) {
+        //mPool.getTransportProtocolBase() + mCur.name() + "." + mPool.getWebRoot() + BLOCKS_URL
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String mPool = prefs.getString("poolEnum", "");
+        String mCur = prefs.getString("curEnum", "");
+        PoolEnum tgtpool = PoolEnum.valueOf(mPool);
+        return tgtpool.getTransportProtocolBase() + (tgtpool.getOmitCurrency()?"":mCur.toLowerCase()+ ".")  + tgtpool.getWebRoot() + Constants.BLOCKS_URL;
+
+    }
 }
