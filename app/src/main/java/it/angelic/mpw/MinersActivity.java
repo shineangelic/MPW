@@ -1,7 +1,11 @@
 package it.angelic.mpw;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -57,12 +61,13 @@ public class MinersActivity extends DrawerActivity {
     private TextView textViewolde;
     private GsonBuilder builder;
     private TextView textViewOldestMinerValue;
+    private FloatingActionButton fab;
 
 
     private void fetchRandomGuy() {
         ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList();
         //choose a random one if no empty
-        if (miners.size() >0) {
+        if (miners.size() > 0) {
             for (int i = 0; i < 5; i++) {
                 final MinerDBRecord rec = miners.get(new Random(new Date().getTime()).nextInt(miners.size()));
                 fetchMinerStats(rec);
@@ -79,24 +84,23 @@ public class MinersActivity extends DrawerActivity {
                     public void onResponse(JSONObject response) {
                         //update known miners TABLE
                         Log.d(Constants.TAG, response.toString());
-
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
                         final Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
 
-                        if (retrieved.getWorkersTotal() > (rec.getTopMiners()==null?-1:rec.getTopMiners()))
+                        if (retrieved.getWorkersTotal() > (rec.getTopMiners() == null ? -1 : rec.getTopMiners()))
                             rec.setTopMiners(retrieved.getWorkersTotal());
-                        if (retrieved.getCurrentHashrate() > (rec.getTopHr()==null?-1:rec.getTopHr()))
+                        if (retrieved.getCurrentHashrate() > (rec.getTopHr() == null ? -1 : rec.getTopHr()))
                             rec.setTopHr(retrieved.getCurrentHashrate());
 
                         rec.setPaid(retrieved.getStats().getPaid());
                         try {//compute first paymt
                             Payment pp = retrieved.getPayments().get(retrieved.getPayments().size() - 1);
                             rec.setFirstSeen(pp.getTimestamp());
-                        }catch (Exception io){
+                        } catch (Exception io) {
                             //dont look back in anger
                         }
-                        rec.setAvgHr(rec.getAvgHr()==null?retrieved.getHashrate():((rec.getAvgHr() + retrieved.getHashrate()) / 2));
+                        rec.setAvgHr(rec.getAvgHr() == null ? retrieved.getHashrate() : ((rec.getAvgHr() + retrieved.getHashrate()) / 2));
                         // aggiorna UI
                         rec.setLastSeen(retrieved.getStats().getLastShare());
                         rec.setBlocksFound(retrieved.getStats().getBlocksFound());
@@ -128,13 +132,12 @@ public class MinersActivity extends DrawerActivity {
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewOldestMinerValue = findViewById(R.id.textViewOldestMinerValue);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
-                fetchRandomGuy();
                 issueRefresh();
             }
         });
@@ -148,13 +151,12 @@ public class MinersActivity extends DrawerActivity {
         LinearLayoutManager mLayoutManager = new GridLayoutManager(this, getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 2 : 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        issueRefresh( );
+        issueRefresh();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-         fetchRandomGuy();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -174,7 +176,7 @@ public class MinersActivity extends DrawerActivity {
         Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
     }
 
-    private void issueRefresh( ) {
+    private void issueRefresh() {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Utils.getMinersStatsUrl(MinersActivity.this), null,
@@ -189,11 +191,8 @@ public class MinersActivity extends DrawerActivity {
                                 Gson gson = builder.create();
                                 // Register an adapter to manage the date types as long values
                                 MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
-                                textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.name() + " Miners on " + mPool.toString());
-                                //update DB from JSON
-                                ArrayList<MinerDBRecord> min = fillRecordStats(retrieved);
-                                mAdapter.setMinersArray(min);
-                                mAdapter.notifyDataSetChanged();
+
+                                new UpdateUIAsynchTask(retrieved).execute();
                             }
                         });
 
@@ -213,9 +212,9 @@ public class MinersActivity extends DrawerActivity {
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
+
     @NonNull
-    private ArrayList<MinerDBRecord> fillRecordStats(MinerRoot retrieved) {
-        HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
+    private ArrayList<MinerDBRecord> updateUIRecordStats(ArrayList<MinerDBRecord> minerDbList) {
         long hihr = 0;
         Long hiPaid = new Long(0);
         Integer hiPaidIdx = null;
@@ -224,12 +223,7 @@ public class MinersActivity extends DrawerActivity {
         int hihrIdx = 0;
         int cnt = 0;
 
-        ArrayList<MinerDBRecord> minerDbList = mDbHelper.getMinerList();
         for (MinerDBRecord minerDbrec : minerDbList) {
-            //JSON-also list
-            if (minatoriJSON.containsKey(minerDbrec.getAddress())) {
-                minerDbrec.setHashRate(minatoriJSON.get(minerDbrec.getAddress()).getHr());
-            }
             if (minerDbrec.getHashRate() > hihr) {
                 hihr = minerDbrec.getHashRate();
                 hihrIdx = cnt;
@@ -245,28 +239,7 @@ public class MinersActivity extends DrawerActivity {
                 oldestDt = minDateSee;
                 minDateSeeIdx = cnt;
             }
-            if (minatoriJSON.containsKey(minerDbrec.getAddress())) {
-                Miner fis = minatoriJSON.get(minerDbrec.getAddress());
-                fis.setAddress(minerDbrec.getAddress());
-                //aggiornalo sul DB
-                mDbHelper.createOrUpdateMiner(fis);
-                //alla fine lo tolgo
-                minatoriJSON.remove(minerDbrec.getAddress());
-            }
             cnt++;
-        }
-        //aggiungo i rimanenti, ma verranno visualizzati alla prox
-        for (String minK : minatoriJSON.keySet()) {
-            //ricopio address
-            Miner pip = minatoriJSON.get(minK);
-            pip.setAddress(minK);
-            //aggiorno su DB
-            mDbHelper.createOrUpdateMiner(pip);
-        }
-
-        if (mAdapter == null) {
-            mAdapter = new MinerAdapter(minerDbList, mPool, mCur);
-            mRecyclerView.setAdapter(mAdapter);
         }
         textViewHighestHashrateValue.setText(Utils.formatBigNumber(hihr));
 
@@ -278,8 +251,8 @@ public class MinersActivity extends DrawerActivity {
             link.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   // mRecyclerView.smoothScrollToPosition(hiPaidIdxCopy );
-                    ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hiPaidIdxCopy, 20);
+                    // mRecyclerView.smoothScrollToPosition(hiPaidIdxCopy );
+                    ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hiPaidIdxCopy, 20);
                 }
             });
         }
@@ -290,7 +263,7 @@ public class MinersActivity extends DrawerActivity {
             link.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(minDateSeeIdxCopy, 20);
+                    ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(minDateSeeIdxCopy, 20);
                 }
             });
         }
@@ -300,10 +273,25 @@ public class MinersActivity extends DrawerActivity {
             @Override
             public void onClick(View view) {
                 // +1 per 'centrarlo
-                ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hihrIdxCopy, 20);
+                ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(hihrIdxCopy, 20);
             }
         });
         return minerDbList;
+    }
+
+
+    @NonNull
+    private void updateRecordStats(MinerRoot retrieved) {
+        HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
+        //aggiungo i rimanenti, ma verranno visualizzati alla prox
+        for (String minK : minatoriJSON.keySet()) {
+            //ricopio address
+            Miner pip = minatoriJSON.get(minK);
+            pip.setAddress(minK);
+            //aggiorno su DB
+            mDbHelper.createOrUpdateMiner(pip);
+        }
+
     }
 
     @Override
@@ -330,6 +318,60 @@ public class MinersActivity extends DrawerActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class UpdateUIAsynchTask extends AsyncTask<String, Void, String> {
 
+        private final MinerRoot retrieved;
+        private NoobPoolDbHelper mDbHelper;
+        private ObjectAnimator objectanimator;
+        private ArrayList<MinerDBRecord> min;
+
+        UpdateUIAsynchTask(MinerRoot mr) {
+            super();
+            retrieved = mr;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            //update DB from JSON
+            updateRecordStats(retrieved);
+            min = mDbHelper.getMinerList();
+            fetchRandomGuy();
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.name() + " Miners on " + mPool.toString());
+            updateUIRecordStats(min);
+            if (mAdapter == null) {
+                mAdapter = new MinerAdapter(min, mPool, mCur);
+                mRecyclerView.setAdapter(mAdapter);
+            } else {
+                mAdapter.setMinersArray(min);
+                mAdapter.notifyDataSetChanged();
+            }
+            objectanimator.cancel();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mDbHelper = new NoobPoolDbHelper(MinersActivity.this, mPool, mCur);
+            if (mAdapter == null) {
+                mAdapter = new MinerAdapter(min, mPool, mCur);
+                min = mDbHelper.getMinerList();
+                mAdapter.setMinersArray(min);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+            // final FloatingActionButton fabb = findViewById(R.id.fab);
+            objectanimator = ObjectAnimator.ofFloat(fab, "rotation", 360);
+            objectanimator.setDuration(1000);
+            objectanimator.setRepeatCount(ObjectAnimator.INFINITE);
+            objectanimator.start();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
 }
 

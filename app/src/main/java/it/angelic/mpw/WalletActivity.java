@@ -1,5 +1,8 @@
 package it.angelic.mpw;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -322,6 +325,8 @@ public class WalletActivity extends DrawerActivity {
         private Wallet last;
         private NoobPoolDbHelper mDbHelper;
         private Long avg;
+        private ObjectAnimator objectanimator;
+        private boolean mCanceled;
 
         @Override
         protected String doInBackground(String... params) {
@@ -329,6 +334,7 @@ public class WalletActivity extends DrawerActivity {
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = mDbHelper.getLastWallet();
             avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());
+
             return "Executed";
         }
 
@@ -349,12 +355,16 @@ public class WalletActivity extends DrawerActivity {
                             radioGroupChartGranularity.getCheckedRadioButtonId()),
                     granoEnum);
             drawMinersTable(last);
-            fab.setPressed(false);
+            objectanimator.cancel();
         }
 
         @Override
         protected void onPreExecute() {
-            fab.setPressed(true);
+           // final FloatingActionButton fabb = findViewById(R.id.fab);
+            objectanimator = ObjectAnimator.ofFloat(fab, "rotation", 360);
+            objectanimator.setDuration(1000);
+            objectanimator.setRepeatCount(ObjectAnimator.INFINITE);
+            objectanimator.start();
         }
 
         @Override

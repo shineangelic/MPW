@@ -43,7 +43,7 @@
         </activity>
         <activity
             android:name=".WalletActivity"
-            android:label="Miners"
+            android:label="Wallet"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

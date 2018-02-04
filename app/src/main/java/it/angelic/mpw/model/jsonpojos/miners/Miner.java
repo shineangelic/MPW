@@ -20,7 +20,7 @@ public void setLastBeat(Date lastBeat) {
 this.lastBeat = lastBeat;
 }
 
-public Long getHr() {
+public Long getHashrate() {
 return hr;
 }
 

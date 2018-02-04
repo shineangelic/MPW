@@ -112,6 +112,7 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
             textViewHashrateValue.setText(Utils.formatBigNumber(game.getHashRate()));
             textViewMinerPaidValue.setText(game.getPaid()==null?"NA":Utils.formatCurrency(game.getPaid(), cur));
             textViewMinerBlockFoundValue.setText(game.getBlocksFound()==null?"NA":"" +game.getBlocksFound());
+            mblockMinerAddress.setSelected(true);
         }
     }
 }

@@ -150,6 +150,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     public int updateMiner(MinerDBRecord retrieved) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
         values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN, retrieved.getLastSeen().getTime());
         values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN, retrieved.getFirstSeen().getTime());
         values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE, retrieved.getOffline());
@@ -168,20 +169,19 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN, retrieved.getLastBeat().getTime());
-        values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR, retrieved.getHr());
+        values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CURHR, retrieved.getHashrate());
         values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE, retrieved.getOffline() ? 1 : 0);
 
         int upd = db.update(NoobDataBaseContract.Miner_.TABLE_NAME, values,
                 NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS + " = CAST('" + retrieved.getAddress() + "' AS TEXT)", null);
         if (upd == 0) {
             values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_ADDRESS, retrieved.getAddress()); // Contact Name
-            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR, retrieved.getHr()); // Contact Name
-            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR, retrieved.getHr()); // Contact Name
+            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_AVGHR, retrieved.getHashrate()); // Contact Name
+            values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_TOPHR, retrieved.getHashrate()); // Contact Name
             values.put(NoobDataBaseContract.Miner_.COLUMN_NAME_FIRSTSEEN, new Date().getTime()); // Serializza
             db.insert(NoobDataBaseContract.Miner_.TABLE_NAME, null, values);
         }
         // Inserting Row
-        db.close(); // Closing database connection
     }
 
     public LinkedMap<Date, HomeStats> getHistoryData(int cutoff) {
@@ -231,7 +231,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         }
         Log.i(TAG, "SELECT DONE. HOME HISTORY SIZE: " + cnt);
         cursor.close();
-        db.close();
         return ret;
     }
 
@@ -294,8 +293,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         }
         Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt);
         cursor.close();
-        db.close();
-
         return pendings / cnt;
     }
 
@@ -348,7 +345,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         }
         Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
         cursor.close();
-        db.close();
         return ret;
     }
 
@@ -380,7 +376,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         }
         Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
         cursor.close();
-        db.close();
         return ret;
     }
 
@@ -421,7 +416,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         }
         Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
         cursor.close();
-        db.close();
         return ret;
     }
 
@@ -475,7 +469,6 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
         }
         Log.i(TAG, "SELECT DONE. MINERS SIZE: " + cnt);
         cursor.close();
-        db.close();
         return retL;
     }
 
