@@ -234,7 +234,7 @@ class Utils {
         PoolEnum puil = PoolEnum.valueOf(mPool);
         return puil.getTransportProtocolBase() + (puil.getOmitCurrency()?"":mCur.toLowerCase()+ ".")  + puil.getWebRoot() + Constants.HOME_STATS_URL;
     }
-    public static String getMinerStatsUrl(Context ctx) {
+    public static String getWalletStatsUrl(Context ctx) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
@@ -257,4 +257,6 @@ class Utils {
         return tgtpool.getTransportProtocolBase() + (tgtpool.getOmitCurrency()?"":mCur.toLowerCase()+ ".")  + tgtpool.getWebRoot() + Constants.BLOCKS_URL;
 
     }
+
+
 }

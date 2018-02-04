@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
@@ -44,8 +45,6 @@ import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
-import static it.angelic.mpw.Constants.MINERS_STATS_URL;
-
 
 public class MinersActivity extends DrawerActivity {
     private TextView textViewBlocksTitle;
@@ -73,7 +72,7 @@ public class MinersActivity extends DrawerActivity {
 
     private void fetchMinerStats(final MinerDBRecord rec) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Utils.getMinerStatsUrl(this) + rec.getAddress(), null,
+                Utils.getWalletStatsUrl(this) + rec.getAddress(), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -125,11 +124,20 @@ public class MinersActivity extends DrawerActivity {
 
         mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
-
         textViewHighestHashrateValue = findViewById(R.id.textViewHighestHashrateValue);
-
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewOldestMinerValue = findViewById(R.id.textViewOldestMinerValue);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+                fetchRandomGuy();
+                issueRefresh();
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.miners_recycler_view);
 

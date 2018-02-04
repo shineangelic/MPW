@@ -1,6 +1,5 @@
 package it.angelic.mpw;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -48,7 +47,6 @@ import java.util.TimeZone;
 import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.db.NoobPoolDbHelper;
 import it.angelic.mpw.model.db.NoobPoolQueryGrouper;
@@ -123,7 +121,7 @@ public class WalletActivity extends DrawerActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                issueRefresh(mDbHelper, builder, Utils.getMinerStatsUrl(WalletActivity.this) + minerAddr);
+                issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(WalletActivity.this) + minerAddr);
             }
         });
 
@@ -151,7 +149,7 @@ public class WalletActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
-        issueRefresh(mDbHelper, builder, Utils.getMinerStatsUrl(this) + minerAddr);
+        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(this) + minerAddr);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

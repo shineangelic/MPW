@@ -99,7 +99,7 @@ public class PaymentsActivity extends DrawerActivity {
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
         final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
-        issueRefresh(mDbHelper, builder, mPool.getTransportProtocolBase() + mCur.name() + "." + mPool.getWebRoot() + Constants.ACCOUNTS_STATS_URL + minerAddr);
+        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(this)+minerAddr);
     }
 
     private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
