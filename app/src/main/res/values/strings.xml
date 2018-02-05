@@ -32,4 +32,5 @@
     <string name="wallet_stats_title">Wallet Stats\n(%1$s - %2$s)</string>
     <string name="title_activity_miners">Miners</string>
     <string name="averages_compute">It takes an average of %1$s to find a %2$s block on %3$s. See blocks section for more accurate stats</string>
+    <string name="ad_unit">ca-app-pub-2379213694485575/8587854500</string>
 </resources>
