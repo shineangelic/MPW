@@ -72,7 +72,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
 
 
         backgroundPool.setImageResource(R.drawable.side_nav_bar);
-        curLogo.setImageResource(R.drawable.ic_ethereum_logo);
+        curLogo.setImageResource(R.mipmap.ic_pool_watcher);
         switch (mPool){
             case HASHINGPARTY:
                 backgroundPool.setImageResource(R.mipmap.ic_hashparty_foreground);
