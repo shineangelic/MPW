@@ -96,7 +96,8 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 NoobDataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
         db.delete(NoobDataBaseContract.Wallet_.TABLE_NAME,
                 NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
-        db.delete(NoobDataBaseContract.Miner_.TABLE_NAME, NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " < " + oneMonthAgo.getTime().getTime(), null);
+        db.delete(NoobDataBaseContract.Miner_.TABLE_NAME,
+                NoobDataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " < " + oneMonthAgo.getTime().getTime(), null);
         db.execSQL(SQL_VACUUM);
         db.close();
     }
@@ -282,7 +283,7 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
             do {
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
 
-                Long curPending = retrieved.getStats().getBalance().longValue();
+                Long curPending = retrieved.getStats().getPending().longValue();
                 if (curPending > prevPending) {
                     cnt++;
                     //pending increased

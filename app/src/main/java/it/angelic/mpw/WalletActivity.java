@@ -1,7 +1,5 @@
 package it.angelic.mpw;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -268,19 +266,22 @@ public class WalletActivity extends DrawerActivity {
             textViewWalRoundSharesPercValue.setText(bd3.stripTrailingZeros().toString() + "%");
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
-            e.printStackTrace();
+            textViewWalRoundSharesPercValue.setText("NA");
         }
         try {
             textViewPendingBalanceValue.setText(Utils.formatCurrency(lastHit.getStats().getBalance().longValue(), mCur));
             textViewPaidValue.setText(Utils.formatCurrency(lastHit.getStats().getPaid(), mCur));
         } catch (Exception ie) {
             Log.e(Constants.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
+            textViewPendingBalanceValue.setText("NA");
+            textViewPaidValue.setText("NA");
         }
 
         try {
-            textViewAvgPending.setText(Utils.formatCurrency(avgPending, mCur));
+            textViewAvgPending.setText(avgPending==0?"NA":Utils.formatCurrency( avgPending, mCur));
         } catch (Exception mie) {
             Log.e(Constants.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
+            textViewAvgPending.setText("NA");
         }
 
     }
@@ -332,7 +333,7 @@ public class WalletActivity extends DrawerActivity {
         protected String doInBackground(String... params) {
             mDbHelper = new NoobPoolDbHelper(WalletActivity.this, mPool, mCur);
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-            last = mDbHelper.getLastWallet();
+            last = storia.get(storia.firstKey());
             avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());
 
             return "Executed";
@@ -344,15 +345,15 @@ public class WalletActivity extends DrawerActivity {
             updateCurrentStats(last, mDbHelper, avg);
             final RadioButton radioDay = findViewById(R.id.radioButtonDay);
             final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
-            GranularityEnum granoEnum=  GranularityEnum.HOUR;
+            GranularityEnum granoEnum = GranularityEnum.HOUR;
             if (radioDay.isChecked())
-                granoEnum=  GranularityEnum.DAY;
+                granoEnum = GranularityEnum.DAY;
             else if (radioMin.isChecked())
-                granoEnum=  GranularityEnum.MINUTE;
-            NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, radioGroupChartGranularity.getCheckedRadioButtonId()), granoEnum);
+                granoEnum = GranularityEnum.MINUTE;
+            NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, granoEnum), granoEnum);
             NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
                     NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
-                            radioGroupChartGranularity.getCheckedRadioButtonId()),
+                            granoEnum),
                     granoEnum);
             drawMinersTable(last);
             objectanimator.cancel();
@@ -360,7 +361,7 @@ public class WalletActivity extends DrawerActivity {
 
         @Override
         protected void onPreExecute() {
-           // final FloatingActionButton fabb = findViewById(R.id.fab);
+            // final FloatingActionButton fabb = findViewById(R.id.fab);
             objectanimator = ObjectAnimator.ofFloat(fab, "rotation", 360);
             objectanimator.setDuration(1000);
             objectanimator.setRepeatCount(ObjectAnimator.INFINITE);

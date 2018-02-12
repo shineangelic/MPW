@@ -17,7 +17,7 @@ public enum PoolEnum {
     CRYPTOPOOL("CryptoPool Network", "cryptopool.network", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
-        add(CurrencyEnum.MC);
+        add(CurrencyEnum.MUSIC);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBQ);
     }}, false),
@@ -32,7 +32,7 @@ public enum PoolEnum {
     ETHERDIG("etherdig", "etherdig.net", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}, true),
-    ISTPOOL("1spool", "1stpool.com", false, new ArrayList<CurrencyEnum>() {{
+    ISTPOOL("1stpool", "1stpool.com", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}, false);
     private String friendlyName;

@@ -51,8 +51,9 @@
                 android:id="@+id/spinnerPoolChooser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Material Design Spinner"
                 android:layout_weight="1"
+                app:ms_enableErrorLabel="false"
+                app:ms_floatingLabelText="Choose your mining pool"
                 android:paddingVertical="12dp"  />
 
             <fr.ganfra.materialspinner.MaterialSpinner
@@ -60,6 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                app:ms_enableErrorLabel="false"
+                app:ms_floatingLabelText="Choose the currency you are mining"
                 android:paddingVertical="12dp" />
 
             <TextView
