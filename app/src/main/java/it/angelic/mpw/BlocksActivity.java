@@ -35,7 +35,7 @@ import java.util.List;
 
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.blocks.Block;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 
@@ -44,7 +44,7 @@ public class BlocksActivity extends DrawerActivity {
     private RecyclerView mRecyclerView;
     private BlockAdapter mAdapter;
 
-    private NoobPoolDbHelper mDbHelper;
+    private PoolDbHelper mDbHelper;
     private TextView textViewMaxBlockTimeValue;
     private TextView textViewMinBlockTimeValue;
     private TextView textViewMeanBlockTimeValue;
@@ -57,7 +57,7 @@ public class BlocksActivity extends DrawerActivity {
         setContentView(R.layout.activity_blocks);
 
 
-        mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        mDbHelper = new PoolDbHelper(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
 
         textViewMaxBlockTimeValue = findViewById(R.id.textViewMaxBlockTimeValue);

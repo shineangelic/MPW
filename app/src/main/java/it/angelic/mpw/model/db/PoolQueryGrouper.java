@@ -13,7 +13,7 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
  * Created by shine@angelic.it on 07/09/2017.
  */
 
-public class NoobPoolQueryGrouper {
+public class PoolQueryGrouper {
 
 
     public static LinkedMap<Date, HomeStats> groupAvgQueryResult(LinkedMap<Date, HomeStats> queryResult, GranularityEnum radioCheckedId) {

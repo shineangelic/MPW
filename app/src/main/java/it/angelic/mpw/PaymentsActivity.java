@@ -38,7 +38,7 @@ import java.util.Locale;
 import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -64,7 +64,7 @@ public class PaymentsActivity extends DrawerActivity {
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
 
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
@@ -98,11 +98,11 @@ public class PaymentsActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
         issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(this)+minerAddr);
     }
 
-    private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
+    private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url, null,
                 new Response.Listener<JSONObject>() {

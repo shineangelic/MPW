@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
+import it.angelic.mpw.model.db.PoolDbHelper;
 
 /**
  * Formats the watched EditText to a public ethereum address
@@ -31,7 +31,7 @@ public class WalletPrefChangeListener implements  Preference.OnPreferenceChangeL
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (isValidEthAddress((String) newValue)) return false;
 
-        NoobPoolDbHelper db = new NoobPoolDbHelper(mCtx,pool,cur);
+        PoolDbHelper db = new PoolDbHelper(mCtx,pool,cur);
         db.truncateWallets(db.getWritableDatabase());
         db.close();
         //salvo wallet in SharedPrefs preciso

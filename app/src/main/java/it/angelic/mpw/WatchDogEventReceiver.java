@@ -31,7 +31,7 @@ import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.PoolEnum;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -56,7 +56,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         Log.i(Constants.TAG, "Miner Pool Watcher Service call:" + Utils.getHomeStatsURL(ctx));
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ctx, mPool, mCur);
+        final PoolDbHelper mDbHelper = new PoolDbHelper(ctx, mPool, mCur);
         final NotificationManager mNotifyMgr =
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         final GsonBuilder builder = new GsonBuilder();

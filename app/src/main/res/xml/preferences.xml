@@ -44,7 +44,7 @@
         <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_notify_offline"
-            android:summary="Activate notification when a miner goes offline"
+            android:summary="Activate notification when a rig goes offline"
             android:title="Notify off-line miners" />
         <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"

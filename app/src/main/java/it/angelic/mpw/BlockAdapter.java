@@ -109,7 +109,11 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockSharesValue.setText(Utils.formatBigNumber(game.getShares()));
             textViewBlockDiffValue.setText(Utils.formatBigNumber(game.getDifficulty()));
             textViewBlockHeightValue.setText("" + game.getHeight());
-            textViewBlockRewardValue.setText(Utils.formatCurrency(Long.valueOf(game.getReward()) / 1000000000, cur));
+            try {
+                textViewBlockRewardValue.setText(Utils.formatCurrency(Long.valueOf(game.getReward()) / 1000000000, cur));
+            }catch (Exception io ){
+                textViewBlockRewardValue.setText("NA");
+            }
             if (!game.getUncle()) {
                 isUncle.setVisibility(View.INVISIBLE);
                 textViewBlockUncleHeight.setVisibility(View.INVISIBLE);

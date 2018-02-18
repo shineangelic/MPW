@@ -5,5 +5,5 @@ package it.angelic.mpw.model.db;
  */
 
 public enum GranularityEnum {
-    DAY,HOUR,MINUTE;
+    DAY,HOUR,MINUTE
 }

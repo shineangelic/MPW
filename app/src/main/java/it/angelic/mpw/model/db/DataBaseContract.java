@@ -7,11 +7,11 @@ import android.provider.BaseColumns;
  * Created by shine@angelic.it on 06/09/2017.
  */
 
-class NoobDataBaseContract {
+class DataBaseContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.
-    private NoobDataBaseContract() {}
+    private DataBaseContract() {}
 
     /* Inner class that defines the table contents */
     public static class HomeStats_ implements BaseColumns {

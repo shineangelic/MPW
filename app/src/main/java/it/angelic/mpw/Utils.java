@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.etherscan.Result;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -201,7 +201,7 @@ class Utils {
 
     }
 
-    public static void fillEthereumStats(Context ctx, NoobPoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool, CurrencyEnum cur) {
+    public static void fillEthereumStats(Context ctx, PoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool, CurrencyEnum cur) {
 
         TextView eth = navigationView.findViewById(R.id.textViewEthValue);
         TextView ethC = navigationView.findViewById(R.id.textViewEthCourtesy);

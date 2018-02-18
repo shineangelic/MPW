@@ -29,7 +29,7 @@ import java.net.URLConnection;
 import fr.ganfra.materialspinner.MaterialSpinner;
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
+import it.angelic.mpw.model.db.PoolDbHelper;
 
 /**
  * A login screen that offers login via email/password.
@@ -324,7 +324,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
             //la chiusa del DB serve
             try {
-                NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(ChoosePoolActivity.this, mPool, mCur);
+                PoolDbHelper mDbHelper = new PoolDbHelper(ChoosePoolActivity.this, mPool, mCur);
                 mDbHelper.cleanOldData(mDbHelper.getWritableDatabase());
                 mDbHelper.close();
             } catch (Exception e) {

@@ -1,8 +1,6 @@
 package it.angelic.mpw;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -10,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +16,6 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -46,10 +42,9 @@ import java.util.TimeZone;
 import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.PoolEnum;
 import it.angelic.mpw.model.db.GranularityEnum;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
-import it.angelic.mpw.model.db.NoobPoolQueryGrouper;
+import it.angelic.mpw.model.db.PoolDbHelper;
+import it.angelic.mpw.model.db.PoolQueryGrouper;
 import it.angelic.mpw.model.jsonpojos.etherscan.EtherscanStats;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 
@@ -79,7 +74,7 @@ public class MainActivity extends DrawerActivity {
     private TextView textViewVarianceValue;
     private TextView textViewAvgBlockTime;
     private GsonBuilder builder;
-    private NoobPoolDbHelper mDbHelper;
+    private PoolDbHelper mDbHelper;
 
 
     private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
@@ -98,7 +93,7 @@ public class MainActivity extends DrawerActivity {
         setContentView(R.layout.activity_main);
 
 
-        mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        mDbHelper = new PoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -148,8 +143,8 @@ public class MainActivity extends DrawerActivity {
                         else if (radioMin.isChecked())
                             granoEnum=  GranularityEnum.MINUTE;
                         LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-                        NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, NoobPoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
-                        NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
+                        NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
+                        NoobChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
                     }
                 });
             }
@@ -179,11 +174,11 @@ public class MainActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);
         //importante refresh
-        mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        mDbHelper = new PoolDbHelper(this, mPool, mCur);
         issueRefresh(mDbHelper, builder);
     }
 
-    private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder) {
+    private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Utils.getHomeStatsURL(MainActivity.this), null,
                 new Response.Listener<JSONObject>() {
@@ -210,10 +205,10 @@ public class MainActivity extends DrawerActivity {
                                     granoEnum=  GranularityEnum.MINUTE;
 
                                 NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
-                                        NoobPoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
+                                        PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
                                         (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
 
-                                NoobChartUtils.drawHashrateHistory(hashText, NoobPoolQueryGrouper.groupAvgQueryResult(storia,
+                                NoobChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia,
                                         granoEnum),
                                         (LineView) findViewById(R.id.line_view_hashrate),
                                         granoEnum);

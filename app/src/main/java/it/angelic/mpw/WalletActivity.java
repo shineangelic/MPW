@@ -51,8 +51,8 @@ import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.GranularityEnum;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
-import it.angelic.mpw.model.db.NoobPoolQueryGrouper;
+import it.angelic.mpw.model.db.PoolDbHelper;
+import it.angelic.mpw.model.db.PoolQueryGrouper;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 import it.angelic.mpw.model.jsonpojos.wallet.Worker;
@@ -94,7 +94,7 @@ public class WalletActivity extends DrawerActivity {
         minerAddr = pref.getString("wallet_addr", null);
 
 
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -155,7 +155,7 @@ public class WalletActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        final NoobPoolDbHelper mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
         issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(this) + minerAddr);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -171,7 +171,7 @@ public class WalletActivity extends DrawerActivity {
 
     }
 
-    private void issueRefresh(final NoobPoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
+    private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 url, null,
                 new Response.Listener<JSONObject>() {
@@ -227,7 +227,7 @@ public class WalletActivity extends DrawerActivity {
     /**
      * Update header with last persisted DB row
      */
-    private void updateCurrentStats(final Wallet lastHit, final NoobPoolDbHelper mDbHelper, Long avgPending) {
+    private void updateCurrentStats(final Wallet lastHit, final PoolDbHelper mDbHelper, Long avgPending) {
 
         Calendar when = Calendar.getInstance();
         try {
@@ -324,14 +324,14 @@ public class WalletActivity extends DrawerActivity {
     private class UpdateUIAsynchTask extends AsyncTask<String, Void, String> {
 
         private Wallet last;
-        private NoobPoolDbHelper mDbHelper;
+        private PoolDbHelper mDbHelper;
         private Long avg;
         private ObjectAnimator objectanimator;
         private boolean mCanceled;
 
         @Override
         protected String doInBackground(String... params) {
-            mDbHelper = new NoobPoolDbHelper(WalletActivity.this, mPool, mCur);
+            mDbHelper = new PoolDbHelper(WalletActivity.this, mPool, mCur);
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = storia.get(storia.lastKey());
             //metodo peso
@@ -351,9 +351,9 @@ public class WalletActivity extends DrawerActivity {
                 granoEnum = GranularityEnum.DAY;
             else if (radioMin.isChecked())
                 granoEnum = GranularityEnum.MINUTE;
-            NoobChartUtils.drawWorkersHistory(lineView, NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia, granoEnum), granoEnum);
+            NoobChartUtils.drawWorkersHistory(lineView, PoolQueryGrouper.groupAvgWalletQueryResult(storia, granoEnum), granoEnum);
             NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
-                    NoobPoolQueryGrouper.groupAvgWalletQueryResult(storia,
+                    PoolQueryGrouper.groupAvgWalletQueryResult(storia,
                             granoEnum),
                     granoEnum);
             drawMinersTable(last);

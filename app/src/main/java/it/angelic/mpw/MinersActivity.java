@@ -1,7 +1,5 @@
 package it.angelic.mpw;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -43,7 +41,7 @@ import java.util.Random;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.MinerDBRecord;
-import it.angelic.mpw.model.db.NoobPoolDbHelper;
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
@@ -55,7 +53,7 @@ public class MinersActivity extends DrawerActivity {
     private RecyclerView mRecyclerView;
     private MinerAdapter mAdapter;
 
-    private NoobPoolDbHelper mDbHelper;
+    private PoolDbHelper mDbHelper;
     private TextView textViewHighestHashrateValue;
     private TextView textViewMostPaidMinerValue;
     private TextView textViewolde;
@@ -126,7 +124,7 @@ public class MinersActivity extends DrawerActivity {
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
-        mDbHelper = new NoobPoolDbHelper(this, mPool, mCur);
+        mDbHelper = new PoolDbHelper(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
         textViewHighestHashrateValue = findViewById(R.id.textViewHighestHashrateValue);
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
@@ -321,7 +319,7 @@ public class MinersActivity extends DrawerActivity {
     private class UpdateUIAsynchTask extends AsyncTask<String, Void, String> {
 
         private final MinerRoot retrieved;
-        private NoobPoolDbHelper mDbHelper;
+        private PoolDbHelper mDbHelper;
         private ObjectAnimator objectanimator;
         private ArrayList<MinerDBRecord> min;
 
@@ -355,7 +353,7 @@ public class MinersActivity extends DrawerActivity {
 
         @Override
         protected void onPreExecute() {
-            mDbHelper = new NoobPoolDbHelper(MinersActivity.this, mPool, mCur);
+            mDbHelper = new PoolDbHelper(MinersActivity.this, mPool, mCur);
             if (mAdapter == null) {
                 mAdapter = new MinerAdapter(min, mPool, mCur);
                 min = mDbHelper.getMinerList();
