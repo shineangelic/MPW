@@ -236,34 +236,16 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * This methods can serve stats/charts only, as it is not precise
+     * This HEAVY method can serve stats/charts only, as it is not precise
      * The last block pending before payout is not being counted.
      *
      * @return average 'pending' increase per block
      */
-    public Long getAveragePending(int checkedRadioButtonId) {
-        String limitCause = "";
-        Calendar now = Calendar.getInstance();
-        int cnt = 1;
+    public Long getAveragePending() {
+        int cnt = 0;
+        int rec=0;
         Long pendings = 0L;
         Long prevPending = 0L;
-        switch (checkedRadioButtonId) {
-            case R.id.radioButtonOneDayMiner:
-                now.add(Calendar.DATE, -1);
-                limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
-                break;
-            case R.id.radioButtonOneWeekMiner:
-                now.add(Calendar.DATE, -7);
-                limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
-                break;
-            case R.id.radioButtonOneMonthMiner:
-                now.add(Calendar.MONTH, -1);
-                limitCause = NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
-                break;
-            default:
-                Log.e("DB", "Unexpected switch ERROR");
-                break;
-        }
 
         SQLiteDatabase db = this.getReadableDatabase();
         // Cursor cursor = db.rawQuery(selectQuery, null);
@@ -271,20 +253,22 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                         NoobDataBaseContract.Wallet_._ID,
                         NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM,
                         NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON},
-                limitCause,
+                null,
                 null,// String[] selectionArgs
                 null,
                 null, // HAVING
                 NoobDataBaseContract.Wallet_.COLUMN_NAME_DTM + " ASC");// ORDER BY
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             Gson gson = builder.create();
+            Wallet camp  = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
+            prevPending = camp.getStats().getBalance().longValue();
             do {
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(NoobDataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-
-                Long curPending = retrieved.getStats().getPending().longValue();
+                rec++;
+                Long curPending = retrieved.getStats().getBalance().longValue();
                 if (curPending > prevPending) {
+                    Log.d(TAG, "Block detected in history. Prev balance: " + prevPending+" current: "+curPending);
                     cnt++;
                     //pending increased
                     pendings += (curPending - prevPending);
@@ -292,8 +276,10 @@ public class NoobPoolDbHelper extends SQLiteOpenHelper {
                 prevPending = curPending;
             } while (cursor.moveToNext());
         }
-        Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt);
+        Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt+" FROM RECORDS: "+rec);
         cursor.close();
+         if (cnt == 0)
+             return 0l;
         return pendings / cnt;
     }
 

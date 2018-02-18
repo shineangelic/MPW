@@ -333,8 +333,9 @@ public class WalletActivity extends DrawerActivity {
         protected String doInBackground(String... params) {
             mDbHelper = new NoobPoolDbHelper(WalletActivity.this, mPool, mCur);
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
-            last = storia.get(storia.firstKey());
-            avg = mDbHelper.getAveragePending(radioGroupBackTo.getCheckedRadioButtonId());
+            last = storia.get(storia.lastKey());
+            //metodo peso
+            avg = mDbHelper.getAveragePending( );
 
             return "Executed";
         }

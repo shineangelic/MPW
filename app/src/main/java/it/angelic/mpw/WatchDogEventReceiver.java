@@ -86,7 +86,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         if (notifyBlock
                                 &&
                                 ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
-                            sendBlockNotification(ctx, "NoobPool has found a new block", mPool);
+                            sendBlockNotification(ctx, mPool.toString()+" has found " +ultimi.get(ultimi.get(0)).getMaturedTotal() +" blocks", mPool);
                         }
 
                     }
