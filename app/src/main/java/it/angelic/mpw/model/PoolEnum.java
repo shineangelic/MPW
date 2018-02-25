@@ -27,6 +27,14 @@ public enum PoolEnum {
         add(CurrencyEnum.DBIX);
         add(CurrencyEnum.VIC);
     }}, false),
+    MINERPOOL("Minerpool", "minerpool.net", false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ELLA);
+        add(CurrencyEnum.EXP);
+        add(CurrencyEnum.MUSIC);
+        add(CurrencyEnum.PIRL);
+        add(CurrencyEnum.UBIQ);
+        add(CurrencyEnum.VIC);
+    }}, false),
     ETHERDIG("etherdig", "etherdig.net", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}, true),

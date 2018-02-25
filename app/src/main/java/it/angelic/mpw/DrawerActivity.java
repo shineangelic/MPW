@@ -85,6 +85,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case NOOBPOOL:
                 curLogo.setImageResource(R.mipmap.pool_noob);
                 break;
+            case MAXHASH:
+                curLogo.setImageResource(R.mipmap.ic_maxhash_logo);
+                break;
 
         }
         switch (mCur){

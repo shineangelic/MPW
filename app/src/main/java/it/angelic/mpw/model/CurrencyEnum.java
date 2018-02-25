@@ -24,7 +24,7 @@ public enum CurrencyEnum {
     MC("Musicoin"),//MAXPOOL names its way
     MONA("MonaCoin"), //lol
     XMR("Monero"),
-    PIRL("Pirl"), //ahah
+    PIRL("Pirl","https://poseidon.pirl.io/explorer"), //ahah
     THC("HempCoin"),
     UBQ("Ubiq", "https://ubiqscan.io"),
     UBIQ("Ubiq", "https://ubiqscan.io"),//MAXPOOL names its way
