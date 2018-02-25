@@ -20,11 +20,13 @@ public enum CurrencyEnum {
 	KMD("Komodo"),
 	LTC("Litecoin"),
     MUSIC("Musicoin"),
+    MC("Musicoin"),//MAXPOOL names its way
     MONA("MonaCoin"), //lol
     XMR("Monero"),
     PIRL("Expanse"), //ahah
     THC("HempCoin"),
     UBQ("Ubiq"),
+    UBIQ("Ubiq"),//MAXPOOL names its way
     VIC("Victorium"),
     XVG("Verge"),
     ZEN("Zencash"),

@@ -34,11 +34,23 @@ public enum PoolEnum {
     }}, true),
     ISTPOOL("1stpool", "1stpool.com", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
-    }}, false);
+    }}, false),
+    MAXHASH("MaxHash", "maxhash.org", true, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+        add(CurrencyEnum.EXP);
+        add(CurrencyEnum.MC);
+        add(CurrencyEnum.UBIQ);
+    }}, false, "pool");
+    //human friendly name
     private String friendlyName;
+    //dominio di primo e secondo liv.
     private String webRoot;
+    //qualche pool funziona solo in HTTPS
     private Boolean httpsOnly;
+    //qualche genio omette la moneta se ne ha una sola nel pool
     private Boolean omitCurrency;
+    //qualche genio cambia la radice del sito
+    private String radixSuffix;
     private ArrayList<CurrencyEnum> supportedCurrencies;
     private PoolEnum(String friendlyName, String wr, Boolean https, ArrayList sfp, Boolean omit) {
         this.friendlyName = friendlyName;
@@ -46,6 +58,15 @@ public enum PoolEnum {
         supportedCurrencies = sfp;
         httpsOnly = https;
         omitCurrency = omit;
+        radixSuffix = "";
+    }
+    private PoolEnum(String friendlyName, String wr, Boolean https, ArrayList sfp, Boolean omit,String rad) {
+        this.friendlyName = friendlyName;
+        this.webRoot = wr;
+        supportedCurrencies = sfp;
+        httpsOnly = https;
+        omitCurrency = omit;
+        radixSuffix = rad;
     }
 
     public Boolean getOmitCurrency() {
@@ -58,6 +79,10 @@ public enum PoolEnum {
 
     public String getTransportProtocolBase() {
         return httpsOnly ? "https://" : "http://";
+    }
+
+    public String getRadixSuffix() {
+        return radixSuffix;
     }
 
     public String getWebRoot() {
