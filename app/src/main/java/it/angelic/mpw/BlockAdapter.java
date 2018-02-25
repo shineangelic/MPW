@@ -3,6 +3,7 @@ package it.angelic.mpw;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,14 +92,19 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
 
         }
 
-        public void bindBlock(final Matured game, CurrencyEnum cur) {
+        public void bindBlock(final Matured game, final CurrencyEnum cur) {
             mTextView.setText(game.getHash().toUpperCase());
             View.OnClickListener list = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse("https://etherscan.io/block/" + game.getHeight()));
-                    ctx.startActivity(i);
+                    if (cur.getScannerSite() != null) {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(cur.getScannerSite() + "/block/" + game.getHeight()));
+                        ctx.startActivity(i);
+                    } else {
+                        Snackbar.make(view, "Blockchain explorer not available for "+cur.toString(), Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    }
                 }
             };
             mTextView.setOnClickListener(list);

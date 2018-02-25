@@ -15,8 +15,8 @@ public enum CurrencyEnum {
 	DOGE("Dogecoin"),
     ELLA("Ellaism"),
 	EMC2("Einstenium"), //argh!
-	ETH("Ethereum"),
-    ETC("Ethereum Classic"),
+	ETH("Ethereum", "https://etherscan.io"),
+    ETC("Ethereum Classic", "https://gastracker.io"),
 	EXP("Expanse"),
 	KMD("Komodo"),
 	LTC("Litecoin"),
@@ -26,8 +26,8 @@ public enum CurrencyEnum {
     XMR("Monero"),
     PIRL("Pirl"), //ahah
     THC("HempCoin"),
-    UBQ("Ubiq"),
-    UBIQ("Ubiq"),//MAXPOOL names its way
+    UBQ("Ubiq", "https://ubiqscan.io"),
+    UBIQ("Ubiq", "https://ubiqscan.io"),//MAXPOOL names its way
     VIC("Victorium"),
     XVG("Verge"),
     ZEN("Zencash"),
@@ -35,8 +35,18 @@ public enum CurrencyEnum {
 
     private String friendlyName;
 
+    public String getScannerSite() {
+        return scannerSite;
+    }
+
+    private String scannerSite;
+
     private CurrencyEnum(String friendlyName){
         this.friendlyName = friendlyName;
+    }
+    private CurrencyEnum(String friendlyName,String scanner){
+        this.friendlyName = friendlyName;
+        this.scannerSite = scanner;
     }
 
     @Override public String toString(){

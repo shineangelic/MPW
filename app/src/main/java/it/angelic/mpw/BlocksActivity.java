@@ -100,7 +100,7 @@ public class BlocksActivity extends DrawerActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_blocks);
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_blocks);
-        View headerLayout = navigationViewInterna.getHeaderView(0);
+        //View headerLayout = navigationViewInterna.getHeaderView(0);
 
         Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
     }
@@ -122,7 +122,14 @@ public class BlocksActivity extends DrawerActivity {
                                 Block retrieved = gson.fromJson(response.toString(), Block.class);
 
                                 if (retrieved.getMaturedTotal() > 0) {
-                                    textViewBlocksTitle.setText(retrieved.getMaturedTotal() + " " + mCur.toString() + " " + "Blocks found on " + mPool.toString());
+                                    StringBuilder txtTit = new StringBuilder();
+                                    txtTit.append(retrieved.getMaturedTotal()).append(" ").append(mCur.toString());
+                                    txtTit.append(" ").append("Blocks");
+                                    if (retrieved.getImmature() != null && retrieved.getImmature().size() > 0)
+                                        txtTit.append(" and ").append(retrieved.getImmature().size()).append(" immature");
+                                    txtTit.append(" found on ").append(mPool.toString());
+
+                                    textViewBlocksTitle.setText(txtTit);
                                     Matured[] maturi = new Matured[retrieved.getMaturedTotal()];
 
                                     SummaryStatistics sts = doApacheMath(retrieved.getMatured());

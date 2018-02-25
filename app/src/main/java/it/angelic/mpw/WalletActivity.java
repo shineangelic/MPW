@@ -246,9 +246,14 @@ public class WalletActivity extends DrawerActivity {
             walletValueText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse("https://etherscan.io/address/" + minerAddr));
-                    startActivity(i);
+                    if (mCur.getScannerSite() != null) {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(mCur.getScannerSite() + "/address/" + minerAddr));
+                        startActivity(i);
+                    } else {
+                        Snackbar.make(view, "Blockchain explorer not available for "+mCur.toString(), Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    }
                 }
             });
         } catch (Exception e) {
@@ -278,7 +283,7 @@ public class WalletActivity extends DrawerActivity {
         }
 
         try {
-            textViewAvgPending.setText(avgPending==0?"NA":Utils.formatCurrency( avgPending, mCur));
+            textViewAvgPending.setText(avgPending == 0 ? "NA" : Utils.formatCurrency(avgPending, mCur));
         } catch (Exception mie) {
             Log.e(Constants.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
             textViewAvgPending.setText("NA");
@@ -335,7 +340,7 @@ public class WalletActivity extends DrawerActivity {
             storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
             last = storia.get(storia.lastKey());
             //metodo peso
-            avg = mDbHelper.getAveragePending( );
+            avg = mDbHelper.getAveragePending();
 
             return "Executed";
         }
