@@ -13,7 +13,6 @@ public enum PoolEnum {
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
     }}, false),
-
     CRYPTOPOOL("CryptoPool Network", "cryptopool.network", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
@@ -21,7 +20,6 @@ public enum PoolEnum {
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBQ);
     }}, false),
-
     HASHINGPARTY("Hashing Party", "hashing.party", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
@@ -41,6 +39,12 @@ public enum PoolEnum {
         add(CurrencyEnum.MC);
         add(CurrencyEnum.UBIQ);
     }}, false, "pool");
+    /*NEVERMINING( "Nevermining",   "nevermining.org", false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.MUSIC);
+        add(CurrencyEnum.PIRL);
+        add(CurrencyEnum.ELLA);
+        add(CurrencyEnum.UBIQ);
+    }}, false);*/
     //human friendly name
     private String friendlyName;
     //dominio di primo e secondo liv.

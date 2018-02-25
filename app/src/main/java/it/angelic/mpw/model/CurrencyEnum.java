@@ -13,6 +13,7 @@ public enum CurrencyEnum {
     DCR("Decred"),
 	DBIX("Dubai Coin"),
 	DOGE("Dogecoin"),
+    ELLA("Ellaism"),
 	EMC2("Einstenium"), //argh!
 	ETH("Ethereum"),
     ETC("Ethereum Classic"),
@@ -23,7 +24,7 @@ public enum CurrencyEnum {
     MC("Musicoin"),//MAXPOOL names its way
     MONA("MonaCoin"), //lol
     XMR("Monero"),
-    PIRL("Expanse"), //ahah
+    PIRL("Pirl"), //ahah
     THC("HempCoin"),
     UBQ("Ubiq"),
     UBIQ("Ubiq"),//MAXPOOL names its way
