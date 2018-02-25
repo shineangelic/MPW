@@ -30,7 +30,7 @@ public class EncourageActivity extends AppCompatActivity {
                 email.setType("application/octet-stream");
 
                 email.putExtra(Intent.EXTRA_EMAIL, new String[]{"shineangelic@gmail.com"});
-                email.putExtra(Intent.EXTRA_SUBJECT, "NoobClient request");
+                email.putExtra(Intent.EXTRA_SUBJECT, "Mining Pool Watcher issue/request");
                 startActivity(Intent.createChooser(email, "Send Email"));
             }
         });
@@ -41,7 +41,7 @@ public class EncourageActivity extends AppCompatActivity {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("NoobPool Client", "0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13");
                 clipboard.setPrimaryClip(clip);
-                Snackbar.make(view, "Developer wallet copied to clipboard", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Developer ETH wallet copied to clipboard", Snackbar.LENGTH_LONG)
                         .show();
             }
         });

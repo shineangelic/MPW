@@ -26,6 +26,13 @@
             android:key="wallet_addr"
             android:summary="Insert your wallet's public address to know your personal stats. Changing it means losing previous wallet's data"
             android:title="Wallet Address" />
+        <android.support.v7.preference.ListPreference
+            android:defaultValue="0"
+            android:entries="@array/theme_names"
+            android:entryValues="@array/theme"
+            android:summary="Overrides automatic day/night switch"
+            android:key="pref_theme"
+            android:title="Theme" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_key_cat_notification"

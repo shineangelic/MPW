@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,8 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+
+        AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", "0")));
     }
 
     @Override
@@ -48,13 +51,14 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-       final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+       final DrawerLayout drawer =  findViewById(R.id.drawer_layout);
 
          navigationView.setNavigationItemSelectedListener(this);
         //set proper pool info
         View headerLayout = navigationView.getHeaderView(0);
         ImageView curLogo = headerLayout.findViewById(R.id.imageViewCurrencyLogo);
         ImageView backgroundPool = headerLayout.findViewById(R.id.backgroundPool);
+        ImageView imageViewCurrencyLogoFoot = drawer.findViewById(R.id.imageViewCurrencyLogoFoot);
         LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
         TextView poolT = headerLayout.findViewById(R.id.navTextPool);
         TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
@@ -67,7 +71,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 startActivity(miner);
             }
         });
-        poolT.setText(mPool.toString());
+        poolT.setText(mPool.toString() + " - "+ mCur.name());
         poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
 
 
@@ -83,7 +87,23 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 break;
 
         }
-
+        switch (mCur){
+            case ETH:
+            case ETC:
+                //gia` cosi, e` default
+                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ethereum_logo);
+                break;
+            case UBIQ:
+            case UBQ:
+                //gia` cosi, e` default
+                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ubiq_logo);
+                break;
+            case MUSIC:
+            case MC:
+                //gia` cosi, e` default
+                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_musicoin_logo);
+                break;
+        }
 
 
     }
