@@ -8,7 +8,7 @@ public class Block implements Serializable
 
     private List<Matured> candidates;
     private Integer candidatesTotal;
-    private Integer immature;
+    private List<Matured> immature;
     private Integer immatureTotal;
     private List<Matured> matured = null;
     private Integer maturedTotal;
@@ -30,11 +30,11 @@ public class Block implements Serializable
         this.candidatesTotal = candidatesTotal;
     }
 
-    public Integer getImmature() {
+    public List<Matured> getImmature() {
         return immature;
     }
 
-    public void setImmature(Integer immature) {
+    public void setImmature(List<Matured> immature) {
         this.immature = immature;
     }
 

@@ -54,7 +54,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
     public void onReceive(final Context ctx, final Intent intent) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
-        CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+        final CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         Log.i(Constants.TAG, "Miner Pool Watcher Service call:" + Utils.getHomeStatsURL(ctx));
         final PoolDbHelper mDbHelper = new PoolDbHelper(ctx, mPool, mCur);
         final NotificationManager mNotifyMgr =
@@ -126,7 +126,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             if (notifyPayment && ultimi.keySet().size() >= LAST_TWO &&
                                     ultimi.get(ultimi.firstKey()).getPayments().size() > ultimi.get(ultimi.get(1)).getPayments().size()) {
                                 sendPaymentNotification(ctx, "You received a payment: " +
-                                        Utils.formatEthCurrency(ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()));
+                                        Utils.formatEthCurrency(ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()), mCur.toString()+" payment from " + mPool.toString());
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -215,7 +215,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
-    private void sendPaymentNotification(Context ctx, String contentText) {
+    private void sendPaymentNotification(Context ctx, String contentText, String contentTitle) {
         Intent resultIntent = new Intent(ctx, PaymentsActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
@@ -230,7 +230,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.ic_payment_black_24dp)
-                        .setContentTitle("Eth payment from NoobPool")
+                        .setContentTitle(contentTitle)
                         .setCategory(CATEGORY_PROGRESS)
                         .setAutoCancel(true)
                         .setContentText(contentText);
