@@ -279,7 +279,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt+" FROM RECORDS: "+rec);
         cursor.close();
          if (cnt == 0)
-             return 0l;
+             return 0L;
         return pendings / cnt;
     }
 

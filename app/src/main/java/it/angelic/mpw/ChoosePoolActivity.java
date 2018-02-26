@@ -2,11 +2,9 @@ package it.angelic.mpw;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -57,13 +55,13 @@ public class ChoosePoolActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_pool);
 
         // Set up the login form.
-        mWalletView = (TextView) findViewById(R.id.wallet);
+        mWalletView = findViewById(R.id.wallet);
         // populateAutoComplete();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
 
         poolSpinner = findViewById(R.id.spinnerPoolChooser);
 
-        skipIntro = (CheckBox) findViewById(R.id.skipIntro);
+        skipIntro = findViewById(R.id.skipIntro);
         skipIntro.setChecked(prefs.getBoolean("skipIntro", false));
 
         if (skipIntro.isChecked()) {
@@ -76,13 +74,13 @@ public class ChoosePoolActivity extends AppCompatActivity {
         //admob
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
 
-        ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<PoolEnum>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
+        ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
         poolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         poolSpinner.setAdapter(poolSpinnerAdapter);
 
 
         currencySpinner = findViewById(R.id.spinnerCurrencyChooser);
-        ArrayAdapter curAdapter = new ArrayAdapter<CurrencyEnum>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
+        ArrayAdapter curAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
         curAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinner.setAdapter(curAdapter);
 
@@ -117,7 +115,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
                 mWalletView.setText(prevWallet.length() == 0 ? getString(R.string.no_wallet_set) : prevWallet);
-                Log.i(Constants.TAG, "currencySpinner list: " + (CurrencyEnum) currencySpinner.getItemAtPosition(currencySpinner.getSelectedItemPosition()));
+                Log.i(Constants.TAG, "currencySpinner list: " + currencySpinner.getItemAtPosition(currencySpinner.getSelectedItemPosition()));
             }
 
             @Override
@@ -127,7 +125,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,7 +166,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 if (prevPool.equalsIgnoreCase(((PoolEnum) poolSpinner.getItemAtPosition(u)).name())) {
                     poolSpinner.setSelection(u);
                     currencySpinner.setSelection(0);
-                    Log.i(Constants.TAG, "Restoring previous pool: " + (PoolEnum) poolSpinner.getSelectedItem());
+                    Log.i(Constants.TAG, "Restoring previous pool: " + poolSpinner.getSelectedItem());
                     break;
                 }
             }
@@ -188,7 +186,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         for (int u = 0; u < currencySpinner.getAdapter().getCount(); u++) {
                             if (prevCur.equalsIgnoreCase(((CurrencyEnum) currencySpinner.getItemAtPosition(u)).name())) {
                                 currencySpinner.setSelection(u);
-                                Log.i(Constants.TAG, "Restoring previous cur: " + (CurrencyEnum) currencySpinner.getSelectedItem());
+                                Log.i(Constants.TAG, "Restoring previous cur: " + currencySpinner.getSelectedItem());
                             }
                         }
                     }
@@ -252,12 +250,10 @@ public class ChoosePoolActivity extends AppCompatActivity {
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -277,12 +273,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
     }
 
     /**
@@ -334,7 +324,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
             }
 
             try {
-                URL myUrl = new URL(Utils.getHomeStatsURL(ChoosePoolActivity.this));
+                URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));
                 URLConnection connection = myUrl.openConnection();
                 connection.setConnectTimeout(2000);
                 connection.connect();

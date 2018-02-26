@@ -15,7 +15,7 @@ import it.angelic.mpw.model.db.PoolDbHelper;
  *
  * @author shine@angelic.it
  */
-public class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener {
+class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener {
 
     private final Context mCtx;
     private final PoolEnum pool;

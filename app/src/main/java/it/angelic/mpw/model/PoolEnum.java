@@ -55,17 +55,17 @@ public enum PoolEnum {
         add(CurrencyEnum.UBIQ);
     }}, false);
     //human friendly name
-    private String friendlyName;
+    private final String friendlyName;
     //dominio di primo e secondo liv.
-    private String webRoot;
+    private final String webRoot;
     //qualche pool funziona solo in HTTPS
-    private Boolean httpsOnly;
+    private final Boolean httpsOnly;
     //qualche genio omette la moneta se ne ha una sola nel pool
-    private Boolean omitCurrency;
+    private final Boolean omitCurrency;
     //qualche genio cambia la radice del sito
-    private String radixSuffix;
-    private ArrayList<CurrencyEnum> supportedCurrencies;
-    private PoolEnum(String friendlyName, String wr, Boolean https, ArrayList sfp, Boolean omit) {
+    private final String radixSuffix;
+    private final ArrayList<CurrencyEnum> supportedCurrencies;
+    PoolEnum(String friendlyName, String wr, Boolean https, ArrayList<CurrencyEnum> sfp, Boolean omit) {
         this.friendlyName = friendlyName;
         this.webRoot = wr;
         supportedCurrencies = sfp;
@@ -73,7 +73,7 @@ public enum PoolEnum {
         omitCurrency = omit;
         radixSuffix = "";
     }
-    private PoolEnum(String friendlyName, String wr, Boolean https, ArrayList sfp, Boolean omit,String rad) {
+    PoolEnum(String friendlyName, String wr, Boolean https, ArrayList<CurrencyEnum> sfp, Boolean omit,String rad) {
         this.friendlyName = friendlyName;
         this.webRoot = wr;
         supportedCurrencies = sfp;

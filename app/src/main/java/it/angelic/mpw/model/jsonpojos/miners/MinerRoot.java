@@ -2,9 +2,6 @@ package it.angelic.mpw.model.jsonpojos.miners;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
-
-import it.angelic.mpw.model.jsonpojos.wallet.Worker;
 
 public class MinerRoot {
 

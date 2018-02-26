@@ -15,16 +15,13 @@ import it.angelic.mpw.model.PoolEnum;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private PoolEnum mPool;
-    private CurrencyEnum mCur;
-
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.preferences);
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
-        mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
+        PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+        CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
 
         final android.support.v7.preference.SwitchPreferenceCompat globalNotifications = (SwitchPreferenceCompat) findPreference("pref_notify");
         final android.support.v7.preference.EditTextPreference walletAddr = (EditTextPreference) findPreference("wallet_addr");

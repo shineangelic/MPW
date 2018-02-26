@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -66,7 +66,7 @@ public class BlocksActivity extends DrawerActivity {
         textViewBlockTimeStdDevValue = findViewById(R.id.textViewBlockTimeStdDevValue);
 
         GsonBuilder builder = new GsonBuilder();
-        mRecyclerView = (RecyclerView) findViewById(R.id.blocks_recycler_view);
+        mRecyclerView = findViewById(R.id.blocks_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -86,18 +86,18 @@ public class BlocksActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationViewInterna = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationViewInterna = findViewById(R.id.navigation_view);
         navigationViewInterna.setNavigationItemSelectedListener(this);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_blocks);
+        NavigationView navigationView = findViewById(R.id.nav_view_blocks);
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_blocks);
         //View headerLayout = navigationViewInterna.getHeaderView(0);
@@ -108,7 +108,7 @@ public class BlocksActivity extends DrawerActivity {
     private void issueRefresh(final GsonBuilder builder) {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Utils.getBlocksURL(BlocksActivity.this), null,
+                Utils.getBlocksURL(PreferenceManager.getDefaultSharedPreferences(BlocksActivity.this)), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -125,6 +125,8 @@ public class BlocksActivity extends DrawerActivity {
                                     StringBuilder txtTit = new StringBuilder();
                                     txtTit.append(retrieved.getMaturedTotal()).append(" ").append(mCur.toString());
                                     txtTit.append(" ").append("Blocks");
+
+
                                     if (retrieved.getImmature() != null && retrieved.getImmature().size() > 0)
                                         txtTit.append(" and ").append(retrieved.getImmature().size()).append(" immature");
                                     txtTit.append(" found on ").append(mPool.toString());

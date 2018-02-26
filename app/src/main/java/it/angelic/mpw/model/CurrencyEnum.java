@@ -33,7 +33,7 @@ public enum CurrencyEnum {
     ZEN("Zencash"),
     ZEC("ZCash");
 
-    private String friendlyName;
+    private final String friendlyName;
 
     public String getScannerSite() {
         return scannerSite;
@@ -41,10 +41,10 @@ public enum CurrencyEnum {
 
     private String scannerSite;
 
-    private CurrencyEnum(String friendlyName){
+    CurrencyEnum(String friendlyName){
         this.friendlyName = friendlyName;
     }
-    private CurrencyEnum(String friendlyName,String scanner){
+    CurrencyEnum(String friendlyName, String scanner){
         this.friendlyName = friendlyName;
         this.scannerSite = scanner;
     }

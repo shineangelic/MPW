@@ -47,7 +47,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
 
        final DrawerLayout drawer =  findViewById(R.id.drawer_layout);
 
@@ -197,7 +197,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                     }).show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

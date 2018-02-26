@@ -42,7 +42,7 @@ class NoobChartUtils {
                     + "(avg: " + Utils.formatHashrate((long) stats.getMean())
                     + ", max: " + Utils.formatHashrate((long) stats.getMax())
                     + ", min: " + Utils.formatHashrate((long) stats.getMin())
-                    + ", now: " + Utils.formatHashrate((long) storia.get(dates.get(dataList.size()-1)).getHashrate())
+                    + ", now: " + Utils.formatHashrate(storia.get(dates.get(dataList.size()-1)).getHashrate())
                     + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
                     + ")");
 
@@ -71,7 +71,7 @@ class NoobChartUtils {
                 + "(avg: " + Utils.formatHashrate((long) stats.getMean())
                 + ", max: " + Utils.formatHashrate((long) stats.getMax())
                 + ", min: " + Utils.formatHashrate((long) stats.getMin())
-                + ", now: " + Utils.formatHashrate((long) dateWalletLinkedMap.get(dates.get(dataList.size()-1)).getHashrate())
+                + ", now: " + Utils.formatHashrate(dateWalletLinkedMap.get(dates.get(dataList.size()-1)).getHashrate())
                 + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
                 + ")");
 

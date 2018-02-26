@@ -1,48 +1,38 @@
 package it.angelic.mpw.model.jsonpojos.miners;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Miner {
 
-private Date lastBeat;
-private Long hr;
-private Boolean offline;
-private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Date lastBeat;
+    private Long hr;
+    private Boolean offline;
     private String address;
 
     public Date getLastBeat() {
-return lastBeat;
-}
+        return lastBeat;
+    }
 
-public void setLastBeat(Date lastBeat) {
-this.lastBeat = lastBeat;
-}
+    public void setLastBeat(Date lastBeat) {
+        this.lastBeat = lastBeat;
+    }
 
-public Long getHashrate() {
-return hr;
-}
+    public Long getHashrate() {
+        return hr;
+    }
 
-public void setHr(Long hr) {
-this.hr = hr;
-}
+    public void setHr(Long hr) {
+        this.hr = hr;
+    }
 
-public Boolean getOffline() {
-return offline;
-}
+    public Boolean getOffline() {
+        return offline;
+    }
 
-public void setOffline(Boolean offline) {
-this.offline = offline;
-}
+    public void setOffline(Boolean offline) {
+        this.offline = offline;
+    }
 
-public Map<String, Object> getAdditionalProperties() {
-return this.additionalProperties;
-}
-
-public void setAdditionalProperty(String name, Object value) {
-this.additionalProperties.put(name, value);
-}
 
     public String getAddress() {
         return address;

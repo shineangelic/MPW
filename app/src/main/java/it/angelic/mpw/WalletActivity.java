@@ -72,7 +72,6 @@ public class WalletActivity extends DrawerActivity {
     private TextView textViewWalLastShare;
     private LinkedMap<Date, Wallet> storia;
     private RadioGroup radioGroupBackTo;
-    private RadioGroup radioGroupChartGranularity;
     private String minerAddr;
     private LineView lineView;
     private TextView textViewWalRoundSharesPercValue;
@@ -104,33 +103,33 @@ public class WalletActivity extends DrawerActivity {
         hashRateChartTitleText = findViewById(R.id.hashrateText);
         walletTitleText = findViewById(R.id.textViewWalletTitle);
         walletValueText = findViewById(R.id.textViewWalletValue);
-        walCurHashrateText = (TextView) findViewById(R.id.textViewWalCurHashrateValue);
-        walCurHashrate3HText = (TextView) findViewById(R.id.textViewWalHashrate3hValue);
-        walTotSharesText = (TextView) findViewById(R.id.textViewWalSharesValue);
-        walOnlineWorkersText = (TextView) findViewById(R.id.textViewWalOnlineMinersValue);
-        lineView = (LineView) findViewById(R.id.line_view_onlineminers);
-        lineViewRate = (LineView) findViewById(R.id.line_view_hrate);
-        textViewWalPaymentsValue = (TextView) findViewById(R.id.textViewWalPaymentsValue);
-        textViewWalLastShareValue = (TextView) findViewById(R.id.textViewWalLastShareValue);
-        textViewWalLastShare = (TextView) findViewById(R.id.textViewWalLastShare);
-        textViewWalRoundSharesPercValue = (TextView) findViewById(R.id.textViewWalRoundSharesPercValue);
-        textViewPendingBalanceValue = (TextView) findViewById(R.id.textViewPendingBalanceValue);
-        textViewAvgPending = (TextView) findViewById(R.id.textViewAvgPendingValue);
-        textViewPaidValue = (TextView) findViewById(R.id.textViewPaidValue);
+        walCurHashrateText = findViewById(R.id.textViewWalCurHashrateValue);
+        walCurHashrate3HText = findViewById(R.id.textViewWalHashrate3hValue);
+        walTotSharesText = findViewById(R.id.textViewWalSharesValue);
+        walOnlineWorkersText = findViewById(R.id.textViewWalOnlineMinersValue);
+        lineView = findViewById(R.id.line_view_onlineminers);
+        lineViewRate = findViewById(R.id.line_view_hrate);
+        textViewWalPaymentsValue = findViewById(R.id.textViewWalPaymentsValue);
+        textViewWalLastShareValue = findViewById(R.id.textViewWalLastShareValue);
+        textViewWalLastShare = findViewById(R.id.textViewWalLastShare);
+        textViewWalRoundSharesPercValue = findViewById(R.id.textViewWalRoundSharesPercValue);
+        textViewPendingBalanceValue = findViewById(R.id.textViewPendingBalanceValue);
+        textViewAvgPending = findViewById(R.id.textViewAvgPendingValue);
+        textViewPaidValue = findViewById(R.id.textViewPaidValue);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(WalletActivity.this) + minerAddr);
+                issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(WalletActivity.this)) + minerAddr);
             }
         });
 
         //i grafici hanno controlli globali
-        radioGroupChartGranularity = (RadioGroup) findViewById(R.id.radioDifficultyGranularity);
-        radioGroupBackTo = (RadioGroup) findViewById(R.id.radioBackto);
+        RadioGroup radioGroupChartGranularity = findViewById(R.id.radioDifficultyGranularity);
+        radioGroupBackTo = findViewById(R.id.radioBackto);
 
         RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -141,7 +140,7 @@ public class WalletActivity extends DrawerActivity {
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
         radioGroupChartGranularity.setOnCheckedChangeListener(mescola);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_wallet), mPool, mCur);
@@ -156,16 +155,16 @@ public class WalletActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
         final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
-        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(this) + minerAddr);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + minerAddr);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationViewInterna = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationViewInterna = findViewById(R.id.navigation_view);
         navigationViewInterna.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_wallet);
 
@@ -200,7 +199,7 @@ public class WalletActivity extends DrawerActivity {
     }
 
     private void drawMinersTable(Wallet retrieved) {
-        TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayoutWorkers);
+        TableLayout minersTable = findViewById(R.id.tableLayoutWorkers);
         minersTable.removeAllViews();
         //table header
         TableRow row = (TableRow) LayoutInflater.from(WalletActivity.this).inflate(R.layout.tablerow_miner, null);
@@ -293,7 +292,7 @@ public class WalletActivity extends DrawerActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

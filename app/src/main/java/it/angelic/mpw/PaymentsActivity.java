@@ -47,7 +47,6 @@ public class PaymentsActivity extends DrawerActivity {
 
     private String minerAddr;
     private GsonBuilder builder;
-    private TextView textViewWalletValue;
     private LineView paymentsChart;
     private TextView textViewPaymentsTitle;
 
@@ -60,7 +59,7 @@ public class PaymentsActivity extends DrawerActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         minerAddr = pref.getString("wallet_addr", null);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
 
@@ -69,9 +68,9 @@ public class PaymentsActivity extends DrawerActivity {
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
-        textViewWalletValue = (TextView) findViewById(R.id.textViewWalletValue);
-        textViewPaymentsTitle = (TextView) findViewById(R.id.textViewPaymentTitle);
-        paymentsChart = (LineView) findViewById(R.id.lineViewPaymentss);
+        TextView textViewWalletValue = findViewById(R.id.textViewWalletValue);
+        textViewPaymentsTitle = findViewById(R.id.textViewPaymentTitle);
+        paymentsChart = findViewById(R.id.lineViewPaymentss);
         textViewWalletValue.setText(minerAddr.toUpperCase());
         textViewWalletValue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +81,7 @@ public class PaymentsActivity extends DrawerActivity {
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -95,11 +94,11 @@ public class PaymentsActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
         final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
-        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(this)+minerAddr);
+        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this))+minerAddr);
     }
 
     private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -140,7 +139,7 @@ public class PaymentsActivity extends DrawerActivity {
     }
 
     private void drawPaymentsTable(Wallet retrieved) {
-        TableLayout minersTable = (TableLayout) findViewById(R.id.tableLayoutPayments);
+        TableLayout minersTable = findViewById(R.id.tableLayoutPayments);
         minersTable.removeAllViews();
         //table header
         TableRow row = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
@@ -168,7 +167,7 @@ public class PaymentsActivity extends DrawerActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

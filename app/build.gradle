@@ -40,6 +40,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:27.+'
     compile 'com.android.support:recyclerview-v7:27.+'
     testCompile 'junit:junit:4.12'
-    compile 'com.makeramen:roundedimageview:2.3.0'
+    //compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.github.ganfra:material-spinner:2.0.0'
 }

@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -70,7 +71,6 @@ public class MainActivity extends DrawerActivity {
     private TextView lastFoundTextLabel;
     private RadioGroup radioGroupBackTo;
     private TextView textViewNetDiffTitle;
-    private RadioGroup radioGroupChartGranularity;
     private TextView textViewVarianceValue;
     private TextView textViewAvgBlockTime;
     private GsonBuilder builder;
@@ -99,22 +99,22 @@ public class MainActivity extends DrawerActivity {
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
 
-        noobText = (TextView) findViewById(R.id.textViewWalletTitle);
-        hashText = (TextView) findViewById(R.id.hashrateText);
-        textViewNetDiffTitle = (TextView) findViewById(R.id.textViewWalHashrateTitle);
-        poolLastBeat = (TextView) findViewById(R.id.textViewWalLastShareValue);
-        textViewNetDiffValue = (TextView) findViewById(R.id.textViewNetDiffValue);
-        lastFoundTextLabel = (TextView) findViewById(R.id.textViewLastBlock);
-        lastFoundText = (TextView) findViewById(R.id.textViewWalPaymentsValue);
-        onlineMinersText = (TextView) findViewById(R.id.textViewWalCurHashrateValue);
-        textViewBlockChainHeightValue = (TextView) findViewById(R.id.textViewBlockChainHeightValue);
-        poolHashrateText = (TextView) findViewById(R.id.textViewPoolHashrateValue);
-        roundSharesText = (TextView) findViewById(R.id.textViewRoundSharesValue);
-        textViewVarianceValue = (TextView) findViewById(R.id.textViewVarianceValue);
-        textViewAvgBlockTime = (TextView) findViewById(R.id.textViewAvgBlockTime);
+        noobText = findViewById(R.id.textViewWalletTitle);
+        hashText = findViewById(R.id.hashrateText);
+        textViewNetDiffTitle = findViewById(R.id.textViewWalHashrateTitle);
+        poolLastBeat = findViewById(R.id.textViewWalLastShareValue);
+        textViewNetDiffValue = findViewById(R.id.textViewNetDiffValue);
+        lastFoundTextLabel = findViewById(R.id.textViewLastBlock);
+        lastFoundText = findViewById(R.id.textViewWalPaymentsValue);
+        onlineMinersText = findViewById(R.id.textViewWalCurHashrateValue);
+        textViewBlockChainHeightValue = findViewById(R.id.textViewBlockChainHeightValue);
+        poolHashrateText = findViewById(R.id.textViewPoolHashrateValue);
+        roundSharesText = findViewById(R.id.textViewRoundSharesValue);
+        textViewVarianceValue = findViewById(R.id.textViewVarianceValue);
+        textViewAvgBlockTime = findViewById(R.id.textViewAvgBlockTime);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,8 +125,8 @@ public class MainActivity extends DrawerActivity {
         });
 
         //i grafici hanno controlli globali
-        radioGroupChartGranularity = (RadioGroup) findViewById(R.id.radioDifficultyGranularity);
-        radioGroupBackTo = (RadioGroup) findViewById(R.id.radioBackto);
+        RadioGroup radioGroupChartGranularity = findViewById(R.id.radioDifficultyGranularity);
+        radioGroupBackTo = findViewById(R.id.radioBackto);
         final RadioButton radioDay = findViewById(R.id.radioButtonDay);
         final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
 
@@ -151,9 +151,9 @@ public class MainActivity extends DrawerActivity {
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
         radioGroupChartGranularity.setOnCheckedChangeListener(mescola);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -170,7 +170,7 @@ public class MainActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);
         //importante refresh
         mDbHelper = new PoolDbHelper(this, mPool, mCur);
@@ -179,7 +179,7 @@ public class MainActivity extends DrawerActivity {
 
     private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Utils.getHomeStatsURL(MainActivity.this), null,
+                Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -311,7 +311,6 @@ public class MainActivity extends DrawerActivity {
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();
-            return;
         }
 
 
@@ -319,7 +318,7 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

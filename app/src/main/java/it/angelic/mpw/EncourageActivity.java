@@ -18,11 +18,11 @@ public class EncourageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encourage);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Button copy = (Button) findViewById(R.id.buttonCopy);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        Button copy = findViewById(R.id.buttonCopy);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

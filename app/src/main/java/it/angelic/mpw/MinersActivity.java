@@ -11,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,7 +76,7 @@ public class MinersActivity extends DrawerActivity {
 
     private void fetchMinerStats(final MinerDBRecord rec) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Utils.getWalletStatsUrl(this) + rec.getAddress(), null,
+                Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + rec.getAddress(), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -130,7 +131,7 @@ public class MinersActivity extends DrawerActivity {
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewOldestMinerValue = findViewById(R.id.textViewOldestMinerValue);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,7 +141,7 @@ public class MinersActivity extends DrawerActivity {
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.miners_recycler_view);
+        mRecyclerView = findViewById(R.id.miners_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -155,18 +156,18 @@ public class MinersActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationViewInterna = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationViewInterna = findViewById(R.id.navigation_view);
         navigationViewInterna.setNavigationItemSelectedListener(this);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_miners);
+        NavigationView navigationView = findViewById(R.id.nav_view_miners);
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_miners);
 
@@ -177,7 +178,7 @@ public class MinersActivity extends DrawerActivity {
     private void issueRefresh() {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Utils.getMinersStatsUrl(MinersActivity.this), null,
+                Utils.getMinersStatsUrl(PreferenceManager.getDefaultSharedPreferences(MinersActivity.this)), null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
@@ -214,7 +215,7 @@ public class MinersActivity extends DrawerActivity {
     @NonNull
     private ArrayList<MinerDBRecord> updateUIRecordStats(ArrayList<MinerDBRecord> minerDbList) {
         long hihr = 0;
-        Long hiPaid = new Long(0);
+        Long hiPaid = Long.valueOf(0);
         Integer hiPaidIdx = null;
         Date oldestDt = new Date();
         Integer minDateSeeIdx = null;
@@ -277,8 +278,6 @@ public class MinersActivity extends DrawerActivity {
         return minerDbList;
     }
 
-
-    @NonNull
     private void updateRecordStats(MinerRoot retrieved) {
         HashMap<String, Miner> minatoriJSON = retrieved.getMiners();
         //aggiungo i rimanenti, ma verranno visualizzati alla prox

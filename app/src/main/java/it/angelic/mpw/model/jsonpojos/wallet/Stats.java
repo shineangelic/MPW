@@ -6,7 +6,7 @@ import java.util.Date;
 public class Stats implements Serializable
 {
 
-private Double balance = new Double(0);
+private Double balance = Double.valueOf(0);
 private Integer blocksFound;
 private Integer immature;
 private Date lastShare;

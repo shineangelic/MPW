@@ -5,7 +5,6 @@ import org.apache.commons.collections4.map.LinkedMap;
 import java.util.Calendar;
 import java.util.Date;
 
-import it.angelic.mpw.R;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
