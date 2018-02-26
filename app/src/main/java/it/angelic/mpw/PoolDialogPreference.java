@@ -9,6 +9,17 @@ import android.util.AttributeSet;
  */
 public class PoolDialogPreference extends DialogPreference {
 
+    public PoolDialogPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        // TODO Auto-generated constructor stub
+    }
+    public PoolDialogPreference(Context context) {
+        this(context, null);
+    }
+
+    public PoolDialogPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        this(context, attrs, defStyleAttr, defStyleAttr);
+    }
 
     public PoolDialogPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);

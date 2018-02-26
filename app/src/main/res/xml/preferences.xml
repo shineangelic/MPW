@@ -20,7 +20,8 @@
             android:entries="@array/freq_names"
             android:entryValues="@array/freq"
             android:key="pref_sync_freq"
-            android:title="Update Frequency" />
+            android:title="Update Frequency"
+            android:summary="Configure service execution interval"/>
         <android.support.v7.preference.EditTextPreference
             android:hint="0x"
             android:key="wallet_addr"

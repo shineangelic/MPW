@@ -23,10 +23,7 @@
                 android:id="@+id/nav_blocks"
                 android:icon="@drawable/ic_insert_link_chain_24dp"
                 android:title="Blocks" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_message_black_24dp"
-                android:title="Telegram" />
+
             <item
                 android:id="@+id/nav_support"
                 android:icon="@drawable/ic_healing_black_24dp"

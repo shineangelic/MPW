@@ -89,6 +89,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case NEVERMINING:
                 curLogo.setImageResource(R.mipmap.ic_nevermining_logo);
                 break;
+            /*case MINERPOOLFR:
+                curLogo.setImageResource(R.mipmap.ic_minerpoolfr_logo);
+                break;*/
 
         }
         switch (mCur){
@@ -153,30 +156,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 Intent miner = new Intent(this, PaymentsActivity.class);
                 startActivity(miner);
             }
-        } else if (id == R.id.nav_send) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-
-            final String appName = "org.telegram.messenger";
-
-            switch (mPool){
-                case HASHINGPARTY:
-                    i.setData(Uri.parse("https://telegram.me/joinchat/FT9nb0I2lftHlyL_H6A_Qg"));
-                    break;
-                case NOOBPOOL:
-                    i.setData(Uri.parse("https://telegram.me/"));
-                    break;
-                case CRYPTOPOOL:
-                    i.setData(Uri.parse("https://telegram.me/joinchat/@CryptoPool_Network"));
-                    break;
-            }
-
-            if (Utils.isAppAvailable(this.getApplicationContext(), appName)) {
-                i.setPackage(appName);
-            } else {//tg not available
-                i.setData(Uri.parse("http://www.t.me/" + mPool.name().toLowerCase()));
-            }
-
-            startActivity(i);
         } else if (id == R.id.nav_support) {
             Intent opzioni = new Intent(DrawerActivity.this, EncourageActivity.class);
             startActivity(opzioni);

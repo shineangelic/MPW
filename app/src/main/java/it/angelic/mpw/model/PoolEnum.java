@@ -35,12 +35,12 @@ public enum PoolEnum {
         add(CurrencyEnum.UBIQ);
         add(CurrencyEnum.VIC);
     }}, false),
-    ETHERDIG("etherdig", "etherdig.net", true, new ArrayList<CurrencyEnum>() {{
+    /*ETHERDIG("etherdig", "etherdig.net", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}, true),
     ISTPOOL("1stpool", "1stpool.com", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
-    }}, false),
+    }}, false),*/
     MAXHASH("MaxHash", "maxhash.org", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.EXP);
@@ -54,6 +54,15 @@ public enum PoolEnum {
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBIQ);
     }}, false);
+   /* MINERPOOLFR("Mining Pool", "mining-pool.fr",true,new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETC);
+        add(CurrencyEnum.ELLA);
+        add(CurrencyEnum.EXP);
+        //add(CurrencyEnum.MONERO);
+        add(CurrencyEnum.MUSIC);
+        add(CurrencyEnum.PIRL);
+        add(CurrencyEnum.UBIQ);
+    }}, false );*/
     //human friendly name
     private final String friendlyName;
     //dominio di primo e secondo liv.
