@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -87,7 +86,6 @@ public class MainActivity extends DrawerActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,11 +136,11 @@ public class MainActivity extends DrawerActivity {
                 radioGroupBackTo.post(new Runnable() {
                     @Override
                     public void run() {
-                        GranularityEnum granoEnum=  GranularityEnum.HOUR;
+                        GranularityEnum granoEnum = GranularityEnum.HOUR;
                         if (radioDay.isChecked())
-                            granoEnum=  GranularityEnum.DAY;
+                            granoEnum = GranularityEnum.DAY;
                         else if (radioMin.isChecked())
-                            granoEnum=  GranularityEnum.MINUTE;
+                            granoEnum = GranularityEnum.MINUTE;
                         LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
                         NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
                         NoobChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
@@ -199,11 +197,11 @@ public class MainActivity extends DrawerActivity {
                                 updateCurrentStats();
                                 final RadioButton radioDay = findViewById(R.id.radioButtonDay);
                                 final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
-                                GranularityEnum granoEnum=  GranularityEnum.HOUR;
+                                GranularityEnum granoEnum = GranularityEnum.HOUR;
                                 if (radioDay.isChecked())
-                                    granoEnum=  GranularityEnum.DAY;
+                                    granoEnum = GranularityEnum.DAY;
                                 else if (radioMin.isChecked())
-                                    granoEnum=  GranularityEnum.MINUTE;
+                                    granoEnum = GranularityEnum.MINUTE;
 
                                 NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
                                         PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
@@ -270,17 +268,22 @@ public class MainActivity extends DrawerActivity {
     private void updateCurrentStats() {
         try {
             HomeStats lastHit = storia.get(storia.lastKey());
-            Calendar when = Calendar.getInstance();
-            when.setTimeZone(TimeZone.getDefault());
-            when.setTime(lastHit.getStats().getLastBlockFound());
-            lastFoundTextLabel.setText(getString(R.string.last_block_found) + " " + Utils.getTimeAgo(when));
+            try {
+                Calendar when = Calendar.getInstance();
+                when.setTimeZone(TimeZone.getDefault());
+                when.setTime(lastHit.getStats().getLastBlockFound());
+                lastFoundTextLabel.setText(getString(R.string.last_block_found) + " " + Utils.getTimeAgo(when));
+                lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
+            } catch (Exception ee) {
+                Log.w(Constants.TAG, "No block found yet?");
+            }
             textViewNetDiffValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getDifficulty())));
             Calendar lastB = Calendar.getInstance();
             lastB.setTime(lastHit.getNodes().get(0).getLastBeat());
             yearFormatExtended.setTimeZone(TimeZone.getDefault());
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
-            lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
-            onlineMinersText.setText("" + lastHit.getMinersTotal());
+
+            onlineMinersText.setText("" + (lastHit.getMinersTotal() == null ? 0 : lastHit.getMinersTotal()));
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));

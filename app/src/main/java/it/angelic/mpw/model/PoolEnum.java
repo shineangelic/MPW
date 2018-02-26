@@ -46,13 +46,14 @@ public enum PoolEnum {
         add(CurrencyEnum.EXP);
         add(CurrencyEnum.MC);
         add(CurrencyEnum.UBIQ);
-    }}, false, "pool");
-    /*NEVERMINING( "Nevermining",   "nevermining.org", false, new ArrayList<CurrencyEnum>() {{
+    }}, false, "pool"),
+    NEVERMINING( "Nevermining",   "nevermining.org", false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ELLA);
+        add(CurrencyEnum.EXP);
         add(CurrencyEnum.MUSIC);
         add(CurrencyEnum.PIRL);
-        add(CurrencyEnum.ELLA);
         add(CurrencyEnum.UBIQ);
-    }}, false);*/
+    }}, false);
     //human friendly name
     private String friendlyName;
     //dominio di primo e secondo liv.

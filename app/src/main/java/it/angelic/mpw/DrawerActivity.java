@@ -28,10 +28,8 @@ import it.angelic.mpw.model.PoolEnum;
 
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
     PoolEnum mPool;
     CurrencyEnum mCur;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +37,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
-
+        //SET APP'S THEME
         AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", "0")));
     }
 
@@ -74,7 +72,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         poolT.setText(mPool.toString() + " - "+ mCur.name());
         poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
 
-
+        imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ethereum_logo);
         backgroundPool.setImageResource(R.drawable.side_nav_bar);
         curLogo.setImageResource(R.mipmap.ic_pool_watcher);
         switch (mPool){
@@ -88,13 +86,15 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case MAXHASH:
                 curLogo.setImageResource(R.mipmap.ic_maxhash_logo);
                 break;
+            case NEVERMINING:
+                curLogo.setImageResource(R.mipmap.ic_nevermining_logo);
+                break;
 
         }
         switch (mCur){
             case ETH:
             case ETC:
                 //gia` cosi, e` default
-                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ethereum_logo);
                 break;
             case UBIQ:
             case UBQ:
@@ -108,12 +108,10 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 break;
         }
 
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
