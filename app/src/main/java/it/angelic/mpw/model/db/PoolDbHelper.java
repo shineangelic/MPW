@@ -18,9 +18,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import it.angelic.mpw.Constants;
-import it.angelic.mpw.R;
-import it.angelic.mpw.model.CurrencyEnum;
-import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.enums.BackToEnum;
 import it.angelic.mpw.model.enums.MinerSortEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;

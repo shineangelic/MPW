@@ -48,8 +48,9 @@ public class PoolQueryGrouper {
             avgSet.setCandidatesTotal(avgSet.getCandidatesTotal() + current.getCandidatesTotal());
             avgSet.setImmatureTotal(avgSet.getImmatureTotal() + current.getImmatureTotal());
             avgSet.setMaturedTotal(avgSet.getMaturedTotal() + current.getMaturedTotal());
-            long curDif = avgSet.getNodes().get(0).getDifficulty() == null ? 0L : Long.parseLong(avgSet.getNodes().get(0).getDifficulty());
-            avgSet.getNodes().get(0).setDifficulty("" + (curDif + Long.parseLong(current.getNodes().get(0).getDifficulty())));
+            long avgDif = avgSet.getNodes().get(0).getDifficulty() == null ? 0L : Long.parseLong(avgSet.getNodes().get(0).getDifficulty());
+            long curDif = current.getNodes().get(0).getDifficulty()== null? 0L : Long.parseLong(current.getNodes().get(0).getDifficulty());
+            avgSet.getNodes().get(0).setDifficulty("" + (avgDif + curDif));
             avgSet.getNodes().get(0).setName(current.getNodes().get(0).getName());//sovrascrive e amen
 
             Calendar cursorDate = Calendar.getInstance();

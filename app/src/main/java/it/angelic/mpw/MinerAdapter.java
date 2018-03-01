@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import it.angelic.mpw.model.CurrencyEnum;
-import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.db.MinerDBRecord;
 
 /**

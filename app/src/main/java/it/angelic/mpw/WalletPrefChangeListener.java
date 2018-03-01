@@ -6,8 +6,8 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
-import it.angelic.mpw.model.CurrencyEnum;
-import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 
 /**

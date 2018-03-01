@@ -26,8 +26,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
-import it.angelic.mpw.model.CurrencyEnum;
-import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 
 /**
@@ -53,7 +53,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
         AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", "0")));
-        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         setContentView(R.layout.activity_choose_pool);
 
         // Set up the login form.

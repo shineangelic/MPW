@@ -10,8 +10,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
-import it.angelic.mpw.model.CurrencyEnum;
-import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

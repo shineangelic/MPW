@@ -183,6 +183,7 @@ public class MainActivity extends DrawerActivity {
     }
 
     private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder) {
+        Log.i(Constants.TAG, "JsonObjectRequest for: " + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)));
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)), null,
                 new Response.Listener<JSONObject>() {

@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import it.angelic.mpw.model.CurrencyEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 
 /**

@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
-import it.angelic.mpw.model.CurrencyEnum;
-import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.PrecisionEnum;
 import it.angelic.mpw.model.jsonpojos.etherscan.Result;

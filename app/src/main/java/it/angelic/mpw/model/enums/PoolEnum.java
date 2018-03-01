@@ -1,4 +1,4 @@
-package it.angelic.mpw.model;
+package it.angelic.mpw.model.enums;
 
 import java.util.ArrayList;
 

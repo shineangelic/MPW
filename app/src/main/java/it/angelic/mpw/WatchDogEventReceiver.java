@@ -27,10 +27,10 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
-import it.angelic.mpw.model.CurrencyEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;

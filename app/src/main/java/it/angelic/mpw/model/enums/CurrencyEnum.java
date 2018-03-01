@@ -1,4 +1,4 @@
-package it.angelic.mpw.model;
+package it.angelic.mpw.model.enums;
 
 /**
  * Enums names matter, as webroot is decided upon that
