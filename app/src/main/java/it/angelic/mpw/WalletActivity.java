@@ -53,6 +53,7 @@ import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.db.PoolQueryGrouper;
+import it.angelic.mpw.model.enums.BackToEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 import it.angelic.mpw.model.jsonpojos.wallet.Worker;
@@ -336,7 +337,10 @@ public class WalletActivity extends DrawerActivity {
         @Override
         protected String doInBackground(String... params) {
             mDbHelper = new PoolDbHelper(WalletActivity.this, mPool, mCur);
-            storia = mDbHelper.getWalletHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
+
+            int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
+            View radioButton =  findViewById(radioButtonID);
+            storia = mDbHelper.getWalletHistoryData( BackToEnum.valueOf((String)radioButton.getTag()));
             last = storia.get(storia.lastKey());
             //metodo peso
             avg = mDbHelper.getAveragePending();
@@ -350,6 +354,7 @@ public class WalletActivity extends DrawerActivity {
             updateCurrentStats(last, mDbHelper, avg);
             final RadioButton radioDay = findViewById(R.id.radioButtonDay);
             final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
+
             GranularityEnum granoEnum = GranularityEnum.HOUR;
             if (radioDay.isChecked())
                 granoEnum = GranularityEnum.DAY;

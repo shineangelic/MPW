@@ -31,7 +31,7 @@
             android:defaultValue="0"
             android:entries="@array/theme_names"
             android:entryValues="@array/theme"
-            android:summary="Overrides automatic day/night switch"
+            android:summary="Overrides automatic day/night switch (needs restart)"
             android:key="pref_theme"
             android:title="Theme" />
     </PreferenceCategory>

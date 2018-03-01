@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import it.angelic.mpw.Constants;
 import it.angelic.mpw.R;
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.BackToEnum;
 import it.angelic.mpw.model.enums.MinerSortEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
@@ -186,22 +188,22 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         // Inserting Row
     }
 
-    public LinkedMap<Date, HomeStats> getHistoryData(int cutoff) {
+    public LinkedMap<Date, HomeStats> getHistoryData(@NonNull BackToEnum cutoff) {
         int cnt = 0;
         LinkedMap<Date, HomeStats> ret = new LinkedMap<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String limitCause = "";
         Calendar now = Calendar.getInstance();
         switch (cutoff) {
-            case R.id.radioButtonOneDay:
+            case ONE_DAY:
                 now.add(Calendar.DATE, -1);
                 limitCause = DataBaseContract.HomeStats_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;
-            case R.id.radioButtonOneWeek:
+            case ONE_WEEK:
                 now.add(Calendar.DATE, -7);
                 limitCause = DataBaseContract.HomeStats_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;
-            case R.id.radioButtonOneMonth:
+            case ONE_MONTH:
                 now.add(Calendar.MONTH, -1);
                 limitCause = DataBaseContract.HomeStats_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;
@@ -285,22 +287,22 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public LinkedMap<Date, Wallet> getWalletHistoryData(int checkedRadioButtonId) {
+    public LinkedMap<Date, Wallet> getWalletHistoryData(@NonNull BackToEnum cutoff) {
         LinkedMap<Date, Wallet> ret = new LinkedMap<>();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
         String limitCause = "";
         Calendar now = Calendar.getInstance();
-        switch (checkedRadioButtonId) {
-            case R.id.radioButtonOneDayMiner:
+        switch (cutoff) {
+            case ONE_DAY:
                 now.add(Calendar.DATE, -1);
                 limitCause = DataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;
-            case R.id.radioButtonOneWeekMiner:
+            case ONE_WEEK:
                 now.add(Calendar.DATE, -7);
                 limitCause = DataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;
-            case R.id.radioButtonOneMonthMiner:
+            case ONE_MONTH:
                 now.add(Calendar.MONTH, -1);
                 limitCause = DataBaseContract.Wallet_.COLUMN_NAME_DTM + "  > " + now.getTime().getTime();
                 break;

@@ -52,7 +52,8 @@
                 android:contentDescription="payment icon"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                card_view:srcCompat="@drawable/ic_account_balance_wallet_white_24dp" />
+                android:background="@drawable/ic_account_balance_wallet_white_24dp"
+                android:backgroundTint="@color/colorAccent"/>
 
             <TextView
                 android:id="@+id/blockMinerAddress"

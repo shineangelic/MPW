@@ -46,8 +46,11 @@ import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.db.PoolQueryGrouper;
+import it.angelic.mpw.model.enums.BackToEnum;
 import it.angelic.mpw.model.jsonpojos.etherscan.EtherscanStats;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
+
+import static it.angelic.mpw.model.enums.BackToEnum.ONE_DAY;
 
 public class MainActivity extends DrawerActivity {
 
@@ -141,7 +144,9 @@ public class MainActivity extends DrawerActivity {
                             granoEnum = GranularityEnum.DAY;
                         else if (radioMin.isChecked())
                             granoEnum = GranularityEnum.MINUTE;
-                        LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
+                        int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
+                        View radioButton =  findViewById(radioButtonID);
+                        LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String)radioButton.getTag()));
                         NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
                         NoobChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
                     }
@@ -193,7 +198,9 @@ public class MainActivity extends DrawerActivity {
                                 HomeStats retrieved = gson.fromJson(response.toString(), HomeStats.class);
                                 mDbHelper.logHomeStats(retrieved);
                                 //dati semi grezzi
-                                storia = mDbHelper.getHistoryData(radioGroupBackTo.getCheckedRadioButtonId());
+                                int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
+                                View radioButton =  findViewById(radioButtonID);
+                                storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String)radioButton.getTag()));
                                 updateCurrentStats();
                                 final RadioButton radioDay = findViewById(R.id.radioButtonDay);
                                 final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);

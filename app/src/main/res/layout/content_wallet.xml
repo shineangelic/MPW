@@ -139,6 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:tag="ONE_DAY"
             android:layout_marginTop="8dp"
             android:checked="true"
             android:text="1 Day" />
@@ -147,6 +148,7 @@
             android:id="@+id/radioButtonOneWeekMiner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="ONE_WEEK"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="1 Week" />
@@ -155,6 +157,7 @@
             android:id="@+id/radioButtonOneMonthMiner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="ONE_MONTH"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:text="1 Month" />
