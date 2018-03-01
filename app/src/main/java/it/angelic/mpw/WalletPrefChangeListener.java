@@ -36,10 +36,10 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
         db.close();
         //salvo wallet in SharedPrefs preciso
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mCtx);
-        //prefs.edit().putString("poolEnum", pool.name()).commit();
-        //prefs.edit().putString("curEnum", cur.name()).commit();
-        prefs.edit().putString("wallet_addr_" + pool.name() + "_" + cur.name(), (String) newValue).commit();
-        //wallet_addr e` gestita da android
+        //change specific
+        prefs.edit().putString("wallet_addr_" + pool.name() + "_" + cur.name(), (String) newValue).apply();
+        //change active one, tanto per
+        prefs.edit().putString("wallet_addr", (String) newValue).commit();
         return true;
     }
 

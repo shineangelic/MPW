@@ -34,6 +34,36 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewBlocksTitle" />
 
+    <RadioGroup
+        android:id="@+id/minerSortOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:tooltipText="Miners sort Order"
+        android:gravity="left|center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/includeMinersLeaderBoardPanel"
+        android:layout_marginLeft="8dp">
+
+        <RadioButton
+            android:id="@+id/radioButtonLastSeen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Last seen first" />
+
+        <RadioButton
+            android:id="@+id/radioButtonHighestHashrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:layout_weight="1"
+            android:text="Highest hashrate first" />
+    </RadioGroup>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/miners_recycler_view"
         android:layout_width="0dp"
@@ -46,7 +76,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/includeMinersLeaderBoardPanel" />
+        app:layout_constraintTop_toBottomOf="@+id/minerSortOrder" />
 
 
 

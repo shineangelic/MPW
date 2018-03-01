@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
  * Created by shine@angelic.it on 06/09/2017.
  */
 
-class DataBaseContract {
+public class DataBaseContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.

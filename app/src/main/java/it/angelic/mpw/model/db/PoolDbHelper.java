@@ -20,6 +20,7 @@ import it.angelic.mpw.Constants;
 import it.angelic.mpw.R;
 import it.angelic.mpw.model.CurrencyEnum;
 import it.angelic.mpw.model.PoolEnum;
+import it.angelic.mpw.model.enums.MinerSortEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -407,7 +408,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<MinerDBRecord> getMinerList() {
+    public ArrayList<MinerDBRecord> getMinerList(MinerSortEnum sortorder) {
         ArrayList<MinerDBRecord> retL = new ArrayList<>();
         int cnt = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -426,7 +427,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
                 null,// String[] selectionArgs
                 null,
                 null, // HAVING
-                DataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " DESC", null);
+                sortorder.getDbColumn() + " DESC", null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {

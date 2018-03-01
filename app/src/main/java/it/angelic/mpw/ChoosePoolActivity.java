@@ -299,7 +299,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
                 prefs.edit().putString("poolEnum", mPool.name()).apply();
                 prefs.edit().putString("curEnum", mCur.name()).apply();
-                prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).apply();
+                prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).commit();
                 Log.w(Constants.TAG, "SAVED  pool: " + mPool.name() + " currency: " + mCur.name());
                 //wallet can be empty, changed in preference
                 //retrocompatibility
@@ -307,8 +307,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
                     prefs.edit().putString("wallet_addr", mWalletAddr).commit();
                 else//remove &let user choose
                     prefs.edit().remove("wallet_addr").commit();
-
-
             } catch (Exception e) {
                 Log.e(Constants.TAG, "ERROR writing base pref", e);
                 return false;

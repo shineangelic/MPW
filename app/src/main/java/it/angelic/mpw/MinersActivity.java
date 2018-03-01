@@ -1,7 +1,6 @@
 package it.angelic.mpw;
 
 import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -43,6 +44,7 @@ import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.MinerDBRecord;
 import it.angelic.mpw.model.db.PoolDbHelper;
+import it.angelic.mpw.model.enums.MinerSortEnum;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
@@ -64,7 +66,7 @@ public class MinersActivity extends DrawerActivity {
 
 
     private void fetchRandomGuy() {
-        ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList();
+        ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList(MinerSortEnum.LAST_SEEN);//ordinamento irrilevante
         //choose a random one if no empty
         if (miners.size() > 0) {
             for (int i = 0; i < 5; i++) {
@@ -171,6 +173,19 @@ public class MinersActivity extends DrawerActivity {
         navigationView.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_miners);
 
+        final RadioGroup radioGroupBackTo = findViewById(R.id.minerSortOrder);
+        final RadioGroup.OnCheckedChangeListener mescola = new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                radioGroupBackTo.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        issueRefresh();
+                    }
+                });
+            }
+        };
+        radioGroupBackTo.setOnCheckedChangeListener(mescola);
 
         Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
     }
@@ -191,7 +206,8 @@ public class MinersActivity extends DrawerActivity {
                                 // Register an adapter to manage the date types as long values
                                 MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
 
-                                new UpdateUIAsynchTask(retrieved).execute();
+                                RadioButton rb = findViewById(R.id.radioButtonLastSeen);//sort order
+                                new UpdateUIAsynchTask(retrieved, rb.isChecked() ? MinerSortEnum.LAST_SEEN : MinerSortEnum.HASHRATE).execute();
                             }
                         });
 
@@ -294,7 +310,7 @@ public class MinersActivity extends DrawerActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_miners, menu);
         return true;
     }
 
@@ -304,34 +320,28 @@ public class MinersActivity extends DrawerActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent opzioni = new Intent(this, SettingsActivity.class);
-            startActivity(opzioni);
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
     private class UpdateUIAsynchTask extends AsyncTask<String, Void, String> {
 
         private final MinerRoot retrieved;
+        private final MinerSortEnum sortOrder;
         private PoolDbHelper mDbHelper;
         private ObjectAnimator objectanimator;
         private ArrayList<MinerDBRecord> min;
 
-        UpdateUIAsynchTask(MinerRoot mr) {
+        UpdateUIAsynchTask(MinerRoot mr, MinerSortEnum sortOrder) {
             super();
             retrieved = mr;
+            this.sortOrder = sortOrder;
         }
 
         @Override
         protected String doInBackground(String... params) {
             //update DB from JSON
             updateRecordStats(retrieved);
-            min = mDbHelper.getMinerList();
+            min = mDbHelper.getMinerList(sortOrder);
             fetchRandomGuy();
             return "Executed";
         }
@@ -355,7 +365,7 @@ public class MinersActivity extends DrawerActivity {
             mDbHelper = new PoolDbHelper(MinersActivity.this, mPool, mCur);
             if (mAdapter == null) {
                 mAdapter = new MinerAdapter(min, mPool, mCur);
-                min = mDbHelper.getMinerList();
+                min = mDbHelper.getMinerList(sortOrder);
                 mAdapter.setMinersArray(min);
                 mRecyclerView.setAdapter(mAdapter);
             }

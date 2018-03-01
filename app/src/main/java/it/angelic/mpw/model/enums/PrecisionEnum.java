@@ -1,4 +1,4 @@
-package it.angelic.mpw;
+package it.angelic.mpw.model.enums;
 
 public enum PrecisionEnum {
     ONE_DIGIT("%.1f"),
