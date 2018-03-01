@@ -24,7 +24,6 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:parentActivityName=".ChoosePoolActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter android:label="View stats">
