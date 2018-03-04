@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import im.dacer.androidcharts.LineView;
+import it.angelic.mpw.model.HomeStatsChartData;
 import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
@@ -25,16 +26,20 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
  * Created by shine@angelic.it on 11/09/2017.
  */
 
-class NoobChartUtils {
-    static void drawHashrateHistory(TextView titleTextView, LinkedMap<Date, HomeStats> storia, LineView chart, GranularityEnum grane) {
+class ChartUtils {
+    static void drawHashrateHistory(TextView titleTextView, LinkedMap<Date, HomeStatsChartData> storia, LineView chart, GranularityEnum grane) {
         SummaryStatistics stats = new SummaryStatistics();
         ArrayList<Float> dataList = new ArrayList<>();
+        ArrayList<Float> dataListMax = new ArrayList<>();
+        ArrayList<Float> dataListMin = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         List<Date> dates = storia.asList();
-        HomeStats campione = storia.values().iterator().next();
+       // HomeStats campione = storia.values().iterator().next();
         for (Date date2 : dates) {
             labelsArr.add(getLabelFormat(grane, date2));
             dataList.add(Utils.condenseHashRate(storia.get(date2).getHashrate()));
+            dataListMax.add(Utils.condenseHashRate(storia.get(date2).getHashrateMax()));
+            dataListMin.add(Utils.condenseHashRate(storia.get(date2).getHashrateMin()));
             stats.addValue(storia.get(date2).getHashrate());
         }
 
@@ -48,10 +53,12 @@ class NoobChartUtils {
 
         ArrayList<ArrayList<Float>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
+        dataLists.add(dataListMax);
+        dataLists.add(dataListMin);
         chart.setShowPopup(LineView.SHOW_POPUPS_All);
         chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
-        chart.setColorArray(new int[]{Color.DKGRAY, Color.CYAN});
+        chart.setColorArray(new int[]{Color.DKGRAY, Color.BLUE, Color.RED});
         chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 
@@ -96,7 +103,7 @@ class NoobChartUtils {
         return date2.toString();
     }
 
-    static void drawDifficultyHistory(TextView textViewNetDiffTitle, LinkedMap<Date, HomeStats> storia, LineView chart, GranularityEnum grane) {
+    static void drawDifficultyHistory(TextView textViewNetDiffTitle, LinkedMap<Date, HomeStatsChartData> storia, LineView chart, GranularityEnum grane) {
         ArrayList<Integer> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         Set<Date> dates = storia.keySet();

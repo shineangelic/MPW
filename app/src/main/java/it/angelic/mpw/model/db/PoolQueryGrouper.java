@@ -5,6 +5,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import java.util.Calendar;
 import java.util.Date;
 
+import it.angelic.mpw.model.HomeStatsChartData;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -15,12 +16,12 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 public class PoolQueryGrouper {
 
 
-    public static LinkedMap<Date, HomeStats> groupAvgQueryResult(LinkedMap<Date, HomeStats> queryResult, GranularityEnum radioCheckedId) {
+    public static LinkedMap<Date, HomeStatsChartData> groupAvgQueryResult(LinkedMap<Date, HomeStats> queryResult, GranularityEnum radioCheckedId) {
 
         if (queryResult.isEmpty())
-            return queryResult;
+            return new LinkedMap<>();
 
-        LinkedMap<Date, HomeStats> ret = new LinkedMap<>();
+        LinkedMap<Date, HomeStatsChartData> ret = new LinkedMap<>();
         Calendar firstDate = Calendar.getInstance();
         firstDate.setTime(queryResult.keySet().iterator().next());
         Calendar firstDateOut = Calendar.getInstance();
@@ -39,12 +40,16 @@ public class PoolQueryGrouper {
         firstDateOut.add(calendarGranularity, 1);
         int divideCnt = 0;
         int totCnt = 0;
-        HomeStats avgSet = new HomeStats();
+        HomeStatsChartData avgSet = new HomeStatsChartData();
         for (HomeStats current : queryResult.values()) {
             divideCnt++;
             totCnt++;
             //aggiorna medie
             avgSet.setHashrate(avgSet.getHashrate() + current.getHashrate());
+            if (current.getHashrate() > avgSet.getHashrateMax() )
+                avgSet.setHashrateMax(current.getHashrate());
+            if (current.getHashrate() <avgSet.getHashrateMin() )
+                avgSet.setHashrateMin(current.getHashrate());
             avgSet.setCandidatesTotal(avgSet.getCandidatesTotal() + current.getCandidatesTotal());
             avgSet.setImmatureTotal(avgSet.getImmatureTotal() + current.getImmatureTotal());
             avgSet.setMaturedTotal(avgSet.getMaturedTotal() + current.getMaturedTotal());
@@ -69,7 +74,7 @@ public class PoolQueryGrouper {
                 divideCnt = 0;
                 ret.put(firstDate.getTime(), avgSet);
 
-                avgSet = new HomeStats();
+                avgSet = new HomeStatsChartData();
                 firstDate.setTime(cursorDate.getTime());
                 firstDateOut.setTime(firstDate.getTime());
                 firstDateOut.add(calendarGranularity, 1);

@@ -113,7 +113,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         + "_"
                         + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
-                mWalletView.setText(prevWallet.length() == 0 ? getString(R.string.no_wallet_set) : prevWallet);
+                mWalletView.setText(prevWallet.length() == 0 ? getString(R.string.no_wallet_set) : Utils.formatEthAddress(prevWallet));
                 Log.i(Constants.TAG, "currencySpinner list: " + currencySpinner.getItemAtPosition(currencySpinner.getSelectedItemPosition()));
             }
 

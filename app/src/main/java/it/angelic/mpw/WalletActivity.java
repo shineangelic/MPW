@@ -242,7 +242,7 @@ public class WalletActivity extends DrawerActivity {
             walTotSharesText.setText(Utils.formatBigNumber(lastHit.getRoundShares()));
             walOnlineWorkersText.setText(lastHit.getWorkersOnline().toString());
             textViewWalPaymentsValue.setText("" + lastHit.getPaymentsTotal());
-            walletValueText.setText(minerAddr.toUpperCase());
+            walletValueText.setText(Utils.formatEthAddress(minerAddr));
             walletValueText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -360,8 +360,8 @@ public class WalletActivity extends DrawerActivity {
                 granoEnum = GranularityEnum.DAY;
             else if (radioMin.isChecked())
                 granoEnum = GranularityEnum.MINUTE;
-            NoobChartUtils.drawWorkersHistory(lineView, PoolQueryGrouper.groupAvgWalletQueryResult(storia, granoEnum), granoEnum);
-            NoobChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
+            ChartUtils.drawWorkersHistory(lineView, PoolQueryGrouper.groupAvgWalletQueryResult(storia, granoEnum), granoEnum);
+            ChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
                     PoolQueryGrouper.groupAvgWalletQueryResult(storia,
                             granoEnum),
                     granoEnum);

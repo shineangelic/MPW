@@ -71,7 +71,7 @@ public class PaymentsActivity extends DrawerActivity {
         TextView textViewWalletValue = findViewById(R.id.textViewWalletValue);
         textViewPaymentsTitle = findViewById(R.id.textViewPaymentTitle);
         paymentsChart = findViewById(R.id.lineViewPaymentss);
-        textViewWalletValue.setText(minerAddr.toUpperCase());
+        textViewWalletValue.setText(Utils.formatEthAddress(minerAddr));
         textViewWalletValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +118,7 @@ public class PaymentsActivity extends DrawerActivity {
                         if (retrieved.getPayments() != null) {
                             drawPaymentsTable(retrieved);
                             //la seguente inverte ordine lista
-                            NoobChartUtils.drawPaymentsHistory(paymentsChart, retrieved);
+                            ChartUtils.drawPaymentsHistory(paymentsChart, retrieved);
                             textViewPaymentsTitle.setText(String.format(getString(R.string.paid_out), mPool.toString()) + " " + retrieved.getPayments().size() + " times");
                         } else {
                             textViewPaymentsTitle.setText("No payment Yet");

@@ -95,7 +95,7 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
         }
 
         public void bindBlock(final MinerDBRecord game, PoolEnum pool,final CurrencyEnum cur) {
-            mblockMinerAddress.setText(game.getAddress().toUpperCase());
+            mblockMinerAddress.setText(Utils.formatEthAddress(game.getAddress()));
             View.OnClickListener list = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

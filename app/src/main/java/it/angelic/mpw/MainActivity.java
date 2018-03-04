@@ -50,10 +50,7 @@ import it.angelic.mpw.model.enums.BackToEnum;
 import it.angelic.mpw.model.jsonpojos.etherscan.EtherscanStats;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 
-import static it.angelic.mpw.model.enums.BackToEnum.ONE_DAY;
-
 public class MainActivity extends DrawerActivity {
-
 
     public static final SimpleDateFormat dayFormat = new SimpleDateFormat("MM-dd", Locale.US);
     public static final SimpleDateFormat hourFormat = new SimpleDateFormat("MM-dd HH", Locale.US);
@@ -75,7 +72,6 @@ public class MainActivity extends DrawerActivity {
     private RadioGroup radioGroupBackTo;
     private TextView textViewNetDiffTitle;
     private TextView textViewVarianceValue;
-    private TextView textViewAvgBlockTime;
     private GsonBuilder builder;
     private PoolDbHelper mDbHelper;
 
@@ -94,13 +90,11 @@ public class MainActivity extends DrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mDbHelper = new PoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
-
 
         noobText = findViewById(R.id.textViewWalletTitle);
         hashText = findViewById(R.id.hashrateText);
@@ -114,7 +108,6 @@ public class MainActivity extends DrawerActivity {
         poolHashrateText = findViewById(R.id.textViewPoolHashrateValue);
         roundSharesText = findViewById(R.id.textViewRoundSharesValue);
         textViewVarianceValue = findViewById(R.id.textViewVarianceValue);
-        textViewAvgBlockTime = findViewById(R.id.textViewAvgBlockTime);
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -147,8 +140,8 @@ public class MainActivity extends DrawerActivity {
                         int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
                         View radioButton =  findViewById(radioButtonID);
                         LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String)radioButton.getTag()));
-                        NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
-                        NoobChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
+                        ChartUtils.drawDifficultyHistory(textViewNetDiffTitle, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
+                        ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
                     }
                 });
             }
@@ -211,11 +204,11 @@ public class MainActivity extends DrawerActivity {
                                 else if (radioMin.isChecked())
                                     granoEnum = GranularityEnum.MINUTE;
 
-                                NoobChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
+                                ChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
                                         PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
                                         (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
 
-                                NoobChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia,
+                                ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia,
                                         granoEnum),
                                         (LineView) findViewById(R.id.line_view_hashrate),
                                         granoEnum);
@@ -253,8 +246,6 @@ public class MainActivity extends DrawerActivity {
                                 }
                             }
                         });
-
-
                     }
                 }, new Response.ErrorListener() {
 
@@ -264,7 +255,6 @@ public class MainActivity extends DrawerActivity {
                 // hide the progress dialog
             }
         });
-
         // Adding request to request queue
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
         NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonEtherObjReq);
@@ -308,14 +298,6 @@ public class MainActivity extends DrawerActivity {
                 Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
                 e.printStackTrace();
             }
-            try {
-                long dtDiff = getAverageBlockSecondsSincePoolsBirth(lastHit);
-                textViewAvgBlockTime.setText(String.format(getString(R.string.averages_compute), Utils.getScaledTime(dtDiff), mCur, mPool));
-
-            } catch (Exception e) {
-                Log.e(Constants.TAG, "Errore refresh share textViewAvgBlockTime: " + e.getMessage());
-                e.printStackTrace();
-            }
         } catch (Exception e) {
             Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();
@@ -343,9 +325,6 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

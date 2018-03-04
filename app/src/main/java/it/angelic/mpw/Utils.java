@@ -255,4 +255,13 @@ class Utils {
     }
 
 
+    public static String formatEthAddress(String minerAddr) {
+        if (minerAddr==null||minerAddr.isEmpty())
+            return "";
+        //boh
+        if (!minerAddr.startsWith("0x"))
+            return minerAddr;
+
+        return "0x" + minerAddr.substring(2).toUpperCase();
+    }
 }
