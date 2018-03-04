@@ -13,13 +13,17 @@ public enum PoolEnum {
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
     }}, false),
-    CRYPTOPOOL("CryptoPool Network", "cryptopool.network", false, new ArrayList<CurrencyEnum>() {{
+    CRYPTOPOOL("CryptoPool Network", "cryptopool.network", true, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ELLA);
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.MUSIC);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBQ);
     }}, false),
+    /*ELLAISMDEV("Ella Dev Pool", "ellaism.org", false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ELLA);
+    }}, true, "pool"),*/
     HASHINGPARTY("Hashing Party", "hashing.party", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);

@@ -11,7 +11,6 @@ import it.angelic.mpw.model.jsonpojos.home.Stats;
 public class HomeStatsChartData implements Serializable {
 
     private final static long serialVersionUID = -991675406872456775L;
-    private Integer candidatesTotal;
     private Long hashrate;
     private Long hashrateMax;
     private Long hashrateMin;
@@ -41,7 +40,7 @@ public class HomeStatsChartData implements Serializable {
      * No args constructor for use in serialization
      */
     public HomeStatsChartData() {
-        candidatesTotal = 0;
+
         hashrate = 0L;
         hashrateMax = 0L;
         hashrateMin = Long.MAX_VALUE;
@@ -54,13 +53,7 @@ public class HomeStatsChartData implements Serializable {
     }
 
 
-    public Integer getCandidatesTotal() {
-        return candidatesTotal;
-    }
 
-    public void setCandidatesTotal(Integer candidatesTotal) {
-        this.candidatesTotal = candidatesTotal;
-    }
 
     public Long getHashrate() {
         return hashrate;

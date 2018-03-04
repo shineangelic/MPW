@@ -50,7 +50,7 @@ public class PoolQueryGrouper {
                 avgSet.setHashrateMax(current.getHashrate());
             if (current.getHashrate() <avgSet.getHashrateMin() )
                 avgSet.setHashrateMin(current.getHashrate());
-            avgSet.setCandidatesTotal(avgSet.getCandidatesTotal() + current.getCandidatesTotal());
+            //avgSet.setCandidatesTotal(avgSet.getCandidatesTotal() + current.getCandidatesTotal());
             avgSet.setImmatureTotal(avgSet.getImmatureTotal() + current.getImmatureTotal());
             avgSet.setMaturedTotal(avgSet.getMaturedTotal() + current.getMaturedTotal());
             long avgDif = avgSet.getNodes().get(0).getDifficulty() == null ? 0L : Long.parseLong(avgSet.getNodes().get(0).getDifficulty());
@@ -66,7 +66,7 @@ public class PoolQueryGrouper {
                 //Log.d(TAG, " calcola medie " + ret.keySet().size());
                 //fase finita, calcola medie e vai
                 avgSet.setHashrate(avgSet.getHashrate() / divideCnt);
-                avgSet.setCandidatesTotal(avgSet.getCandidatesTotal() / divideCnt);
+                //avgSet.setCandidatesTotal(avgSet.getCandidatesTotal() / divideCnt);
                 avgSet.setImmatureTotal(avgSet.getImmatureTotal() / divideCnt);
                 avgSet.setMaturedTotal(avgSet.getMaturedTotal() / divideCnt);
                 avgSet.getNodes().get(0).setDifficulty("" + Long.parseLong(avgSet.getNodes().get(0).getDifficulty()) / divideCnt);

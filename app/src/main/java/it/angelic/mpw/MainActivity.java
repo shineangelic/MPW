@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -204,12 +205,12 @@ public class MainActivity extends DrawerActivity {
                                 else if (radioMin.isChecked())
                                     granoEnum = GranularityEnum.MINUTE;
 
+
                                 ChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
                                         PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
                                         (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
 
-                                ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia,
-                                        granoEnum),
+                                ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia,granoEnum),
                                         (LineView) findViewById(R.id.line_view_hashrate),
                                         granoEnum);
                             }

@@ -1,7 +1,10 @@
 package it.angelic.mpw;
 
 import android.graphics.Color;
+import android.support.v4.content.res.ResourcesCompat;
 import android.widget.TextView;
+
+import junit.framework.Assert;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
@@ -16,7 +19,6 @@ import java.util.Set;
 import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.HomeStatsChartData;
 import it.angelic.mpw.model.db.GranularityEnum;
-import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -34,7 +36,8 @@ class ChartUtils {
         ArrayList<Float> dataListMin = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         List<Date> dates = storia.asList();
-       // HomeStats campione = storia.values().iterator().next();
+
+        // HomeStats campione = storia.values().iterator().next();
         for (Date date2 : dates) {
             labelsArr.add(getLabelFormat(grane, date2));
             dataList.add(Utils.condenseHashRate(storia.get(date2).getHashrate()));
@@ -43,23 +46,47 @@ class ChartUtils {
             stats.addValue(storia.get(date2).getHashrate());
         }
 
-            titleTextView.setText("Hashrate History chart "
-                    + "(avg: " + Utils.formatHashrate((long) stats.getMean())
-                    + ", max: " + Utils.formatHashrate((long) stats.getMax())
-                    + ", min: " + Utils.formatHashrate((long) stats.getMin())
-                    + ", now: " + Utils.formatHashrate(storia.get(dates.get(dataList.size()-1)).getHashrate())
-                    + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
-                    + ")");
+        titleTextView.setText("Hashrate History chart "
+                + "(avg: " + Utils.formatHashrate((long) stats.getMean())
+                + ", max: " + Utils.formatHashrate((long) stats.getMax())
+                + ", min: " + Utils.formatHashrate((long) stats.getMin())
+                + ", now: " + Utils.formatHashrate(storia.get(dates.get(dataList.size() - 1)).getHashrate())
+                + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
+                + ")");
 
         ArrayList<ArrayList<Float>> dataLists = new ArrayList<>();
-        dataLists.add(dataList);
+        List<Integer> colArr = new ArrayList<>();
+
         dataLists.add(dataListMax);
+        colArr.add(ResourcesCompat.getColor(titleTextView.getResources(), R.color.colorPrimaryAlpha, null));
+
         dataLists.add(dataListMin);
+        colArr.add(ResourcesCompat.getColor(titleTextView.getResources(), R.color.colorAccentAlpha, null));
+
+        dataLists.add(dataList);
+
         chart.setShowPopup(LineView.SHOW_POPUPS_All);
-        chart.setDrawDotLine(false); //optional
+        //chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
-        chart.setColorArray(new int[]{Color.DKGRAY, Color.BLUE, Color.RED});
+
+
+        colArr.add(Color.DKGRAY);
+        /*colorArray = new int[]{ ResourcesCompat.getColor(titleTextView.getResources(), enableMax?R.color.colorPrimaryAlpha:android.R.color.transparent,null),
+                ResourcesCompat.getColor(titleTextView.getResources(), enableMin?R.color.colorAccentAlpha:android.R.color.transparent,null),
+                Color.DKGRAY,};*/
+        int[] ret = new int[colArr.size()];
+        int i = 0;
+        for (Integer e : colArr)
+            ret[i++] = e.intValue();
+        chart.setColorArray(ret);
+        Assert.assertTrue(dataLists.size() == colArr.size());
         chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+
+
+        chart.requestLayout();
+        chart.invalidate();
+
+
     }
 
     public static void drawWalletHashRateHistory(TextView titleTextView, LineView chart, LinkedMap<Date, Wallet> dateWalletLinkedMap, GranularityEnum grane) {
@@ -78,7 +105,7 @@ class ChartUtils {
                 + "(avg: " + Utils.formatHashrate((long) stats.getMean())
                 + ", max: " + Utils.formatHashrate((long) stats.getMax())
                 + ", min: " + Utils.formatHashrate((long) stats.getMin())
-                + ", now: " + Utils.formatHashrate(dateWalletLinkedMap.get(dates.get(dataList.size()-1)).getHashrate())
+                + ", now: " + Utils.formatHashrate(dateWalletLinkedMap.get(dates.get(dataList.size() - 1)).getHashrate())
                 + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
                 + ")");
 
