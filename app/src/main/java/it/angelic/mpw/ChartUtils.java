@@ -67,8 +67,8 @@ class ChartUtils {
 
         dataLists.add(dataList);
 
-        chart.setShowPopup(LineView.SHOW_POPUPS_All);
-        //chart.setDrawDotLine(false); //optional
+        chart.setShowPopup(LineView.SHOW_POPUPS_MAXMIN_ONLY);
+        chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
 
 

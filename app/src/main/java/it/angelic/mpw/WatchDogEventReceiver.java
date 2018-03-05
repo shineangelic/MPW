@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -145,6 +146,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
             NoobJSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReq);
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
+            Crashlytics.logException(se);
         }
     }
 

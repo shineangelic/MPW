@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'io.fabric'
 android {
     compileSdkVersion 27
     buildToolsVersion "27.0.1"
@@ -24,6 +24,11 @@ android {
 
 dependencies {
     implementation 'com.google.android.gms:play-services-ads:11.8.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true
+    }
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-crash:11.8.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -43,3 +48,7 @@ dependencies {
     //compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.github.ganfra:material-spinner:2.0.0'
 }
+
+
+
+apply plugin: 'com.google.gms.google-services'

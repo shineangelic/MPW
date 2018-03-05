@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,6 +48,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
     private MaterialSpinner poolSpinner;
     private MaterialSpinner currencySpinner;
     private CheckBox skipIntro;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
         AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", "0")));
         setContentView(R.layout.activity_choose_pool);
-
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Set up the login form.
         mWalletView = findViewById(R.id.wallet);
 
@@ -339,6 +341,18 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
             if (success) {
                 Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
+
+                //firebase log event
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mPool.toString());
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "POOL");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
+                bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mCur.toString());
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CURRENCY");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
                 startActivity(miner);
                 finish();
             } else if (connectError) {

@@ -2,9 +2,13 @@ package it.angelic.mpw;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
@@ -20,11 +24,13 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
     private final Context mCtx;
     private final PoolEnum pool;
     private final CurrencyEnum cur;
+    private final FirebaseAnalytics mFirebaseAnalytics;
 
     public WalletPrefChangeListener(Context activity, PoolEnum pool, CurrencyEnum curr) {
         this. mCtx = activity;
         this.pool = pool;
         this.cur= curr;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(activity);
     }
 
     @Override
@@ -40,6 +46,11 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
         prefs.edit().putString("wallet_addr_" + pool.name() + "_" + cur.name(), (String) newValue).apply();
         //change active one, tanto per
         prefs.edit().putString("wallet_addr", (String) newValue).commit();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, (String) newValue);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+        Crashlytics.setUserIdentifier((String) newValue);
         return true;
     }
 
