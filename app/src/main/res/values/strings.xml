@@ -13,17 +13,6 @@
     <string name="title_activity_choose_pool">Choose your Pool</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Wallet (public address)</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This Wallet address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 
     <string name="wallet_info">Currently selected pool is %1$s (%2$s mining). Changing it means losing previous wallet\'s data.</string>
     <string name="confirm">Confirm</string>
@@ -31,6 +20,6 @@
     <string name="paid_out">%1$s paid out</string>
     <string name="wallet_stats_title">Wallet Stats\n(%1$s - %2$s)</string>
     <string name="title_activity_miners">Miners</string>
-    <string name="averages_compute">It takes an average of %1$s to find a %2$s block on %3$s. See blocks section for more accurate stats</string>
     <string name="ad_unit">ca-app-pub-2379213694485575/8587854500</string>
+    <string name="ad_unit_homestats">ca-app-pub-2379213694485575/1437595948</string>
 </resources>

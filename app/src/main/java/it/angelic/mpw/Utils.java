@@ -33,11 +33,11 @@ class Utils {
     private static String formatHashrate(long bytes, String precision) throws IllegalFormatException {
 
         // Kilobyte Check
-        float kilo = bytes / 1000f;
-        float mega = kilo / 1000f;
-        float giga = mega / 1000f;
-        float tera = giga / 1000f;
-        float peta = tera / 1000f;
+        float kilo = bytes / 1024f;
+        float mega = kilo / 1024f;
+        float giga = mega / 1024f;
+        float tera = giga / 1024f;
+        float peta = tera / 1024f;
 
         // Determine which value to send back
         if (peta > 1)

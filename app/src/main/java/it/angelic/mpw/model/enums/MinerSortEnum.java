@@ -9,7 +9,7 @@ public enum MinerSortEnum {
         this.dbColumn = dbColumn;
     }
 
-    private String dbColumn;
+    private final String dbColumn;
     public String getDbColumn() {
         return dbColumn;
     }

@@ -62,7 +62,6 @@ public class MinersActivity extends DrawerActivity {
     private TextView textViewolde;
     private GsonBuilder builder;
     private TextView textViewOldestMinerValue;
-    private FloatingActionButton fab;
 
 
     private int fetchRandomGuy() {
@@ -137,7 +136,7 @@ public class MinersActivity extends DrawerActivity {
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewOldestMinerValue = findViewById(R.id.textViewOldestMinerValue);
 
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
