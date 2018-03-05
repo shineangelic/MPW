@@ -44,6 +44,8 @@ class ChartUtils {
             dataListMax.add(Utils.condenseHashRate(storia.get(date2).getHashrateMax()));
             dataListMin.add(Utils.condenseHashRate(storia.get(date2).getHashrateMin()));
             stats.addValue(storia.get(date2).getHashrate());
+            stats.addValue(storia.get(date2).getHashrateMax());
+            stats.addValue(storia.get(date2).getHashrateMin());
         }
 
         titleTextView.setText("Hashrate History chart "

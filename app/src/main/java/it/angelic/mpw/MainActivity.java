@@ -77,13 +77,13 @@ public class MainActivity extends DrawerActivity {
     private PoolDbHelper mDbHelper;
 
 
-    private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
+   /* private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
         final Date firstBlockDate = new Date();//2017/07/15
         firstBlockDate.setTime(1500099900000L);
         long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
         //meno uno perche` il conto parte dal secondo blocco. Il primo boh
         return datediffFirst / (lastHit.getMaturedTotal() - 1);
-    }
+    }*/
 
 
     @Override
@@ -303,7 +303,6 @@ public class MainActivity extends DrawerActivity {
             Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
             e.printStackTrace();
         }
-
 
     }
 

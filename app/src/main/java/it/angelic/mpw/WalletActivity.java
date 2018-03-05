@@ -341,9 +341,11 @@ public class WalletActivity extends DrawerActivity {
             int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
             View radioButton =  findViewById(radioButtonID);
             storia = mDbHelper.getWalletHistoryData( BackToEnum.valueOf((String)radioButton.getTag()));
-            last = storia.get(storia.lastKey());
-            //metodo peso
-            avg = mDbHelper.getAveragePending();
+            if (storia != null && storia.size() > 0) {
+                last = storia.get(storia.lastKey());
+                //metodo peso
+                avg = mDbHelper.getAveragePending();
+            }
 
             return "Executed";
         }
@@ -360,12 +362,15 @@ public class WalletActivity extends DrawerActivity {
                 granoEnum = GranularityEnum.DAY;
             else if (radioMin.isChecked())
                 granoEnum = GranularityEnum.MINUTE;
-            ChartUtils.drawWorkersHistory(lineView, PoolQueryGrouper.groupAvgWalletQueryResult(storia, granoEnum), granoEnum);
-            ChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
-                    PoolQueryGrouper.groupAvgWalletQueryResult(storia,
-                            granoEnum),
-                    granoEnum);
-            drawMinersTable(last);
+            if (storia != null && storia.size() > 0) {
+                ChartUtils.drawWorkersHistory(lineView, PoolQueryGrouper.groupAvgWalletQueryResult(storia, granoEnum), granoEnum);
+                ChartUtils.drawWalletHashRateHistory(hashRateChartTitleText, lineViewRate,
+                        PoolQueryGrouper.groupAvgWalletQueryResult(storia,
+                                granoEnum),
+                        granoEnum);
+                drawMinersTable(last);
+            }
+
             objectanimator.cancel();
         }
 

@@ -65,15 +65,19 @@ public class MinersActivity extends DrawerActivity {
     private FloatingActionButton fab;
 
 
-    private void fetchRandomGuy() {
+    private int fetchRandomGuy() {
+        int ret = 0;
         ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList(MinerSortEnum.LAST_SEEN);//ordinamento irrilevante
         //choose a random one if no empty
         if (miners.size() > 0) {
             for (int i = 0; i < 5; i++) {
                 final MinerDBRecord rec = miners.get(new Random(new Date().getTime()).nextInt(miners.size()));
                 fetchMinerStats(rec);
+                ret ++;
             }
         }
+
+        return ret;
     }
 
     private void fetchMinerStats(final MinerDBRecord rec) {
@@ -137,8 +141,6 @@ public class MinersActivity extends DrawerActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null).show();
                 issueRefresh();
             }
         });
@@ -328,7 +330,6 @@ public class MinersActivity extends DrawerActivity {
         private final MinerRoot retrieved;
         private final MinerSortEnum sortOrder;
         private PoolDbHelper mDbHelper;
-        private ObjectAnimator objectanimator;
         private ArrayList<MinerDBRecord> min;
 
         UpdateUIAsynchTask(MinerRoot mr, MinerSortEnum sortOrder) {
@@ -342,8 +343,8 @@ public class MinersActivity extends DrawerActivity {
             //update DB from JSON
             updateRecordStats(retrieved);
             min = mDbHelper.getMinerList(sortOrder);
-            fetchRandomGuy();
-            return "Executed";
+
+            return ""+fetchRandomGuy();
         }
 
         @Override
@@ -357,7 +358,8 @@ public class MinersActivity extends DrawerActivity {
                 mAdapter.setMinersArray(min);
                 mAdapter.notifyDataSetChanged();
             }
-            objectanimator.cancel();
+            Snackbar.make(textViewBlocksTitle, "Refreshed " + result + " miners", Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
         }
 
         @Override
@@ -370,10 +372,6 @@ public class MinersActivity extends DrawerActivity {
                 mRecyclerView.setAdapter(mAdapter);
             }
             // final FloatingActionButton fabb = findViewById(R.id.fab);
-            objectanimator = ObjectAnimator.ofFloat(fab, "rotation", 360);
-            objectanimator.setDuration(1000);
-            objectanimator.setRepeatCount(ObjectAnimator.INFINITE);
-            objectanimator.start();
         }
 
         @Override
