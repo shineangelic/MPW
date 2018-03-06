@@ -17,8 +17,8 @@
         android:text="NA"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textViewOldestMinerLink"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMostPaidMinerLink" />
+        app:layout_constraintEnd_toStartOf="@id/textViewOldestMinerLink"
+        app:layout_constraintTop_toBottomOf="@id/textViewMostPaidMinerLink" />
 
     <View
         android:id="@+id/viewSeparatorBlocks"
@@ -79,7 +79,7 @@
         android:layout_marginLeft="8dp"
         android:text="Oldest Miner"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textViewOldestMinerLink" />
+        app:layout_constraintTop_toTopOf="@id/textViewOldestMinerLink" />
 
     <ImageButton
         android:id="@+id/textViewHighestHashrateLink"
@@ -89,7 +89,9 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewSeparatorBlocks"
-        app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+        android:background="@drawable/ic_account_balance_wallet_black_24dp"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_marginRight="8dp" />
 
     <ImageButton
         android:id="@+id/textViewMostPaidMinerLink"
@@ -99,7 +101,9 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewHighestHashrateLink"
-        app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+        android:background="@drawable/ic_account_balance_wallet_black_24dp"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_marginRight="8dp" />
 
     <ImageButton
         android:id="@+id/textViewOldestMinerLink"
@@ -109,5 +113,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewMostPaidMinerLink"
-        app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp" />
+        android:background="@drawable/ic_account_balance_wallet_black_24dp"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_marginRight="8dp" />
 </android.support.constraint.ConstraintLayout>
