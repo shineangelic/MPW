@@ -12,6 +12,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 
@@ -20,10 +23,10 @@ import it.angelic.mpw.model.jsonpojos.blocks.Matured;
  */
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
     private final CurrencyEnum cur;
-    private Matured[] blocksArray;
+    private List<Matured> blocksArray;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BlockAdapter(Matured[] myDataset, CurrencyEnum curr) {
+    public BlockAdapter(List<Matured> myDataset, CurrencyEnum curr) {
         blocksArray = myDataset;
         cur = curr;
     }
@@ -41,20 +44,21 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(BlockViewHolder holder, int position) {
+
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.bindBlock(blocksArray[position], cur);
+        holder.bindBlock(blocksArray.get(position), cur);
 
     }
 
-    public void setBlocksArray(Matured[] blocksArray) {
+    public void setBlocksArray( List<Matured> blocksArray) {
         this.blocksArray = blocksArray;
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return blocksArray.length;
+        return blocksArray.size();
     }
 
     // Provide a reference to the views for each data item

@@ -132,13 +132,11 @@ public class BlocksActivity extends DrawerActivity {
                                     txtTit.append(" found on ").append(mPool.toString());
 
                                     textViewBlocksTitle.setText(txtTit);
-                                    Matured[] maturi = new Matured[retrieved.getMaturedTotal()];
 
                                     SummaryStatistics sts = doApacheMath(retrieved.getMatured());
-                                    retrieved.getMatured().toArray(maturi);
 
                                     if (mAdapter == null) {
-                                        mAdapter = new BlockAdapter(maturi, mCur);
+                                        mAdapter = new BlockAdapter(retrieved.getMatured(), mCur);
                                         mRecyclerView.setAdapter(mAdapter);
                                     }
                                     textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
@@ -146,7 +144,7 @@ public class BlocksActivity extends DrawerActivity {
                                     textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
                                     textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
 
-                                    mAdapter.setBlocksArray(maturi);
+                                    mAdapter.setBlocksArray(retrieved.getMatured());
                                     mAdapter.notifyDataSetChanged();
                                 }else
                                     textViewBlocksTitle.setText("No Block found on " + mPool.toString());
