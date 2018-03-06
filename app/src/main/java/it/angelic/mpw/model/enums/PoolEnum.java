@@ -24,6 +24,9 @@ public enum PoolEnum {
     /*ELLAISMDEV("Ella Dev Pool", "ellaism.org", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ELLA);
     }}, true, "pool"),*/
+    ETHTEAM("EthTeam", "ethteam.com",false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETC);
+    }}, true),
     HASHINGPARTY("Hashing Party", "hashing.party", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
