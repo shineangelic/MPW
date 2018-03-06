@@ -345,13 +345,15 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 //firebase log event
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mPool.toString());
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,  mPool.toString());
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "POOL");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                mFirebaseAnalytics.logEvent("select_pool", bundle);
 
                 bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mCur.toString());
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,  mCur.toString());
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CURRENCY");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                mFirebaseAnalytics.logEvent("select_currency", bundle);
 
                 startActivity(miner);
                 finish();

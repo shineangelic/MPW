@@ -48,7 +48,7 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
         prefs.edit().putString("wallet_addr", (String) newValue).commit();
 
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, (String) newValue);
+        //bundle.putString(FirebaseAnalytics.Param.ITEM_ID, (String) newValue);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
         Crashlytics.setUserIdentifier((String) newValue);
         return true;

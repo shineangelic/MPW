@@ -20,7 +20,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.preferences);
-
+        //Crashlytics.getInstance().crash();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
