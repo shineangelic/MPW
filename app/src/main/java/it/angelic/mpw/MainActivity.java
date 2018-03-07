@@ -157,7 +157,7 @@ public class MainActivity extends DrawerActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
+
 
         //ADS
         AdView mAdView = findViewById(R.id.adView);
@@ -170,6 +170,7 @@ public class MainActivity extends DrawerActivity {
         super.onStart();
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
         //importante refresh
         mDbHelper = new PoolDbHelper(this, mPool, mCur);
         issueRefresh(mDbHelper, builder);

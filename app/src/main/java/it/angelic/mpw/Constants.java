@@ -21,6 +21,6 @@ public class Constants {
     //NOOB POOL
     public static final String NOOB_POOL_NAME = "Noob Pool";
 
-    static final String ETHER_STATS_URL = "https://api.coinmarketcap.com/v1/ticker/";
+    static final String ETHER_STATS_URL = "https://api.coinmarketcap.com/v1/ticker/?limit=1000";
 
 }

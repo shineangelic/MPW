@@ -378,7 +378,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 List<Ticker> posts = gson.fromJson(response.toString(), listType);
                 Ticker fnd = null;
                 for (Ticker currency : posts) {
-                    if (mCur.name().equalsIgnoreCase(currency.getSymbol())) {
+                    if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
                         fnd = currency;
                         break;
                     }
@@ -386,7 +386,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 Utils.saveEtherValues(fnd, ChoosePoolActivity.this);
             } catch (Exception e) {
                 Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
-
             }
 
             try {

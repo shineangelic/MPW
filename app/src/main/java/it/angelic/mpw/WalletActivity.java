@@ -144,8 +144,6 @@ public class WalletActivity extends DrawerActivity {
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_wallet), mPool, mCur);
-
         //ADS
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -164,7 +162,7 @@ public class WalletActivity extends DrawerActivity {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view_wallet), mPool, mCur);
         NavigationView navigationViewInterna = findViewById(R.id.navigation_view);
         navigationViewInterna.setNavigationItemSelectedListener(this);
         navigationViewInterna.setCheckedItem(R.id.nav_wallet);
