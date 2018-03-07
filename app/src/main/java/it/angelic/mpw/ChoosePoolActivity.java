@@ -18,18 +18,29 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
-import it.angelic.mpw.model.db.PoolDbHelper;
+import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 
 /**
  * A login screen that offers login via email/password.
@@ -54,7 +65,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
-        AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", "0")));
+        AppCompatDelegate.setDefaultNightMode(Integer.valueOf(prefs.getString("pref_theme", "0")));
         setContentView(R.layout.activity_choose_pool);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Set up the login form.
@@ -90,7 +101,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item,
                         ((PoolEnum) poolSpinner.getAdapter().getItem(position)).getSupportedCurrencies());
-               arra.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                arra.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 currencySpinner.setAdapter(arra);
                 String prevWallet = prefs.getString("wallet_addr_"
                         + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name()
@@ -255,25 +266,25 @@ public class ChoosePoolActivity extends AppCompatActivity {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     /**
@@ -295,9 +306,9 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
             try {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
+
                 prefs.edit().putString("poolEnum", mPool.name()).apply();
                 prefs.edit().putString("curEnum", mCur.name()).apply();
                 prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).commit();
@@ -320,6 +331,62 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 mDbHelper.close();
             } catch (Exception e) {
                 Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
+            }
+
+            //COINMARKETCAP
+            ///ETH Value From etherscan
+          /*  JsonObjectRequest jsonEtherObjReq = new JsonObjectRequest(Request.Method.GET,
+                    Constants.ETHER_STATS_URL, null,
+                    new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(final JSONObject response) {
+                            Log.d(Constants.TAG, response.toString());
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson gson = builder.create();
+                            Type listType = new TypeToken<List<Ticker>>() {
+                            }.getType();
+                            List<Ticker> posts = gson.fromJson(response.toString(), listType);
+
+                            for (Ticker currency : posts) {
+                                if (mCur.name().equalsIgnoreCase(currency.getSymbol())) {
+                                    Utils.saveEtherValues(currency, ChoosePoolActivity.this);
+                                    break;
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                    // hide the progress dialog
+                }
+            });
+            NoobJSONClientSingleton.getInstance(ChoosePoolActivity.this).addToRequestQueue(jsonEtherObjReq);
+*/
+            try {
+                //synch jason
+                RequestFuture<JSONArray> future = RequestFuture.newFuture();
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,Constants.ETHER_STATS_URL, new JSONArray(), future, future);
+                JSONClientSingleton.getInstance(ChoosePoolActivity.this).addToRequestQueue(request);
+                JSONArray response = future.get(); // this will block
+                Log.d(Constants.TAG, response.toString());
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                Type listType = new TypeToken<List<Ticker>>() {}.getType();
+                List<Ticker> posts = gson.fromJson(response.toString(), listType);
+                Ticker fnd = null;
+                for (Ticker currency : posts) {
+                    if (mCur.name().equalsIgnoreCase(currency.getSymbol())) {
+                        fnd = currency;
+                        break;
+                    }
+                }
+                Utils.saveEtherValues(fnd, ChoosePoolActivity.this);
+            } catch (Exception e) {
+                Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
+
             }
 
             try {
@@ -345,13 +412,13 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 //firebase log event
                 Bundle bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mPool.toString());
-                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,  mPool.toString());
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mPool.toString());
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "POOL");
                 mFirebaseAnalytics.logEvent("select_pool", bundle);
 
                 bundle = new Bundle();
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mCur.toString());
-                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME,  mCur.toString());
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mCur.toString());
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CURRENCY");
                 mFirebaseAnalytics.logEvent("select_currency", bundle);
 

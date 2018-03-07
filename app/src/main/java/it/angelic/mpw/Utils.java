@@ -3,10 +3,13 @@ package it.angelic.mpw;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import org.json.JSONArray;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,7 +20,7 @@ import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.PrecisionEnum;
-import it.angelic.mpw.model.jsonpojos.etherscan.Result;
+import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -185,45 +188,45 @@ class Utils {
         return formatCurrency(balance, CurrencyEnum.ETH);
     }
 
-    public static void saveEtherValues(Result result, Context ctx) {
-        SharedPreferences settings = ctx.getSharedPreferences("ETHERSCAN", MODE_PRIVATE);
+    public static void saveEtherValues(@Nullable Ticker result, Context ctx) {
+        SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
+
         try {
-            prefEditor.putString("ETHUSD", result.getEthusd());
-            prefEditor.putString("ETHBTC", result.getEthbtc());
-            prefEditor.putLong("ETHTIMESTAMP", result.getEthusd_timestamp().getTime());
+            prefEditor.putString("CURUSD", result.getPrice_usd());
+            prefEditor.putString("CURCHG", result.getPercent_change_24h());
+            prefEditor.putLong("CURTIMESTAMP", Long.valueOf(result.getLast_updated()) *1000);
         } catch (Exception ie) {
-            Log.e(TAG, "Impossible  to save Ether values: " + ie.getMessage());
+            Log.e(TAG, "Impossible  to save Currency values: " + ie.getMessage());
+            prefEditor.remove("CURUSD");
+            prefEditor.remove("CURCHG");
+            prefEditor.remove("CURTIMESTAMP");
         }
-
-
         prefEditor.commit();
 
     }
 
     public static void fillEthereumStats(Context ctx, PoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool, CurrencyEnum cur) {
-
-        TextView eth = navigationView.findViewById(R.id.textViewEthValue);
+        TextView ethPlaceholder = navigationView.findViewById(R.id.textView10);
         TextView ethC = navigationView.findViewById(R.id.textViewEthCourtesy);
-        TextView textViewCurbalance = navigationView.findViewById(R.id.textViewCurbalance);
         TextView textViewWhoPaid = navigationView.findViewById(R.id.textViewWhoPaid);
-        SharedPreferences settings = ctx.getSharedPreferences("ETHERSCAN", MODE_PRIVATE);
+        SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
         try {
-            String val = settings.getString("ETHUSD", "---");
-            eth.setText(val);
-            ethC.setText("Courtesy of etherscan.io. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("ETHTIMESTAMP", 0))));
-            textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out), activePool.toString()));
+            String val = settings.getString("CURUSD", "---");
+            String chg = settings.getString("CURCHG", "---");
+            ethC.setText("Courtesy of coinmarketcap. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("CURTIMESTAMP", 0))));
+            ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder),cur.name(), val,chg));
         } catch (Exception e) {
             Log.e(TAG, "Error eth currency panel:" + e.getMessage());
-            eth.setVisibility(View.INVISIBLE);
             ethC.setVisibility(View.INVISIBLE);
+            ethPlaceholder.setVisibility(View.INVISIBLE);
         }
         try {
             Wallet last = mDbHelper.getLastWallet();
-            textViewCurbalance.setText(Utils.formatCurrency(last.getStats().getPaid(), cur));
+            textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out_full), activePool.toString(),""+Utils.formatCurrency(last.getStats().getPaid(),cur)));
         } catch (Exception e) {
             Log.e(TAG, "Errore aggiornamento eth paid panel: " + e.getMessage());
-            textViewCurbalance.setVisibility(View.INVISIBLE);
+            textViewWhoPaid.setVisibility(View.INVISIBLE);
         }
     }
     public static String getHomeStatsURL( SharedPreferences prefs) {

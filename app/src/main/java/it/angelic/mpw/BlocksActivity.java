@@ -164,7 +164,7 @@ public class BlocksActivity extends DrawerActivity {
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     private SummaryStatistics doApacheMath(List<Matured> maturi) {

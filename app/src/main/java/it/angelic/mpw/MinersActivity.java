@@ -1,6 +1,5 @@
 package it.angelic.mpw;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -119,7 +118,7 @@ public class MinersActivity extends DrawerActivity {
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     @Override
@@ -226,7 +225,7 @@ public class MinersActivity extends DrawerActivity {
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
 

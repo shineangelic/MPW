@@ -2,10 +2,8 @@ package it.angelic.mpw;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.design.widget.Snackbar;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -91,7 +89,7 @@ public class NoobPoolInstrumentedTest {
             }
         });
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsonObjReq);
     }
 
     @Test
@@ -119,7 +117,7 @@ public class NoobPoolInstrumentedTest {
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
 
     }
 
@@ -149,7 +147,7 @@ public class NoobPoolInstrumentedTest {
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
     }
 
     @Test
@@ -177,7 +175,7 @@ public class NoobPoolInstrumentedTest {
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
     }
 
     @Test

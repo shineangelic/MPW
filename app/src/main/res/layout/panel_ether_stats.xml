@@ -5,28 +5,15 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewEthValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text=" ---.--"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toEndOf="@+id/textView10"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="8dp" />
-
-    <TextView
         android:id="@+id/textViewEthCourtesy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="8dp"
         android:text="TextView"
         android:textSize="10sp"
         android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWhoPaid"
-        android:layout_marginLeft="24dp" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewWhoPaid" />
 
     <ImageView
         android:id="@+id/imageViewCurrencyLogoFoot"
@@ -46,21 +33,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="1 ETH = "
+        android:text="@string/currency_placeholder"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toEndOf="@+id/imageViewCurrencyLogoFoot"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="8dp" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="$"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toEndOf="@+id/textViewEthValue"
+        app:layout_constraintStart_toEndOf="@id/imageViewCurrencyLogoFoot"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="8dp" />
 
@@ -70,25 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/paid_out"
-        app:layout_constraintStart_toEndOf="@+id/imageViewCurrencyLogoFoot"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
+        app:layout_constraintStart_toEndOf="@id/imageViewCurrencyLogoFoot"
+        app:layout_constraintTop_toBottomOf="@id/textView10"
         android:layout_marginLeft="8dp" />
 
-    <TextView
-        android:id="@+id/textViewCurbalance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="---"
-        app:layout_constraintStart_toEndOf="@+id/textViewWhoPaid"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
-        android:layout_marginLeft="8dp" />
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$"
-        app:layout_constraintStart_toEndOf="@+id/textViewCurbalance"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
 </android.support.constraint.ConstraintLayout>

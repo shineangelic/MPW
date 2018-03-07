@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -48,7 +47,7 @@ import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.db.PoolQueryGrouper;
 import it.angelic.mpw.model.enums.BackToEnum;
-import it.angelic.mpw.model.jsonpojos.etherscan.EtherscanStats;
+
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 
 public class MainActivity extends DrawerActivity {
@@ -227,38 +226,9 @@ public class MainActivity extends DrawerActivity {
                 updateCurrentStats();
             }
         });
-        ///ETH Value From etherscan
-        JsonObjectRequest jsonEtherObjReq = new JsonObjectRequest(Request.Method.GET,
-                Constants.ETHER_STATS_URL, null,
-                new Response.Listener<JSONObject>() {
 
-                    @Override
-                    public void onResponse(final JSONObject response) {
-                        Log.d(Constants.TAG, response.toString());
-                        hashText.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Gson gson = builder.create();
-                                // Register an adapter to manage the date types as long values
-                                EtherscanStats retrieved = gson.fromJson(response.toString(), EtherscanStats.class);
-
-                                if ("OK".equals(retrieved.getMessage())) {
-                                    Utils.saveEtherValues(retrieved.getResult(), MainActivity.this);
-                                }
-                            }
-                        });
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                // hide the progress dialog
-            }
-        });
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
-        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonEtherObjReq);
+        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     /**

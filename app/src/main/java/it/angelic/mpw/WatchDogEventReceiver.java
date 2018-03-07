@@ -140,10 +140,10 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                         // hide the progress dialog
                     }
                 });
-                NoobJSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReqWallet);
+                JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReqWallet);
             }
             // Adding request to request queue
-            NoobJSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReq);
+            JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReq);
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
             Crashlytics.logException(se);

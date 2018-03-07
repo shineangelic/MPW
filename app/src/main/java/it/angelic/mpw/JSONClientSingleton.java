@@ -11,9 +11,9 @@ import com.android.volley.toolbox.Volley;
  * Created by shine@angelic.it on 06/09/2017.
  */
 
-public class NoobJSONClientSingleton {
+public class JSONClientSingleton {
 
-    private static final String TAG = NoobJSONClientSingleton.class
+    private static final String TAG = JSONClientSingleton.class
             .getSimpleName();
     private final Context mCtx;
     // Instantiate the cache
@@ -23,16 +23,16 @@ public class NoobJSONClientSingleton {
     private RequestQueue queue;
 
     //itself instance
-    private static NoobJSONClientSingleton mInstance;
+    private static JSONClientSingleton mInstance;
 
-    private NoobJSONClientSingleton(Context context) {
+    private JSONClientSingleton(Context context) {
         mCtx = context;
         queue = getRequestQueue();
     }
 
-    public static synchronized NoobJSONClientSingleton getInstance(Context cx) {
+    public static synchronized JSONClientSingleton getInstance(Context cx) {
         if (mInstance == null) {
-            mInstance = new NoobJSONClientSingleton(cx);
+            mInstance = new JSONClientSingleton(cx);
         }
         return mInstance;
     }

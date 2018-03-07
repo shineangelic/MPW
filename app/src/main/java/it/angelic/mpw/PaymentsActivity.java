@@ -135,7 +135,7 @@ public class PaymentsActivity extends DrawerActivity {
         });
 
         // Adding request to request queue
-        NoobJSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     private void drawPaymentsTable(Wallet retrieved) {
