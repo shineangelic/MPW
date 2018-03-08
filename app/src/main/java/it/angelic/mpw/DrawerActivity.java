@@ -88,6 +88,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case NEVERMINING:
                 curLogo.setImageResource(R.mipmap.ic_nevermining_logo);
                 break;
+            case TWOMINERS:
+                curLogo.setImageResource(R.mipmap.ic_2miners_logo);
+                break;
             /*case MINERPOOLFR:
                 curLogo.setImageResource(R.mipmap.ic_minerpoolfr_logo);
                 break;*/
@@ -107,6 +110,18 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case MC:
                 //gia` cosi, e` default
                 imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_musicoin_logo);
+                break;
+            case PIRL:
+                //gia` cosi, e` default
+                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_pirl_logo);
+                break;
+            case ELLA:
+                //gia` cosi, e` default
+                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ella_logo);
+                break;
+            case EXP:
+                //gia` cosi, e` default
+                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_exp_logo);
                 break;
         }
 

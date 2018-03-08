@@ -60,6 +60,15 @@ public enum PoolEnum {
         add(CurrencyEnum.MUSIC);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBIQ);
+    }}, false),
+    TWOMINERS("2miners", "2miners.com", true, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ETC);
+        add(CurrencyEnum.EXP);
+        add(CurrencyEnum.MUSIC);
+        add(CurrencyEnum.ETP);
+        add(CurrencyEnum.PIRL);
+        add(CurrencyEnum.ELLA);
     }}, false);
    /* MINERPOOLFR("Mining Pool", "mining-pool.fr",true,new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);

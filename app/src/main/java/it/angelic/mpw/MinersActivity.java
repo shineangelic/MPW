@@ -352,7 +352,7 @@ public class MinersActivity extends DrawerActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.name() + " Miners on " + mPool.toString());
+            textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.toString() + " miners on " + mPool.toString());
             updateUIRecordStats(min);
             if (mAdapter == null) {
                 mAdapter = new MinerAdapter(min, mPool, mCur);

@@ -11,7 +11,7 @@ public class PoolDialogPreference extends DialogPreference {
 
     public PoolDialogPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // TODO Auto-generated constructor stub
+
     }
     public PoolDialogPreference(Context context) {
         this(context, null);

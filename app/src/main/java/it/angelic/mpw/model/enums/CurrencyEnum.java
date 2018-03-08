@@ -17,6 +17,7 @@ public enum CurrencyEnum {
 	EMC2("Einstenium"), //argh!
 	ETH("Ethereum", "https://etherscan.io"),
     ETC("Ethereum Classic", "https://gastracker.io"),
+    ETP("Metaverse"),
 	EXP("Expanse"),
 	KMD("Komodo"),
 	LTC("Litecoin"),
