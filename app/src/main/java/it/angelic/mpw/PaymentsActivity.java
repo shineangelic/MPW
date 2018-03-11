@@ -30,6 +30,9 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,6 +42,9 @@ import im.dacer.androidcharts.LineView;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.PoolDbHelper;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.jsonpojos.blocks.Block;
+import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -98,7 +104,7 @@ public class PaymentsActivity extends DrawerActivity {
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
         final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
-        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this))+minerAddr);
+        issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + minerAddr);
     }
 
     private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -134,8 +140,102 @@ public class PaymentsActivity extends DrawerActivity {
             }
         });
 
+        JsonObjectRequest jsonObjBlockReq = new JsonObjectRequest(Request.Method.GET,
+                Utils.getBlocksURL(PreferenceManager.getDefaultSharedPreferences(PaymentsActivity.this)), null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(final JSONObject response) {
+                        Log.d(Constants.TAG, response.toString());
+                        Gson gson = builder.create();
+                        // Register an adapter to manage the date types as long values
+                        Block matured = gson.fromJson(response.toString(), Block.class);
+                        drawProjectionTable(mDbHelper, matured);
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(Constants.TAG, "Error: " + error.getMessage());
+                Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+
         // Adding request to request queue
         JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjBlockReq);
+    }
+
+    private void drawProjectionTable(final PoolDbHelper mDbHelper, Block matured) {
+        Double shareperc = 0d;
+
+        TableLayout minersTable = findViewById(R.id.tableLayoutProjections);
+        minersTable.removeAllViews();
+        //table header
+        TableRow row = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection, null);
+        minersTable.addView(row);
+
+        try {
+            MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
+            HomeStats last = mDbHelper.getLastHomeStats(1).getValue(0);
+            // bigIntX is a BigInteger
+            BigDecimal bigDecX = new BigDecimal(mDbHelper.getLastWallet().getRoundShares());
+            BigDecimal bigDecY = new BigDecimal(last.getStats().getRoundShares());
+
+            shareperc = bigDecX.divide(bigDecY, mc).doubleValue();
+            //By current currency
+            TableRow rowCur = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
+            ((TextView) rowCur.findViewById(R.id.textViewProjEmpty)).setText(mCur.name());
+            long dayP = (long) Utils.getDailyProfitProjection(shareperc, matured.getMatured());
+            ((TextView) rowCur.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP));
+            ((TextView) rowCur.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * 7));
+            Calendar c = Calendar.getInstance();
+            int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+            ((TextView) rowCur.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * monthMaxDays));
+
+            minersTable.addView(rowCur);
+            //CAZZO DI DOLLARI
+            try {
+                TableRow rowCurEl = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
+                ((TextView) rowCurEl.findViewById(R.id.textViewProjEmpty)).setText(" $ ");
+                SharedPreferences settings = PaymentsActivity.this.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
+                Double val = Double.valueOf(settings.getString("CURUSD", "0"));
+                long dayPD = dayP * val.longValue();
+                ((TextView) rowCurEl.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD));
+                ((TextView) rowCurEl.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD * 7));
+                ((TextView) rowCurEl.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD * monthMaxDays));
+
+                minersTable.addView(rowCurEl);
+                if (!CurrencyEnum.ETH.equals(mCur)) {
+                    try {
+                        TableRow rowCurEl2 = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
+                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjEmpty)).setText(CurrencyEnum.ETH.name());
+                        Double valUsdETH = 1 / Double.valueOf(settings.getString("ETHUSD", "0"));
+                        long dayPDETH = dayPD * valUsdETH.longValue();
+                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatEthCurrency(PaymentsActivity.this, dayPDETH));
+                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatEthCurrency(PaymentsActivity.this, dayPDETH * 7));
+                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatEthCurrency(PaymentsActivity.this, dayPDETH * monthMaxDays));
+
+                        minersTable.addView(rowCurEl);
+
+
+                    } catch (Exception oioi) {
+                        Log.w(Constants.TAG, "Internal Row 3 fail");
+                    }
+                }
+
+            } catch (Exception oioi) {
+                Log.w(Constants.TAG, "Internal Row 2 fail");
+            }
+
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "Errore refresh share perc: ", e);
+            // textViewWalRoundSharesPercValue.setText("NA");
+        }
+
+
     }
 
     private void drawPaymentsTable(Wallet retrieved) {
@@ -150,7 +250,7 @@ public class PaymentsActivity extends DrawerActivity {
             //one row for each payment
             TableRow rowt = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
             ((TextView) rowt.findViewById(R.id.textViewWorkerName)).setText(yearFormat.format(thispay.getTimestamp()));
-            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatCurrency(thispay.getAmount(), mCur));
+            ((TextView) rowt.findViewById(R.id.textViewWorkerHashrate)).setText(Utils.formatCurrency(PaymentsActivity.this, thispay.getAmount(), mCur));
             rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

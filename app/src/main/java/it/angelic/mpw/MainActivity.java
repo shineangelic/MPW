@@ -90,7 +90,7 @@ public class MainActivity extends DrawerActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Locale current = getResources().getConfiguration().locale;
+        //Locale current = getResources().getConfiguration().locale;
 
         mDbHelper = new PoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();

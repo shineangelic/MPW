@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -32,6 +33,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
@@ -49,6 +51,7 @@ public class BlocksActivity extends DrawerActivity {
     private TextView textViewMinBlockTimeValue;
     private TextView textViewMeanBlockTimeValue;
     private TextView textViewBlockTimeStdDevValue;
+    private TextView textViewBlocksPerDayValue;
 
 
     @Override
@@ -64,6 +67,7 @@ public class BlocksActivity extends DrawerActivity {
         textViewMinBlockTimeValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewMeanBlockTimeValue = findViewById(R.id.textViewMeanBlockTimeValue);
         textViewBlockTimeStdDevValue = findViewById(R.id.textViewBlockTimeStdDevValue);
+        textViewBlocksPerDayValue = findViewById(R.id.textViewBlocksPerDayValue);
 
         GsonBuilder builder = new GsonBuilder();
         mRecyclerView = findViewById(R.id.blocks_recycler_view);
@@ -143,6 +147,8 @@ public class BlocksActivity extends DrawerActivity {
                                     textViewMaxBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
                                     textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
                                     textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
+                                    Locale current = getResources().getConfiguration().locale;
+                                    textViewBlocksPerDayValue.setText(String.format(current,"%.3f",Utils.getPoolBlockPerDay(retrieved.getMatured())));
 
                                     mAdapter.setBlocksArray(retrieved.getMatured());
                                     mAdapter.notifyDataSetChanged();

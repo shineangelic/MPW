@@ -129,7 +129,7 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                                 if (notifyPayment && ultimi.keySet().size() >= LAST_TWO &&
                                         ultimi.get(ultimi.firstKey()).getPayments().size() > ultimi.get(ultimi.get(1)).getPayments().size()) {
                                     sendPaymentNotification(ctx, "You received a payment: " +
-                                            Utils.formatEthCurrency(ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()), mCur.toString() + " payment from " + mPool.toString());
+                                            Utils.formatEthCurrency(ctx,ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()), mCur.toString() + " payment from " + mPool.toString());
                                 }
                             }
                         }, new Response.ErrorListener() {

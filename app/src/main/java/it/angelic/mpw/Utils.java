@@ -9,17 +9,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.IllegalFormatException;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
-import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.PrecisionEnum;
+import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -180,30 +181,22 @@ class Utils {
         }
     }
 
-    public static String formatCurrency(Long balance, CurrencyEnum cur) {
-        return String.format(Locale.getDefault(), PrecisionEnum.SIX_DIGIT.getFormat() + " " + cur.name(), (balance / 1000000000F));
+    public static String formatGenericCurrency(Context ctx, Long balance){
+        Locale current = ctx.getResources().getConfiguration().locale;
+        return String.format(current, PrecisionEnum.FIVE_DIGIT.getFormat(), (balance / 1000000000F));
     }
 
-    public static String formatEthCurrency(Long balance) {
-        return formatCurrency(balance, CurrencyEnum.ETH);
+    public static String formatUSDCurrency(Context ctx, Long balance){
+        Locale current = ctx.getResources().getConfiguration().locale;
+        return String.format(current, PrecisionEnum.TWO_DIGIT.getFormat(), (balance / 1000000000F));
     }
 
-    public static void saveEtherValues(@Nullable Ticker result, Context ctx) {
-        SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
-        SharedPreferences.Editor prefEditor = settings.edit();
+    public static String formatCurrency(Context ctx,Long balance, CurrencyEnum cur) {
+        return  formatGenericCurrency(ctx,balance) + " " + cur.name();
+    }
 
-        try {
-            prefEditor.putString("CURUSD", result.getPrice_usd());
-            prefEditor.putString("CURCHG", result.getPercent_change_24h());
-            prefEditor.putLong("CURTIMESTAMP", Long.valueOf(result.getLast_updated()) *1000);
-        } catch (Exception ie) {
-            Log.e(TAG, "Impossible  to save Currency values: " + ie.getMessage());
-            prefEditor.remove("CURUSD");
-            prefEditor.remove("CURCHG");
-            prefEditor.remove("CURTIMESTAMP");
-        }
-        prefEditor.commit();
-
+    public static String formatEthCurrency(Context ctx,Long balance) {
+        return formatCurrency(ctx,balance, CurrencyEnum.ETH);
     }
 
     public static void fillEthereumStats(Context ctx, PoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool, CurrencyEnum cur) {
@@ -215,7 +208,7 @@ class Utils {
             String val = settings.getString("CURUSD", "---");
             String chg = settings.getString("CURCHG", "---");
             ethC.setText("Courtesy of coinmarketcap. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("CURTIMESTAMP", 0))));
-            ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder),cur.name(), val,Double.valueOf(chg)));
+            ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder), cur.name(), val, Double.valueOf(chg)));
         } catch (Exception e) {
             Log.e(TAG, "Error eth currency panel:" + e.getMessage());
             ethC.setVisibility(View.INVISIBLE);
@@ -223,52 +216,89 @@ class Utils {
         }
         try {
             Wallet last = mDbHelper.getLastWallet();
-            textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out_full), activePool.toString(),""+Utils.formatCurrency(last.getStats().getPaid(),cur)));
+            textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out_full), activePool.toString(), "" + Utils.formatCurrency(ctx,last.getStats().getPaid(), cur)));
         } catch (Exception e) {
             Log.e(TAG, "Errore aggiornamento eth paid panel: " + e.getMessage());
             textViewWhoPaid.setVisibility(View.INVISIBLE);
         }
     }
-    public static String getHomeStatsURL( SharedPreferences prefs) {
+
+    public static String getHomeStatsURL(SharedPreferences prefs) {
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
         //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
         PoolEnum puil = PoolEnum.valueOf(mPool);
-        String compose = (puil.getOmitCurrency()?"":mCur.toLowerCase())+ puil.getRadixSuffix();
-        return puil.getTransportProtocolBase() + compose +(compose.length()==0?"":".")  + puil.getWebRoot() + Constants.HOME_STATS_URL;
+        String compose = (puil.getOmitCurrency() ? "" : mCur.toLowerCase()) + puil.getRadixSuffix();
+        return puil.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + puil.getWebRoot() + Constants.HOME_STATS_URL;
     }
+
     public static String getWalletStatsUrl(SharedPreferences prefs) {
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
         PoolEnum tgtpool = PoolEnum.valueOf(mPool);
-        String compose = (tgtpool.getOmitCurrency()?"":mCur.toLowerCase())+ tgtpool.getRadixSuffix();
-        return tgtpool.getTransportProtocolBase() + compose +(compose.length()==0?"":".")  + tgtpool.getWebRoot() + Constants.ACCOUNTS_STATS_URL;
+        String compose = (tgtpool.getOmitCurrency() ? "" : mCur.toLowerCase()) + tgtpool.getRadixSuffix();
+        return tgtpool.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + tgtpool.getWebRoot() + Constants.ACCOUNTS_STATS_URL;
     }
 
-    public static String getMinersStatsUrl( SharedPreferences prefs) {
+    public static String getMinersStatsUrl(SharedPreferences prefs) {
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
         PoolEnum tgtpool = PoolEnum.valueOf(mPool);
-        String compose = (tgtpool.getOmitCurrency()?"":mCur.toLowerCase())+ tgtpool.getRadixSuffix();
-        return tgtpool.getTransportProtocolBase() + compose +(compose.length()==0?"":".")  + tgtpool.getWebRoot() + Constants.MINERS_STATS_URL;
+        String compose = (tgtpool.getOmitCurrency() ? "" : mCur.toLowerCase()) + tgtpool.getRadixSuffix();
+        return tgtpool.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + tgtpool.getWebRoot() + Constants.MINERS_STATS_URL;
     }
 
-    public static String getBlocksURL( SharedPreferences prefs) {
+    public static String getBlocksURL(SharedPreferences prefs) {
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
         PoolEnum tgtpool = PoolEnum.valueOf(mPool);
-        String compose = (tgtpool.getOmitCurrency()?"":mCur.toLowerCase())+ tgtpool.getRadixSuffix();
-        return tgtpool.getTransportProtocolBase()+ compose +(compose.length()==0?"":".")  + tgtpool.getWebRoot() + Constants.BLOCKS_URL;
+        String compose = (tgtpool.getOmitCurrency() ? "" : mCur.toLowerCase()) + tgtpool.getRadixSuffix();
+        return tgtpool.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + tgtpool.getWebRoot() + Constants.BLOCKS_URL;
     }
 
 
     public static String formatEthAddress(String minerAddr) {
-        if (minerAddr==null||minerAddr.isEmpty())
+        if (minerAddr == null || minerAddr.isEmpty())
             return "";
         //boh
         if (!minerAddr.startsWith("0x"))
             return minerAddr;
 
         return "0x" + minerAddr.substring(2).toUpperCase();
+    }
+
+    public static double getPoolBlockPerDay(List<Matured> matured) {
+        if (matured.size() < 2)
+            return 0;
+
+        Date firstDate = matured.get(0).getTimestamp();
+        Date lastD = matured.get(matured.size() - 1).getTimestamp();
+
+        long difference = firstDate.getTime() - lastD.getTime();
+        long diff = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
+        Log.i("blocks interval:", diff + "");
+
+        return matured.size() / (double) diff;
+    }
+
+    public static double getPoolBlockAvgReward(List<Matured> matured) {
+        if (matured.size() < 1)
+            return 0;
+
+        double summer = 0;
+        int cnt = 0;
+
+        // Add the data from the array
+        for (Matured m : matured) {
+            summer += Double.valueOf(m.getReward())/ 1000000000d;
+            cnt++;
+        }
+        return summer / cnt;
+    }
+
+    public static double getDailyProfitProjection(double sharePercent, List<Matured> matured){
+        double avp = getPoolBlockAvgReward(matured);
+        double blockEarnProj = sharePercent * avp;
+        return blockEarnProj * getPoolBlockPerDay(matured);
     }
 }

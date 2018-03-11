@@ -269,7 +269,7 @@ public class WalletActivity extends DrawerActivity {
 
             BigDecimal bd3 = bigDecX.divide(bigDecY, mc);
             // to divide:
-            Formatter formatter = new Formatter();
+            //Formatter formatter = new Formatter();
             Locale current = getResources().getConfiguration().locale;
             //1 %1$s = %2$s$\n%3+$s%% last 24hr
             //%+10.4f%%
@@ -281,8 +281,8 @@ public class WalletActivity extends DrawerActivity {
             textViewWalRoundSharesPercValue.setText("NA");
         }
         try {
-            textViewPendingBalanceValue.setText(Utils.formatCurrency(lastHit.getStats().getBalance().longValue(), mCur));
-            textViewPaidValue.setText(Utils.formatCurrency(lastHit.getStats().getPaid(), mCur));
+            textViewPendingBalanceValue.setText(Utils.formatCurrency(WalletActivity.this,lastHit.getStats().getBalance().longValue(), mCur));
+            textViewPaidValue.setText(Utils.formatCurrency(WalletActivity.this,lastHit.getStats().getPaid(), mCur));
         } catch (Exception ie) {
             Log.e(Constants.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
             textViewPendingBalanceValue.setText("NA");
@@ -290,7 +290,7 @@ public class WalletActivity extends DrawerActivity {
         }
 
         try {
-            textViewAvgPending.setText(avgPending == 0 ? "NA" : Utils.formatCurrency(avgPending, mCur));
+            textViewAvgPending.setText(avgPending == 0 ? "NA" : Utils.formatCurrency(WalletActivity.this,avgPending, mCur));
         } catch (Exception mie) {
             Log.e(Constants.TAG, "Errore refresh Agerage pending: " + mie.getMessage());
             textViewAvgPending.setText("NA");

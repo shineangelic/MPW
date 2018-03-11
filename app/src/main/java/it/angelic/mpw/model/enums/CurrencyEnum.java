@@ -5,7 +5,7 @@ package it.angelic.mpw.model.enums;
  * Created by shine@angelic.it on 31/01/2018.
  */
 public enum CurrencyEnum {
-    //BTC("Bitcoin"),
+    BTC("Bitcoin"),
     BTG("Bitcoin Gold"),
     BCN("Bytecoin"),
     BTX("Bitcore"),
@@ -18,6 +18,7 @@ public enum CurrencyEnum {
 	ETH("Ethereum", "https://etherscan.io"),
     ETC("Ethereum Classic", "https://gastracker.io"),
     ETP("Metaverse"),
+    ETZ("EtherZero"),
 	EXP("Expanse"),
 	KMD("Komodo"),
 	LTC("Litecoin"),
@@ -31,6 +32,7 @@ public enum CurrencyEnum {
     UBIQ("Ubiq", "https://ubiqscan.io"),//MAXPOOL names its way
     VIC("Victorium"),
     XVG("Verge"),
+    WHALE("Whalecoin"),
     ZEN("Zencash"),
     ZEC("ZCash");
 

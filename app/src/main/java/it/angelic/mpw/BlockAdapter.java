@@ -120,7 +120,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockDiffValue.setText(Utils.formatBigNumber(game.getDifficulty()));
             textViewBlockHeightValue.setText("" + game.getHeight());
             try {
-                textViewBlockRewardValue.setText(Utils.formatCurrency(Long.valueOf(game.getReward()) / 1000000000, cur));
+                textViewBlockRewardValue.setText(Utils.formatCurrency(ctx,Long.valueOf(game.getReward()) / 1000000000, cur));
             }catch (Exception io ){
                 textViewBlockRewardValue.setText("NA");
             }

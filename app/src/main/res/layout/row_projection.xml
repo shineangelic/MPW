@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableRowDay"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dip">
+
+    <TextView
+        android:id="@+id/textViewProjEmpty"
+        android:text="   "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textViewProjDayCur"
+        android:text="Day"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewProjWeekCur"
+        android:text="Week"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewProjMonthCur"
+        android:text="Month"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+</TableRow>

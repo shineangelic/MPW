@@ -262,7 +262,7 @@ public class MinersActivity extends DrawerActivity {
         //Based on these final copied values, we scroll to winner
         final Integer hiPaidIdxCopy = hiPaidIdx;
         if (hiPaidIdx != null) {
-            textViewMostPaidMinerValue.setText(Utils.formatCurrency(hiPaid, mCur));
+            textViewMostPaidMinerValue.setText(Utils.formatCurrency(MinersActivity.this,hiPaid, mCur));
             ImageButton link = findViewById(R.id.textViewMostPaidMinerLink);
             link.setOnClickListener(new View.OnClickListener() {
                 @Override

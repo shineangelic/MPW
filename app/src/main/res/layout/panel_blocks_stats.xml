@@ -9,7 +9,7 @@
 
 
     <TextView
-        android:id="@+id/textViewBlockTimeStdDevValue"
+        android:id="@+id/textViewBlocksPerDayValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -20,7 +20,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMeanBlockTimeValue" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewBlockTimeStdDevValue" />
 
     <View
         android:id="@+id/viewSeparatorBlocks"
@@ -109,5 +109,29 @@
         android:layout_marginTop="8dp"
         android:text="Block time Standard deviation"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMeanBlockTime" />
+        app:layout_constraintTop_toBottomOf="@id/textViewMeanBlockTime" />
+
+    <TextView
+        android:id="@+id/textViewBlockTimeStdDevValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="72dp"
+        android:layout_marginTop="8dp"
+        android:text="NA"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMeanBlockTimeValue" />
+
+    <TextView
+        android:id="@+id/textViewBlocksPerDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Average blocks per day"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewBlockTimeStdDev" />
 </android.support.constraint.ConstraintLayout>

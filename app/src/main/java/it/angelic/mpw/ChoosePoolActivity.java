@@ -333,38 +333,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
             }
 
-            //COINMARKETCAP
-            ///ETH Value From etherscan
-          /*  JsonObjectRequest jsonEtherObjReq = new JsonObjectRequest(Request.Method.GET,
-                    Constants.ETHER_STATS_URL, null,
-                    new Response.Listener<JSONObject>() {
-
-                        @Override
-                        public void onResponse(final JSONObject response) {
-                            Log.d(Constants.TAG, response.toString());
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson gson = builder.create();
-                            Type listType = new TypeToken<List<Ticker>>() {
-                            }.getType();
-                            List<Ticker> posts = gson.fromJson(response.toString(), listType);
-
-                            for (Ticker currency : posts) {
-                                if (mCur.name().equalsIgnoreCase(currency.getSymbol())) {
-                                    Utils.saveEtherValues(currency, ChoosePoolActivity.this);
-                                    break;
-                                }
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                    // hide the progress dialog
-                }
-            });
-            NoobJSONClientSingleton.getInstance(ChoosePoolActivity.this).addToRequestQueue(jsonEtherObjReq);
-*/
             try {
                 //synch jason
                 RequestFuture<JSONArray> future = RequestFuture.newFuture();
@@ -380,10 +348,17 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 for (Ticker currency : posts) {
                     if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
                         fnd = currency;
-                        break;
+                    }
+                    //always save ETH
+                    if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
+                        CryptoSharedPreferencesUtils.saveEthereumValues(currency, ChoosePoolActivity.this);
+                    }
+                    //always save BTC
+                    if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
+                        CryptoSharedPreferencesUtils.saveBtcValues(currency, ChoosePoolActivity.this);
                     }
                 }
-                Utils.saveEtherValues(fnd, ChoosePoolActivity.this);
+                CryptoSharedPreferencesUtils.saveEtherValues(fnd, ChoosePoolActivity.this);
             } catch (Exception e) {
                 Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
             }
