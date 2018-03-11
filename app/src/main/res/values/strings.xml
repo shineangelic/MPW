@@ -17,7 +17,7 @@
     <string name="wallet_info">Currently selected pool is %1$s (%2$s mining). Changing it means losing previous wallet\'s data.</string>
     <string name="confirm">Confirm</string>
     <string name="no_wallet_set">No wallet set. Use settings later to choose one</string>
-    <string name="currency_placeholder">1 %1$s = %2$s$\n%3$s%% last 24hr</string>
+    <string name="currency_placeholder">1 %1$s = %2$s$\n%3$+.2f%% last 24hr</string>
     <string name="paid_out">%1$s paid out</string>
     <string name="paid_out_full">%1$s paid out %2$s</string>
     <string name="wallet_stats_title">Wallet Stats\n(%1$s - %2$s)</string>

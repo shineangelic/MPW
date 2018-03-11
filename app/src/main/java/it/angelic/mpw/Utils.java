@@ -215,7 +215,7 @@ class Utils {
             String val = settings.getString("CURUSD", "---");
             String chg = settings.getString("CURCHG", "---");
             ethC.setText("Courtesy of coinmarketcap. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("CURTIMESTAMP", 0))));
-            ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder),cur.name(), val,chg));
+            ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder),cur.name(), val,Double.valueOf(chg)));
         } catch (Exception e) {
             Log.e(TAG, "Error eth currency panel:" + e.getMessage());
             ethC.setVisibility(View.INVISIBLE);

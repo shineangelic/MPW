@@ -41,9 +41,12 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -264,11 +267,17 @@ public class WalletActivity extends DrawerActivity {
             BigDecimal bigDecX = new BigDecimal(lastHit.getRoundShares());
             BigDecimal bigDecY = new BigDecimal(last.getStats().getRoundShares());
 
-            BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
+            BigDecimal bd3 = bigDecX.divide(bigDecY, mc);
             // to divide:
-            textViewWalRoundSharesPercValue.setText(bd3.stripTrailingZeros().toString() + "%");
+            Formatter formatter = new Formatter();
+            Locale current = getResources().getConfiguration().locale;
+            //1 %1$s = %2$s$\n%3+$s%% last 24hr
+            //%+10.4f%%
+            DecimalFormat df = new DecimalFormat("0%", DecimalFormatSymbols.getInstance(current));
+            df.setMaximumFractionDigits(12); //340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
+            textViewWalRoundSharesPercValue.setText(df.format(bd3));
         } catch (Exception e) {
-            Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
+            Log.e(Constants.TAG, "Errore refresh share perc: ",e);
             textViewWalRoundSharesPercValue.setText("NA");
         }
         try {

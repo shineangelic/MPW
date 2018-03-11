@@ -87,8 +87,10 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Locale current = getResources().getConfiguration().locale;
 
         mDbHelper = new PoolDbHelper(this, mPool, mCur);
         builder = new GsonBuilder();

@@ -361,7 +361,7 @@ public class MinersActivity extends DrawerActivity {
                 mAdapter.setMinersArray(min);
                 mAdapter.notifyDataSetChanged();
             }
-            Snackbar.make(textViewBlocksTitle, "Refreshed " + result + " miners", Snackbar.LENGTH_SHORT)
+            Snackbar.make(textViewBlocksTitle, "Updated " + result + " miners.The more you refresh the accurate it gets", Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show();
         }
 

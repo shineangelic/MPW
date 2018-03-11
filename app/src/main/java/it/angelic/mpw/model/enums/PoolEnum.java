@@ -72,7 +72,10 @@ public enum PoolEnum {
     }}, false),
     XEMINERS("xeminer", "xeminer.net", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
-    }}, false);
+    }}, false),
+    DOLOMITIPOOL("Dolomiti Pool", "pool.athesis.com",false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+    }}, true);
    /* MINERPOOLFR("Mining Pool", "mining-pool.fr",true,new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.ELLA);
@@ -93,12 +96,12 @@ public enum PoolEnum {
     //qualche genio cambia la radice del sito
     private final String radixSuffix;
     private final ArrayList<CurrencyEnum> supportedCurrencies;
-    PoolEnum(String friendlyName, String wr, Boolean https, ArrayList<CurrencyEnum> sfp, Boolean omit) {
+    PoolEnum(String friendlyName, String wr, Boolean https, ArrayList<CurrencyEnum> sfp, Boolean omitCurrency) {
         this.friendlyName = friendlyName;
         this.webRoot = wr;
         supportedCurrencies = sfp;
         httpsOnly = https;
-        omitCurrency = omit;
+        this.omitCurrency = omitCurrency;
         radixSuffix = "";
     }
     PoolEnum(String friendlyName, String wr, Boolean https, ArrayList<CurrencyEnum> sfp, Boolean omit,String rad) {
