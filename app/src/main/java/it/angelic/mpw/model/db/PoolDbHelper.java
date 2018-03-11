@@ -18,10 +18,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import it.angelic.mpw.Constants;
-import it.angelic.mpw.model.enums.CurrencyEnum;
-import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.enums.BackToEnum;
+import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.MinerSortEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
@@ -166,6 +166,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         return db.update(DataBaseContract.Miner_.TABLE_NAME, values,
                 DataBaseContract.Miner_.COLUMN_NAME_ADDRESS + " = CAST('" + retrieved.getAddress() + "' AS TEXT)", null);
     }
+
     public void createOrUpdateMiner(Miner retrieved) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -225,11 +226,15 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             Gson gson = builder.create();
             do {
-                // Register an adapter to manage the date types as long values
-                HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.HomeStats_.COLUMN_NAME_JSON)), HomeStats.class);
-                cnt++;
-                // Adding contact to list
-                ret.put(retrieved.getNow().getTime(), retrieved);
+                try {
+                    // Register an adapter to manage the date types as long values
+                    HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.HomeStats_.COLUMN_NAME_JSON)), HomeStats.class);
+                    // Adding contact to list
+                    ret.put(retrieved.getNow().getTime(), retrieved);
+                    cnt++;
+                } catch (Exception ce) {
+                    Log.e(TAG, "Cant read HistoryData entry: " + ce.getMessage());
+                }
             } while (cursor.moveToNext());
         }
         Log.i(TAG, "SELECT DONE. HOME HISTORY SIZE: " + cnt);
@@ -243,9 +248,10 @@ public class PoolDbHelper extends SQLiteOpenHelper {
      *
      * @return average 'pending' increase per block
      */
+
     public Long getAveragePending() {
         int cnt = 0;
-        int rec=0;
+        int rec = 0;
         Long pendings = 0L;
         Long prevPending = 0L;
 
@@ -263,14 +269,14 @@ public class PoolDbHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             Gson gson = builder.create();
-            Wallet camp  = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
+            Wallet camp = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
             prevPending = camp.getStats().getBalance().longValue();
             do {
                 Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
                 rec++;
                 Long curPending = retrieved.getStats().getBalance().longValue();
                 if (curPending > prevPending) {
-                    Log.d(TAG, "Block detected in history. Prev balance: " + prevPending+" current: "+curPending);
+                    Log.d(TAG, "Block detected in history. Prev balance: " + prevPending + " current: " + curPending);
                     cnt++;
                     //pending increased
                     pendings += (curPending - prevPending);
@@ -278,10 +284,10 @@ public class PoolDbHelper extends SQLiteOpenHelper {
                 prevPending = curPending;
             } while (cursor.moveToNext());
         }
-        Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt+" FROM RECORDS: "+rec);
+        Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt + " FROM RECORDS: " + rec);
         cursor.close();
-         if (cnt == 0)
-             return 0L;
+        if (cnt == 0)
+            return 0L;
         return pendings / cnt;
     }
 
@@ -324,12 +330,16 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             Gson gson = builder.create();
             do {
-                // Register an adapter to manage the date types as long values
-                Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-                cnt++;
-                // Adding contact to list
-                Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_DTM)));
-                ret.put(curDate, retrieved);
+                try {
+                    // Register an adapter to manage the date types as long values
+                    Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
+                    cnt++;
+                    // Adding contact to list
+                    Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_DTM)));
+                    ret.put(curDate, retrieved);
+                } catch (Exception ce) {
+                    Log.e(TAG, "Cant read WalletHistoryData entry: " + ce.getMessage());
+                }
             } while (cursor.moveToNext());
         }
         Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);
@@ -356,11 +366,15 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             Gson gson = builder.create();
             do {
-                HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), HomeStats.class);
-                cnt++;
-                // Adding contact to list
-                Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_DTM)));
-                ret.put(curDate, retrieved);
+                try {
+                    HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), HomeStats.class);
+                    cnt++;
+                    // Adding contact to list
+                    Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_DTM)));
+                    ret.put(curDate, retrieved);
+                } catch (Exception ce) {
+                    Log.e(TAG, "Cant read HomeStats entry: " + ce.getMessage());
+                }
             } while (cursor.moveToNext());
         }
         Log.i(TAG, "SELECT DONE. WALLET HISTORY SIZE: " + cnt);

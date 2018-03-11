@@ -69,6 +69,9 @@ public enum PoolEnum {
         add(CurrencyEnum.ETP);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.ELLA);
+    }}, false),
+    XEMINERS("xeminer", "xeminer.net", true, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
     }}, false);
    /* MINERPOOLFR("Mining Pool", "mining-pool.fr",true,new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
