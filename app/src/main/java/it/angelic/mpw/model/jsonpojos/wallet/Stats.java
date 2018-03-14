@@ -8,7 +8,7 @@ public class Stats implements Serializable
 
 private Double balance = Double.valueOf(0);
 private Integer blocksFound;
-private Integer immature;
+private Long immature;
 private Date lastShare;
 private Long paid;
 private Long pending;
@@ -31,11 +31,11 @@ public void setBlocksFound(Integer blocksFound) {
 this.blocksFound = blocksFound;
 }
 
-public Integer getImmature() {
+public Long getImmature() {
 return immature;
 }
 
-public void setImmature(Integer immature) {
+public void setImmature(Long immature) {
 this.immature = immature;
 }
 
