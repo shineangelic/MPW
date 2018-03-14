@@ -87,8 +87,8 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
                             LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(LAST_TWO);
                             //controllo se manca qualcuno
                             if (notifyBlock
-                                    &&
-                                    ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
+                                    && ultimi.size() > 1
+                                    && ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
                                 sendBlockNotification(ctx, mPool.toString() + " has found " + ultimi.get(ultimi.get(0)).getMaturedTotal() + " blocks", mPool);
                             }
 
