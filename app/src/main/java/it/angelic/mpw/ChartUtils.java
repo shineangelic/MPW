@@ -192,8 +192,13 @@ class ChartUtils {
         }
         chart.setDrawDotLine(false); //optional
         chart.setBottomTextList(labelsArr);
-
-        chart.setColorArray(new int[]{Color.DKGRAY, Color.CYAN});
+        List<Integer> colArr = new ArrayList<>();
+        colArr.add(ResourcesCompat.getColor(chart.getResources(), R.color.colorPrimary, null));
+        int[] ret = new int[colArr.size()];
+        int i = 0;
+        for (Integer e : colArr)
+            ret[i++] = e.intValue();
+        chart.setColorArray(ret);
         ArrayList<ArrayList<Float>> dataLists = new ArrayList<>();
         dataLists.add(dataList);
         chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)

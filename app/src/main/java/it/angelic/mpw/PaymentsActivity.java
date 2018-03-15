@@ -43,6 +43,7 @@ import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PrecisionEnum;
 import it.angelic.mpw.model.jsonpojos.blocks.Block;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
@@ -188,12 +189,12 @@ public class PaymentsActivity extends DrawerActivity {
             //By current currency
             TableRow rowCur = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
             ((TextView) rowCur.findViewById(R.id.textViewProjEmpty)).setText(mCur.name());
-            long dayP = (long) Utils.getDailyProfitProjection(shareperc, matured.getMatured());
-            ((TextView) rowCur.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP));
-            ((TextView) rowCur.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * 7));
+            Double dayP = Utils.getDailyProfitProjection(shareperc, matured.getMatured());
+            ((TextView) rowCur.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP, PrecisionEnum.TWO_DIGIT));
+            ((TextView) rowCur.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * 7, PrecisionEnum.TWO_DIGIT));
             Calendar c = Calendar.getInstance();
             int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-            ((TextView) rowCur.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * monthMaxDays));
+            ((TextView) rowCur.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * monthMaxDays, PrecisionEnum.TWO_DIGIT));
 
             minersTable.addView(rowCur);
             //CAZZO DI DOLLARI
@@ -202,7 +203,7 @@ public class PaymentsActivity extends DrawerActivity {
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjEmpty)).setText(" $ ");
                 SharedPreferences settings = PaymentsActivity.this.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
                 Double val = Double.valueOf(settings.getString("CURUSD", "0"));
-                long dayPD = dayP * val.longValue();
+               Double dayPD = dayP * val.doubleValue();
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD));
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD * 7));
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD * monthMaxDays));
@@ -213,19 +214,16 @@ public class PaymentsActivity extends DrawerActivity {
                         TableRow rowCurEl2 = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
                         ((TextView) rowCurEl2.findViewById(R.id.textViewProjEmpty)).setText(CurrencyEnum.ETH.name());
                         Double valUsdETH = 1 / Double.valueOf(settings.getString("ETHUSD", "0"));
-                        long dayPDETH = dayPD * valUsdETH.longValue();
-                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatEthCurrency(PaymentsActivity.this, dayPDETH));
-                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatEthCurrency(PaymentsActivity.this, dayPDETH * 7));
-                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatEthCurrency(PaymentsActivity.this, dayPDETH * monthMaxDays));
+                        Double dayPDETH = dayPD * valUsdETH;
+                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayPDETH, PrecisionEnum.TWO_DIGIT));
+                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayPDETH * 7, PrecisionEnum.TWO_DIGIT));
+                        ((TextView) rowCurEl2.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayPDETH * monthMaxDays, PrecisionEnum.TWO_DIGIT));
 
-                        minersTable.addView(rowCurEl);
-
-
+                        minersTable.addView(rowCurEl2);
                     } catch (Exception oioi) {
-                        Log.w(Constants.TAG, "Internal Row 3 fail");
+                        Log.w(Constants.TAG, "Internal Row 3 fail",oioi);
                     }
                 }
-
             } catch (Exception oioi) {
                 Log.w(Constants.TAG, "Internal Row 2 fail");
             }

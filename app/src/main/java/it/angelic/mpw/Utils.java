@@ -28,6 +28,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static it.angelic.mpw.Constants.TAG;
 
 /**
+ * utilities varie, ispirate da stackovrflw
  * Created by shine@angelic.it on 07/09/2017.
  */
 
@@ -186,7 +187,12 @@ class Utils {
         return String.format(current, PrecisionEnum.FIVE_DIGIT.getFormat(), (balance / 1000000000F));
     }
 
-    public static String formatUSDCurrency(Context ctx, Long balance){
+    public static String formatGenericCurrency(Context ctx, Double balance, PrecisionEnum fmt){
+        Locale current = ctx.getResources().getConfiguration().locale;
+        return String.format(current, fmt.getFormat(), (balance / 1000000000F));
+    }
+
+    public static String formatUSDCurrency(Context ctx, Double balance){
         Locale current = ctx.getResources().getConfiguration().locale;
         return String.format(current, PrecisionEnum.TWO_DIGIT.getFormat(), (balance / 1000000000F));
     }
