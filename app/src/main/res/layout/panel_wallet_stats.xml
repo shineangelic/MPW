@@ -1,298 +1,313 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_proj"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="4dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:contentPadding="4dp"
+    card_view:layout_constraintEnd_toEndOf="parent"
+    card_view:layout_constraintStart_toStartOf="parent">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="180dp" />
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"
+            tools:layout_editor_absoluteX="180dp"
+            tools:layout_editor_absoluteY="0dp" />
 
-    <TextView
-        android:id="@+id/textViewWalletValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:tooltipText="Wallet Address can be set in Preferences"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
+        <TextView
+            android:id="@+id/textViewWalletValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:tooltipText="Wallet Address can be set in Preferences"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
 
-    <View
-        android:id="@+id/viewSeparatorWallet"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:background="#FFCCCCCC"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalletValue" />
+        <View
+            android:id="@+id/viewSeparatorWallet"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="#FFCCCCCC"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalletValue" />
 
-    <TextView
-        android:id="@+id/textViewWalCurHashrate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Hashrate (now)"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
+        <TextView
+            android:id="@+id/textViewWalCurHashrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Hashrate (now)"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
 
-    <TextView
-        android:id="@+id/textViewWalCurHashrateValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="NA"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toLeftOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
+        <TextView
+            android:id="@+id/textViewWalCurHashrateValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="NA"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toLeftOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
 
-    <TextView
-        android:id="@+id/textViewWalOnlineMiners"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Workers Online"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
+        <TextView
+            android:id="@+id/textViewWalOnlineMiners"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Workers Online"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
 
-    <TextView
-        android:id="@+id/textViewWalOnlineMinersValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
+        <TextView
+            android:id="@+id/textViewWalOnlineMinersValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet" />
 
-    <TextView
-        android:id="@+id/textViewWalHashrate3h"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Hashrate (3h)"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalCurHashrate" />
+        <TextView
+            android:id="@+id/textViewWalHashrate3h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Hashrate (3h)"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalCurHashrate" />
 
-    <TextView
-        android:id="@+id/textViewWalHashrate3hValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toLeftOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalCurHashrateValue" />
+        <TextView
+            android:id="@+id/textViewWalHashrate3hValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toLeftOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalCurHashrateValue" />
 
-    <TextView
-        android:id="@+id/textViewWalPayments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="7dp"
-        android:text="Payments"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalOnlineMiners" />
+        <TextView
+            android:id="@+id/textViewWalPayments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
+            android:text="Payments"
+            app:layout_constraintLeft_toLeftOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalOnlineMiners" />
 
-    <TextView
-        android:id="@+id/textViewWalPaymentsValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalOnlineMinersValue" />
+        <TextView
+            android:id="@+id/textViewWalPaymentsValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalOnlineMinersValue" />
 
-    <View
-        android:id="@+id/viewSeparatorWallet2"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="7dp"
-        android:background="#FFCCCCCC"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalPaymentsValue" />
+        <View
+            android:id="@+id/viewSeparatorWallet2"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="7dp"
+            android:background="#FFCCCCCC"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalPaymentsValue" />
 
-    <TextView
-        android:id="@+id/textViewWalShares"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="7dp"
-        android:text="Round Shares"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShare"
-        android:layout_marginStart="8dp" />
+        <TextView
+            android:id="@+id/textViewWalShares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
+            android:text="Round Shares"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShare" />
 
-    <TextView
-        android:id="@+id/textViewWalSharesValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="7dp"
-        android:text="NA"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShareValue" />
+        <TextView
+            android:id="@+id/textViewWalSharesValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginTop="7dp"
+            android:text="NA"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShareValue" />
 
-    <TextView
-        android:id="@+id/textViewWalLastShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Last Share"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2"
-        android:layout_marginStart="8dp" />
+        <TextView
+            android:id="@+id/textViewWalLastShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Last Share"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2" />
 
-    <TextView
-        android:id="@+id/textViewWalLastShareValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2" />
+        <TextView
+            android:id="@+id/textViewWalLastShareValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2" />
 
-    <TextView
-        android:id="@+id/textViewWalRoundSharesPerc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Round Share %"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalShares"
-        android:layout_marginStart="8dp" />
+        <TextView
+            android:id="@+id/textViewWalRoundSharesPerc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Round Share %"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalShares" />
 
-    <TextView
-        android:id="@+id/textViewWalRoundSharesPercValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="NA"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalSharesValue"
-        android:layout_marginEnd="8dp" />
+        <TextView
+            android:id="@+id/textViewWalRoundSharesPercValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="NA"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalSharesValue" />
 
-    <TextView
-        android:id="@+id/textViewPendingBalance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Pending balance"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalRoundSharesPerc" />
+        <TextView
+            android:id="@+id/textViewPendingBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Pending balance"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalRoundSharesPerc" />
 
-    <TextView
-        android:id="@+id/textViewPendingBalanceValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="NA"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalRoundSharesPercValue" />
+        <TextView
+            android:id="@+id/textViewPendingBalanceValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="NA"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWalRoundSharesPercValue" />
 
-    <TextView
-        android:id="@+id/textViewPaid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Paid"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPendingBalance" />
+        <TextView
+            android:id="@+id/textViewPaid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Paid"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPendingBalance" />
 
-    <TextView
-        android:id="@+id/textViewPaidValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="NA"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPendingBalanceValue" />
+        <TextView
+            android:id="@+id/textViewPaidValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="NA"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPendingBalanceValue" />
 
-    <TextView
-        android:id="@+id/textViewAvgPending"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Average Block profit"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPaid" />
+        <TextView
+            android:id="@+id/textViewAvgPending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Average Block profit"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPaid" />
 
-    <TextView
-        android:id="@+id/textViewAvgPendingValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="NA"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPaidValue" />
+        <TextView
+            android:id="@+id/textViewAvgPendingValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="NA"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPaidValue" />
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

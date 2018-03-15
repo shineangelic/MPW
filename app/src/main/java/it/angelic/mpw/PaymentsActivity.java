@@ -252,10 +252,18 @@ public class PaymentsActivity extends DrawerActivity {
             rowt.findViewById(R.id.buttonPay).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //mostra transazione pagamento
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse("https://etherscan.io/tx/" + thispay.getTx()));
-                    startActivity(i);
+                    if (mCur.getScannerSite() != null) {
+                        //mostra transazione pagamento
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(mCur.getScannerSite() +"/tx/" + thispay.getTx()));
+                        startActivity(i);
+                    } else {
+                        //ClipboardManager clipboard = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+                        //ClipData clip = ClipData.newPlainText("NoobPool Client", "0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13");
+                        //clipboard.setPrimaryClip(clip);
+                        Snackbar.make(view, "Blockchain explorer not available for "+mCur.toString(), Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                    }
                 }
             });
             minersTable.addView(rowt);

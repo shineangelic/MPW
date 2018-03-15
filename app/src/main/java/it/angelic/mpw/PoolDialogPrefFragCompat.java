@@ -12,7 +12,7 @@ public class PoolDialogPrefFragCompat extends PreferenceDialogFragmentCompat {
     private FirebaseAnalytics mFirebaseAnalytics;
     public PoolDialogPrefFragCompat(){
         super();
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
+
     }
 
     public static PoolDialogPrefFragCompat newInstance(String key) {
@@ -20,6 +20,7 @@ public class PoolDialogPrefFragCompat extends PreferenceDialogFragmentCompat {
         final Bundle bundle = new Bundle(1);
         bundle.putString(ARG_KEY, key);
         fragment.setArguments(bundle);
+
         return fragment;
     }
 
@@ -27,6 +28,7 @@ public class PoolDialogPrefFragCompat extends PreferenceDialogFragmentCompat {
     public void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
             prefs.edit().putBoolean("skipIntro",false).apply();
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, new Boolean(prefs.getBoolean("skipIntro", false)).toString());

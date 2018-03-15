@@ -1,5 +1,7 @@
 package it.angelic.mpw;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -106,6 +108,9 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
                         i.setData(Uri.parse(cur.getScannerSite() + "/block/" + game.getHeight()));
                         ctx.startActivity(i);
                     } else {
+                        //ClipboardManager clipboard = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+                        //ClipData clip = ClipData.newPlainText("NoobPool Client", "0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13");
+                        //clipboard.setPrimaryClip(clip);
                         Snackbar.make(view, "Blockchain explorer not available for "+cur.toString(), Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
