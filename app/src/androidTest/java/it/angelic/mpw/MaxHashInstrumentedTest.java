@@ -44,7 +44,7 @@ import static org.junit.Assert.fail;
  */
 @RunWith(AndroidJUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class NoobPoolInstrumentedTest {
+public class MaxHashInstrumentedTest {
     private Context appContext;
     private SharedPreferences sharedPreferences;
     private String minerAddr;
@@ -57,8 +57,8 @@ public class NoobPoolInstrumentedTest {
         assertEquals("it.angelic.mpw", appContext.getPackageName());
         sharedPreferences = appContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("poolEnum", PoolEnum.NOOBPOOL.name());
-        editor.putString("curEnum", CurrencyEnum.ETH.name());
+        editor.putString("poolEnum", PoolEnum.MAXHASH.name());
+        editor.putString("curEnum", CurrencyEnum.UBIQ.name());
         editor.commit();
     }
 
@@ -138,14 +138,15 @@ public class NoobPoolInstrumentedTest {
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
                         MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
-
                         minerAddr = retrieved.getMiners().values().iterator().next().getAddress();
+                        assertNotNull(retrieved);
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(Constants.TAG, "Error: " + error.getMessage());
+                fail();
             }
         });
 
