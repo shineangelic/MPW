@@ -282,10 +282,15 @@ public class WalletActivity extends DrawerActivity {
         }
         try {
             textViewPendingBalanceValue.setText(Utils.formatCurrency(WalletActivity.this,lastHit.getStats().getBalance().longValue(), mCur));
+        } catch (Exception ie) {
+            Log.e(Constants.TAG, "Errore refresh Pending: " + ie.getMessage());
+            textViewPendingBalanceValue.setText("NA");
+        }
+
+        try {
             textViewPaidValue.setText(Utils.formatCurrency(WalletActivity.this,lastHit.getStats().getPaid(), mCur));
         } catch (Exception ie) {
-            Log.e(Constants.TAG, "Errore refresh Paid/pending: " + ie.getMessage());
-            textViewPendingBalanceValue.setText("NA");
+            Log.e(Constants.TAG, "Errore refresh Paid: " + ie.getMessage());
             textViewPaidValue.setText("NA");
         }
 
