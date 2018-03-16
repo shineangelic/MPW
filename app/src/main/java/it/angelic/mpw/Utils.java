@@ -3,7 +3,6 @@ package it.angelic.mpw;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +20,6 @@ import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.enums.PrecisionEnum;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
-import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -182,27 +180,27 @@ class Utils {
         }
     }
 
-    public static String formatGenericCurrency(Context ctx, Long balance){
+    public static String formatGenericCurrency(Context ctx, Long balance) {
         Locale current = ctx.getResources().getConfiguration().locale;
         return String.format(current, PrecisionEnum.FIVE_DIGIT.getFormat(), (balance / 1000000000F));
     }
 
-    public static String formatGenericCurrency(Context ctx, Double balance, PrecisionEnum fmt){
+    public static String formatGenericCurrency(Context ctx, Double balance, PrecisionEnum fmt) {
         Locale current = ctx.getResources().getConfiguration().locale;
         return String.format(current, fmt.getFormat(), (balance / 1000000000F));
     }
 
-    public static String formatUSDCurrency(Context ctx, Double balance){
+    public static String formatUSDCurrency(Context ctx, Double balance) {
         Locale current = ctx.getResources().getConfiguration().locale;
         return String.format(current, PrecisionEnum.TWO_DIGIT.getFormat(), (balance / 1000000000F));
     }
 
-    public static String formatCurrency(Context ctx,Long balance, CurrencyEnum cur) {
-        return  formatGenericCurrency(ctx,balance) + " " + cur.name();
+    public static String formatCurrency(Context ctx, Long balance, CurrencyEnum cur) {
+        return formatGenericCurrency(ctx, balance) + " " + cur.name();
     }
 
-    public static String formatEthCurrency(Context ctx,Long balance) {
-        return formatCurrency(ctx,balance, CurrencyEnum.ETH);
+    public static String formatEthCurrency(Context ctx, Long balance) {
+        return formatCurrency(ctx, balance, CurrencyEnum.ETH);
     }
 
     public static void fillEthereumStats(Context ctx, PoolDbHelper mDbHelper, NavigationView navigationView, PoolEnum activePool, CurrencyEnum cur) {
@@ -222,7 +220,7 @@ class Utils {
         }
         try {
             Wallet last = mDbHelper.getLastWallet();
-            textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out_full), activePool.toString(), "" + Utils.formatCurrency(ctx,last.getStats().getPaid(), cur)));
+            textViewWhoPaid.setText(String.format(ctx.getString(R.string.paid_out_full), activePool.toString(), "" + Utils.formatCurrency(ctx, last.getStats().getPaid(), cur)));
         } catch (Exception e) {
             Log.e(TAG, "Errore aggiornamento eth paid panel: " + e.getMessage());
             textViewWhoPaid.setVisibility(View.INVISIBLE);
@@ -274,7 +272,7 @@ class Utils {
     }
 
     public static double getPoolBlockPerDay(List<Matured> matured) {
-        if (matured.size() < 2)
+        if (matured == null || matured.size() < 2)
             return 0;
 
         Date firstDate = matured.get(0).getTimestamp();
@@ -288,7 +286,7 @@ class Utils {
     }
 
     public static double getPoolBlockAvgReward(List<Matured> matured) {
-        if (matured==null || matured.size() < 1)
+        if (matured == null || matured.size() < 1)
             return 0;
 
         double summer = 0;
@@ -296,13 +294,13 @@ class Utils {
 
         // Add the data from the array
         for (Matured m : matured) {
-            summer += Double.valueOf(m.getReward())/ 1000000000d;
+            summer += Double.valueOf(m.getReward()) / 1000000000d;
             cnt++;
         }
         return summer / cnt;
     }
 
-    public static double getDailyProfitProjection(double sharePercent, List<Matured> matured){
+    public static double getDailyProfitProjection(double sharePercent, List<Matured> matured) {
         double avp = getPoolBlockAvgReward(matured);
         double blockEarnProj = sharePercent * avp;
         return blockEarnProj * getPoolBlockPerDay(matured);
