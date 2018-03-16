@@ -288,7 +288,7 @@ class Utils {
     }
 
     public static double getPoolBlockAvgReward(List<Matured> matured) {
-        if (matured.size() < 1)
+        if (matured==null || matured.size() < 1)
             return 0;
 
         double summer = 0;

@@ -1,5 +1,7 @@
 package it.angelic.mpw;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -104,7 +106,10 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
                         i.setData(Uri.parse(cur.getScannerSite() + "/address/" + game.getAddress()));
                         ctx.startActivity(i);
                     } else {
-                        Snackbar.make(view, "Blockchain explorer not available for "+cur.toString(), Snackbar.LENGTH_SHORT)
+                        ClipboardManager clipboard = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("NoobPool Client", game.getAddress());
+                        clipboard.setPrimaryClip(clip);
+                        Snackbar.make(view, "Blockchain explorer not available for "+cur.toString()+". Address copied to clipboard", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
                 }
