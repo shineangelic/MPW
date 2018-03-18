@@ -22,21 +22,28 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -48,6 +55,8 @@ import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.db.PoolQueryGrouper;
 import it.angelic.mpw.model.enums.BackToEnum;
 
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 
 public class MainActivity extends DrawerActivity {
@@ -230,8 +239,51 @@ public class MainActivity extends DrawerActivity {
             }
         });
 
+        JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
+                Constants.ETHER_STATS_URL, null,
+                new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(final JSONArray response) {
+                        Log.d(Constants.TAG, response.toString());
+                        hashText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gson gson = builder.create();
+                                Log.d(Constants.TAG, response.toString());
+                                Type listType = new TypeToken<List<Ticker>>() {}.getType();
+                                List<Ticker> posts = gson.fromJson(response.toString(), listType);
+                                Ticker fnd = null;
+                                for (Ticker currency : posts) {
+                                    if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
+                                        fnd = currency;
+                                    }
+                                    //always save ETH
+                                    if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
+                                        CryptoSharedPreferencesUtils.saveEthereumValues(currency, MainActivity.this);
+                                    }
+                                    //always save BTC
+                                    if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
+                                        CryptoSharedPreferencesUtils.saveBtcValues(currency, MainActivity.this);
+                                    }
+                                }
+                                //eventually resets  when fnd = null
+                                CryptoSharedPreferencesUtils.saveEtherValues(fnd, MainActivity.this);
+                            }
+                        });
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                Crashlytics.logException(error);
+            }
+        });
+
         // Adding request to request queue
         JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
+        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonArrayCurrenciesReq);
     }
 
     /**

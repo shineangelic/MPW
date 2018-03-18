@@ -269,20 +269,25 @@ public class PoolDbHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             Gson gson = builder.create();
-            Wallet camp = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-            prevPending = camp.getStats().getBalance().longValue();
-            do {
-                Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-                rec++;
-                Long curPending = retrieved.getStats().getBalance().longValue();
-                if (curPending > prevPending) {
-                    Log.d(TAG, "Block detected in history. Prev balance: " + prevPending + " current: " + curPending);
-                    cnt++;
-                    //pending increased
-                    pendings += (curPending - prevPending);
-                }
-                prevPending = curPending;
-            } while (cursor.moveToNext());
+            try {
+
+                Wallet camp = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
+                prevPending = camp.getStats().getBalance().longValue();
+                do {
+                    Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
+                    rec++;
+                    Long curPending = retrieved.getStats().getBalance().longValue();
+                    if (curPending > prevPending) {
+                        Log.d(TAG, "Block detected in history. Prev balance: " + prevPending + " current: " + curPending);
+                        cnt++;
+                        //pending increased
+                        pendings += (curPending - prevPending);
+                    }
+                    prevPending = curPending;
+                } while (cursor.moveToNext());
+            }catch (Exception caz){
+                Log.e(TAG, "Cant read getAveragePending entry: " + caz.getMessage());
+            }
         }
         Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt + " FROM RECORDS: " + rec);
         cursor.close();

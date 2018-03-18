@@ -336,10 +336,25 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
             }
 
+            synchCurrenciesFromCoinmarketcap();
+
+            try {
+                URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));
+                URLConnection connection = myUrl.openConnection();
+                connection.setConnectTimeout(2000);
+                connection.connect();
+
+            } catch (Exception e) {
+                connectError = true;
+            }
+            return true;
+        }
+
+        public void synchCurrenciesFromCoinmarketcap() {
             try {
                 //synch jason
                 RequestFuture<JSONArray> future = RequestFuture.newFuture();
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,Constants.ETHER_STATS_URL, new JSONArray(), future, future);
+                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Constants.ETHER_STATS_URL, new JSONArray(), future, future);
                 JSONClientSingleton.getInstance(ChoosePoolActivity.this).addToRequestQueue(request);
                 JSONArray response = future.get(); // this will block
                 Log.d(Constants.TAG, response.toString());
@@ -365,17 +380,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
             }
-
-            try {
-                URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));
-                URLConnection connection = myUrl.openConnection();
-                connection.setConnectTimeout(2000);
-                connection.connect();
-
-            } catch (Exception e) {
-                connectError = true;
-            }
-            return true;
         }
 
         @Override

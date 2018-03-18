@@ -2,6 +2,7 @@ package it.angelic.mpw;
 
 import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -21,6 +22,8 @@ import it.angelic.mpw.model.HomeStatsChartData;
 import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
+
+import static it.angelic.mpw.Constants.TAG;
 
 /**
  * Utils class to fill charts backing objects
@@ -47,12 +50,17 @@ class ChartUtils {
             stats.addValue(storia.get(date2).getHashrateMax());
             stats.addValue(storia.get(date2).getHashrateMin());
         }
-
+        String curHashRateTxt = "--";
+        try {
+            curHashRateTxt = Utils.formatHashrate(storia.get(dates.get(dataList.size() - 1)).getHashrate());
+        }catch (Exception re){
+            Log.w(TAG,"history too short?",re);
+        }
         titleTextView.setText("Hashrate History chart "
                 + "(avg: " + Utils.formatHashrate((long) stats.getMean())
                 + ", max: " + Utils.formatHashrate((long) stats.getMax())
                 + ", min: " + Utils.formatHashrate((long) stats.getMin())
-                + ", now: " + Utils.formatHashrate(storia.get(dates.get(dataList.size() - 1)).getHashrate())
+                + ", now: " + curHashRateTxt
                 + ", std dev: " + Utils.formatHashrate((long) stats.getStandardDeviation())
                 + ")");
 

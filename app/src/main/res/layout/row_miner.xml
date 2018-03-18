@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -52,7 +53,7 @@
                 android:contentDescription="payment icon"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/ic_account_balance_wallet_white_24dp"
+                app:srcCompat="@drawable/ic_account_balance_wallet_white_24dp"
                 android:backgroundTint="@color/colorAccent"/>
 
             <TextView
@@ -86,7 +87,8 @@
                     android:layout_marginTop="8dp"
                     android:text="First seen"
                     card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toTopOf="parent" />
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginLeft="8dp" />
 
                 <TextView
                     android:id="@+id/textViewMinerFirstSeenValue"
@@ -98,7 +100,8 @@
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toTopOf="parent" />
+                    card_view:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginRight="8dp" />
 
                 <TextView
                     android:id="@+id/textViewBlockWhen"
@@ -108,7 +111,8 @@
                     android:layout_marginTop="8dp"
                     android:text="Last seen"
                     card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerFirstSeen" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerFirstSeen"
+                    android:layout_marginLeft="8dp" />
 
                 <TextView
                     android:id="@+id/textViewBlockWhenValue"
@@ -120,7 +124,8 @@
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerFirstSeenValue" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerFirstSeenValue"
+                    android:layout_marginRight="8dp" />
 
                 <TextView
                     android:id="@+id/textViewBlockShares"
@@ -130,7 +135,8 @@
                     android:layout_marginTop="8dp"
                     android:text="Hashrate"
                     card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhen" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhen"
+                    android:layout_marginLeft="8dp" />
 
                 <TextView
                     android:id="@+id/textViewHashrateValue"
@@ -142,7 +148,8 @@
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhenValue" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhenValue"
+                    android:layout_marginRight="8dp" />
 
                 <TextView
                     android:id="@+id/textViewMinerBlockFound"

@@ -172,14 +172,15 @@ public class WalletActivity extends DrawerActivity {
 
     }
 
-    private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
+    private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder,final String url) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 url, null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(Constants.TAG, response.toString());
+                        Log.d(Constants.TAG,"URL "+url);
+                        Log.d(Constants.TAG,"RESPONSE "+ response.toString());
 
                         Gson gson = builder.create();
                         // Register an adapter to manage the date types as long values
