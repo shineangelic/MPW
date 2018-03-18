@@ -213,7 +213,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:srcCompat="@drawable/ic_insert_link_chain_24dp"
-                android:backgroundTint="@color/colorAccent"
+                android:tint="@color/colorAccent"
                 android:contentDescription="payment icon"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />

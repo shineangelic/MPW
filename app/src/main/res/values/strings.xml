@@ -20,7 +20,7 @@
     <string name="currency_placeholder">1 %1$s = %2$s$\n%3$+.2f%% last 24hr</string>
     <string name="paid_out">%1$s paid out</string>
     <string name="paid_out_full">%1$s paid out %2$s</string>
-    <string name="wallet_stats_title">Wallet Stats\n(%1$s - %2$s)</string>
+    <string name="wallet_stats_title">Wallet Stats\n%1$s - %2$s</string>
     <string name="title_activity_miners">Miners</string>
     <string name="ad_unit">ca-app-pub-2379213694485575/8587854500</string>
     <string name="ad_unit_homestats">ca-app-pub-2379213694485575/1437595948</string>

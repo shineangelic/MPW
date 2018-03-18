@@ -163,7 +163,7 @@ class ChartUtils {
         chart.setDrawDotLine(false); //optional
         chart.setShowPopup(LineView.SHOW_POPUPS_All);
         chart.setBottomTextList(labelsArr);
-        chart.setColorArray(new int[]{Color.DKGRAY, Color.CYAN});
+        chart.setColorArray(new int[]{textViewNetDiffTitle.getResources().getColor(R.color.colorPrimary), Color.CYAN});
         chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
     }
 

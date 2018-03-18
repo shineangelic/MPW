@@ -66,6 +66,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
         AppCompatDelegate.setDefaultNightMode(Integer.valueOf(prefs.getString("pref_theme", "0")));
+
         setContentView(R.layout.activity_choose_pool);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Set up the login form.
