@@ -44,12 +44,16 @@ public enum PoolEnum {
         add(CurrencyEnum.VIC);
         add(CurrencyEnum.WHALE);
     }}, false),
-    /*ETHERDIG("etherdig", "etherdig.net", true, new ArrayList<CurrencyEnum>() {{
-        add(CurrencyEnum.ETH);
-    }}, true),
-    ISTPOOL("1stpool", "1stpool.com", false, new ArrayList<CurrencyEnum>() {{
-        add(CurrencyEnum.ETH);
-    }}, false),*/
+    KRATOS("","https://kratos.biz",false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ELLA);
+        add(CurrencyEnum.ETZ);
+        add(CurrencyEnum.EXP);
+        add(CurrencyEnum.MUSIC);
+        add(CurrencyEnum.PIRL);
+        add(CurrencyEnum.UBIQ);
+        add(CurrencyEnum.VIC);
+        add(CurrencyEnum.WHALE);
+    }}, false),
     MAXHASH("MaxHash", "maxhash.org", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.EXP);
