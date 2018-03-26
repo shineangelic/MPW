@@ -25,6 +25,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -100,6 +102,11 @@ public class PaymentsActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        //ADS
+        AdView mAdView = findViewById(R.id.adViewPayments);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -258,9 +265,6 @@ public class PaymentsActivity extends DrawerActivity {
                         i.setData(Uri.parse(mCur.getScannerSite() +"/tx/" + thispay.getTx()));
                         startActivity(i);
                     } else {
-                        //ClipboardManager clipboard = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
-                        //ClipData clip = ClipData.newPlainText("NoobPool Client", "0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13");
-                        //clipboard.setPrimaryClip(clip);
                         Snackbar.make(view, "Blockchain explorer not available for "+mCur.toString(), Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }

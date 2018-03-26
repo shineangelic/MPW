@@ -1,4 +1,5 @@
 <resources>
     <string name="ad_unit">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_unit_pay">ca-app-pub-3940256099942544/6300978111</string>
     <string name="ad_unit_homestats">ca-app-pub-3940256099942544/6300978111</string>
 </resources>
