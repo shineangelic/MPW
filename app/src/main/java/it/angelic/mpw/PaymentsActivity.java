@@ -182,10 +182,10 @@ public class PaymentsActivity extends DrawerActivity {
             MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
             HomeStats last = mDbHelper.getLastHomeStats(1).getValue(0);
             // bigIntX is a BigInteger
-            BigDecimal bigDecX = new BigDecimal(mDbHelper.getLastWallet().getRoundShares());
+            BigDecimal bigDecRoundShares = new BigDecimal(mDbHelper.getLastWallet().getRoundShares());
             BigDecimal bigDecY = new BigDecimal(last.getStats().getRoundShares());
 
-            shareperc = bigDecX.divide(bigDecY, mc).doubleValue();
+            shareperc = bigDecRoundShares.divide(bigDecY, mc).doubleValue();
             //By current currency
             TableRow rowCur = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
             ((TextView) rowCur.findViewById(R.id.textViewProjEmpty)).setText(mCur.name());

@@ -86,7 +86,7 @@ public class KratosInstrumentedTest {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                fail();
+                fail(error.getMessage());
                 // hide the progress dialog
             }
         });
@@ -115,7 +115,7 @@ public class KratosInstrumentedTest {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(Constants.TAG, "Error: " + error.getMessage());
-                fail();
+                fail(error.getMessage());
             }
         });
 
@@ -146,6 +146,7 @@ public class KratosInstrumentedTest {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(Constants.TAG, "Error: " + error.getMessage());
+                fail(error.getMessage());
             }
         });
 
@@ -174,6 +175,7 @@ public class KratosInstrumentedTest {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(Constants.TAG, "Error: " + error.getMessage());
+                fail(error.getMessage());
             }
         });
 

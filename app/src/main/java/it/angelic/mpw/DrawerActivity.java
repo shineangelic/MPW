@@ -91,6 +91,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case TWOMINERS:
                 curLogo.setImageResource(R.mipmap.ic_2miners_logo);
                 break;
+            case KRATOS:
+                curLogo.setImageResource(R.mipmap.ic_kratos_logo);
+                break;
             case XEMINERS:
                 curLogo.setImageResource(R.mipmap.ic_xeminer_logo);
                 break;
