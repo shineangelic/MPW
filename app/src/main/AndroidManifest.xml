@@ -57,13 +57,15 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <receiver android:name=".WatchDogSetupReceiver">
+        <service
+            android:exported="false"
+            android:name=".MyJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>
-        </receiver>
-        <receiver android:name=".WatchDogEventReceiver" />
+        </service>
+
 
         <activity
             android:name=".EncourageActivity"

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
@@ -21,6 +22,14 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.JobTrigger;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -79,6 +88,14 @@ public class ChoosePoolActivity extends AppCompatActivity {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, new Boolean(prefs.getBoolean("skipIntro", false)).toString());
         mFirebaseAnalytics.logEvent("skip_intro", bundle);
 
+        //SERVICE Schedule
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+        Job myJob = getJobUpdate(prefs, dispatcher);
+
+
+        dispatcher.mustSchedule(myJob);
+
+
         if (skipIntro.isChecked()) {
             Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
             startActivity(miner);
@@ -88,6 +105,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         //admob
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
+
+
 
         ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
         poolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -166,6 +185,36 @@ public class ChoosePoolActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
+    @NonNull
+    private static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher) {
+        Bundle myExtrasBundle = new Bundle();
+        myExtrasBundle.putString("WALLETURL", prefs.getString("wallet_addr", null));
+        myExtrasBundle.putBoolean("NOTIFY_BLOCK", prefs.getBoolean("wallet_addr", true));
+        myExtrasBundle.putBoolean("NOTIFY_OFFLINE", prefs.getBoolean("wallet_addr", true));
+        myExtrasBundle.putBoolean("NOTIFY_PAYMENT", prefs.getBoolean("wallet_addr", true));
+        return dispatcher.newJobBuilder()
+                // the JobService that will be called
+                .setService(MyJobService.class)
+                // uniquely identifies the job
+                .setTag("mpw-updater")
+                // one-off job
+                .setRecurring(true)
+                // don't persist past a device reboot
+                .setLifetime(Lifetime.FOREVER)
+                // start between 0 and 60 seconds from now
+                .setTrigger(periodicTrigger(240, 60))
+                // don't overwrite an existing job with the same tag
+                .setReplaceCurrent(true)
+                // retry with exponential backoff
+               //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                // constraints that need to be satisfied for the job to run
+                .setExtras(myExtrasBundle)
+                .build();
+    }
+
+    public static JobTrigger periodicTrigger(int frequency, int tolerance) {
+        return Trigger.executionWindow(frequency - tolerance, frequency);
+    }
     /**
      * BEWARE listeners!! your souls shall be called in your absence as well
      *

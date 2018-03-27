@@ -23,12 +23,13 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-ads:11.8.0'
+    implementation 'com.google.android.gms:play-services-ads:12.0.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.google.firebase:firebase-crash:11.8.0'
+    implementation 'com.google.firebase:firebase-core:12.0.0'
+    implementation 'com.google.firebase:firebase-crash:12.0.0'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
