@@ -237,6 +237,8 @@ public class MainActivity extends DrawerActivity {
             }
         });
 
+        Utils.asynchCurrenciesFromCoinmarketcap(this, mCur);
+        /*
         JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
                 Constants.ETHER_STATS_URL, null,
                 new Response.Listener<JSONArray>() {
@@ -277,11 +279,11 @@ public class MainActivity extends DrawerActivity {
                 VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                 Crashlytics.logException(error);
             }
-        });
+        });*/
 
         // Adding request to request queue
         JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
-        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonArrayCurrenciesReq);
+        //JSONClientSingleton.getInstance(this).addToRequestQueue(jsonArrayCurrenciesReq);
     }
 
     /**

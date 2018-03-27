@@ -78,14 +78,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.w(Constants.TAG, "Changed NOTIF setting to: " + prefs.getString("pref_sync_freq", null));
+                Log.w(Constants.TAG, "Changed NOTIF setting to: " +newValue);
                 Boolean nv = (Boolean) newValue;
-                FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
-                dispatcher.cancelAll();
-                if (nv) {
-                    Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
-                    dispatcher.schedule(myJob);
-                }
                 // newValue is the value you choose
                 blockNotifications.setEnabled(nv);
                 offlineNotifications.setEnabled(nv);

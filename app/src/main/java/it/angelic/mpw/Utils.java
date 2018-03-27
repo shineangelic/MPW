@@ -1,24 +1,20 @@
 package it.angelic.mpw;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.Job;
-import com.firebase.jobdispatcher.JobTrigger;
-import com.firebase.jobdispatcher.Lifetime;
-import com.firebase.jobdispatcher.Trigger;
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -335,7 +331,8 @@ class Utils {
             Log.d(Constants.TAG, response.toString());
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            Type listType = new TypeToken<List<Ticker>>() {}.getType();
+            Type listType = new TypeToken<List<Ticker>>() {
+            }.getType();
             List<Ticker> posts = gson.fromJson(response.toString(), listType);
             Ticker fnd = null;
             for (Ticker currency : posts) {
@@ -357,5 +354,52 @@ class Utils {
         }
     }
 
+    public static void asynchCurrenciesFromCoinmarketcap(final Context ctx, final CurrencyEnum mCur) {
+        try {
+            JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
+                    Constants.ETHER_STATS_URL, null,
+                    new Response.Listener<JSONArray>() {
 
+                        @Override
+                        public void onResponse(final JSONArray response) {
+                            Log.d(Constants.TAG, response.toString());
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson gson = builder.create();
+                            Log.d(Constants.TAG, response.toString());
+                            Type listType = new TypeToken<List<Ticker>>() {
+                            }.getType();
+                            List<Ticker> posts = gson.fromJson(response.toString(), listType);
+                            Ticker fnd = null;
+                            for (Ticker currency : posts) {
+                                if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
+                                    fnd = currency;
+                                }
+                                //always save ETH
+                                if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
+                                    CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
+                                }
+                                //always save BTC
+                                if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
+                                    CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
+                                }
+                            }
+                            //eventually resets  when fnd = null
+                            CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
+
+                        }
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                    Crashlytics.logException(error);
+                }
+            });
+
+            // Adding request to request queue
+            JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonArrayCurrenciesReq);
+        } catch (Exception e) {
+            Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
+        }
+    }
 }

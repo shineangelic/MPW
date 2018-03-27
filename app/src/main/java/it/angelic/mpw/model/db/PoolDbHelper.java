@@ -89,6 +89,12 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_MINERS_IDX);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        this.close();
+        super.finalize();
+    }
+
     public void cleanOldData(SQLiteDatabase db) {
 
         Calendar oneMonthAgo = Calendar.getInstance();

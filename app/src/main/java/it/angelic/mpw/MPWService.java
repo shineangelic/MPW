@@ -152,7 +152,7 @@ public class MPWService extends JobService {
 
             //REFRESH coin values sincrono
             Log.e(TAG, "SERVICE UPDATING CURRENCIES");
-            Utils.synchCurrenciesFromCoinmarketcap(ctx, mCur);
+            Utils.asynchCurrenciesFromCoinmarketcap(ctx, mCur);
 
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
@@ -281,6 +281,8 @@ public class MPWService extends JobService {
         myExtrasBundle.putBoolean("NOTIFY_BLOCK", prefs.getBoolean("pref_notify_block", true));
         myExtrasBundle.putBoolean("NOTIFY_OFFLINE", prefs.getBoolean("pref_notify_offline", true));
         myExtrasBundle.putBoolean("NOTIFY_PAYMENT", prefs.getBoolean("pref_notify_payment", true));
+
+        Log.w(Constants.TAG,"Built JobBuilder FREQ: " +intervalMsec);
         return dispatcher.newJobBuilder()
                 // the JobService that will be called
                 .setService(MPWService.class)
@@ -291,7 +293,7 @@ public class MPWService extends JobService {
                 // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
                 // start between freq and 300 seconds tolerance
-                .setTrigger(periodicTrigger(intervalMsec, 300))
+                .setTrigger(periodicTrigger(intervalMsec, (intervalMsec/100)*10))
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(true)
                 // retry with exponential backoff
