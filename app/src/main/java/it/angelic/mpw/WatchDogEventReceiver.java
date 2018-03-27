@@ -49,6 +49,7 @@ import static it.angelic.mpw.Constants.TAG;
  * http://www.hascode.com/2011/11/managing-background-tasks-on-android
  * -using-the-alarm-manager/
  */
+@Deprecated
 public class WatchDogEventReceiver extends BroadcastReceiver {
     final int NOTIFICATION_MINER_OFFLINE = 12;
 

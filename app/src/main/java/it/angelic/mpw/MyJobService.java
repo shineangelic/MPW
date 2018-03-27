@@ -141,6 +141,11 @@ public class MyJobService extends JobService {
             }
             // Adding request to request queue
             JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReq);
+
+            //REFRESH coin values sincrono
+            Log.e(TAG, "SERVICE UPDATING CURRENCIES");
+            Utils.synchCurrenciesFromCoinmarketcap(ctx, mCur);
+
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
             Crashlytics.logException(se);

@@ -2,11 +2,11 @@ package it.angelic.mpw;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
@@ -22,13 +22,10 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.JobTrigger;
-import com.firebase.jobdispatcher.Lifetime;
-import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -89,12 +86,14 @@ public class ChoosePoolActivity extends AppCompatActivity {
         mFirebaseAnalytics.logEvent("skip_intro", bundle);
 
         //SERVICE Schedule
+        Boolean synchActive = prefs.getBoolean("pref_sync", true);
+
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
-        Job myJob = getJobUpdate(prefs, dispatcher);
-
-
-        dispatcher.mustSchedule(myJob);
-
+        if (synchActive) {
+            Job myJob = Utils.getJobUpdate(prefs, dispatcher);
+            dispatcher.schedule(myJob);
+        } else
+            dispatcher.cancelAll();
 
         if (skipIntro.isChecked()) {
             Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
@@ -105,7 +104,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         //admob
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
-
 
 
         ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
@@ -185,36 +183,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
-    @NonNull
-    private static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher) {
-        Bundle myExtrasBundle = new Bundle();
-        myExtrasBundle.putString("WALLETURL", prefs.getString("wallet_addr", null));
-        myExtrasBundle.putBoolean("NOTIFY_BLOCK", prefs.getBoolean("wallet_addr", true));
-        myExtrasBundle.putBoolean("NOTIFY_OFFLINE", prefs.getBoolean("wallet_addr", true));
-        myExtrasBundle.putBoolean("NOTIFY_PAYMENT", prefs.getBoolean("wallet_addr", true));
-        return dispatcher.newJobBuilder()
-                // the JobService that will be called
-                .setService(MyJobService.class)
-                // uniquely identifies the job
-                .setTag("mpw-updater")
-                // one-off job
-                .setRecurring(true)
-                // don't persist past a device reboot
-                .setLifetime(Lifetime.FOREVER)
-                // start between 0 and 60 seconds from now
-                .setTrigger(periodicTrigger(240, 60))
-                // don't overwrite an existing job with the same tag
-                .setReplaceCurrent(true)
-                // retry with exponential backoff
-               //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                // constraints that need to be satisfied for the job to run
-                .setExtras(myExtrasBundle)
-                .build();
-    }
-
-    public static JobTrigger periodicTrigger(int frequency, int tolerance) {
-        return Trigger.executionWindow(frequency - tolerance, frequency);
-    }
     /**
      * BEWARE listeners!! your souls shall be called in your absence as well
      *
@@ -385,7 +353,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
             }
 
-            synchCurrenciesFromCoinmarketcap();
+            //TODO togliere
+            Utils.synchCurrenciesFromCoinmarketcap(ChoosePoolActivity.this, mCur);
 
             try {
                 URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));
@@ -399,37 +368,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
             return true;
         }
 
-        public void synchCurrenciesFromCoinmarketcap() {
-            try {
-                //synch jason
-                RequestFuture<JSONArray> future = RequestFuture.newFuture();
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Constants.ETHER_STATS_URL, new JSONArray(), future, future);
-                JSONClientSingleton.getInstance(ChoosePoolActivity.this).addToRequestQueue(request);
-                JSONArray response = future.get(); // this will block
-                Log.d(Constants.TAG, response.toString());
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                Type listType = new TypeToken<List<Ticker>>() {}.getType();
-                List<Ticker> posts = gson.fromJson(response.toString(), listType);
-                Ticker fnd = null;
-                for (Ticker currency : posts) {
-                    if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
-                        fnd = currency;
-                    }
-                    //always save ETH
-                    if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
-                        CryptoSharedPreferencesUtils.saveEthereumValues(currency, ChoosePoolActivity.this);
-                    }
-                    //always save BTC
-                    if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
-                        CryptoSharedPreferencesUtils.saveBtcValues(currency, ChoosePoolActivity.this);
-                    }
-                }
-                CryptoSharedPreferencesUtils.saveEtherValues(fnd, ChoosePoolActivity.this);
-            } catch (Exception e) {
-                Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
-            }
-        }
 
         @Override
         protected void onPostExecute(final Boolean success) {

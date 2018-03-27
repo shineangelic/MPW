@@ -11,6 +11,9 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
 
 import com.crashlytics.android.Crashlytics;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
 
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
@@ -48,10 +51,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+                Boolean nv= (Boolean) newValue;
+                FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
+                if (nv) {
+                    Job myJob = Utils.getJobUpdate(prefs, dispatcher);
+                    dispatcher.schedule(myJob);
+                } else
+                    dispatcher.cancelAll();
+
                 // newValue is the value you choose
-                blockNotifications.setEnabled((Boolean) newValue);
-                offlineNotifications.setEnabled((Boolean) newValue);
-                paymentNotifications.setEnabled((Boolean) newValue);
+                blockNotifications.setEnabled(nv);
+                offlineNotifications.setEnabled(nv);
+                paymentNotifications.setEnabled(nv);
                 return true;
             }
         };
