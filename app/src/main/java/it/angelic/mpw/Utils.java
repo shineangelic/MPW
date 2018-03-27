@@ -1,13 +1,31 @@
 package it.angelic.mpw;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.JobTrigger;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.IllegalFormatException;
@@ -20,6 +38,7 @@ import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.enums.PrecisionEnum;
 import it.angelic.mpw.model.jsonpojos.blocks.Matured;
+import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -304,5 +323,69 @@ class Utils {
         double avp = getPoolBlockAvgReward(matured);
         double blockEarnProj = sharePercent * avp;
         return blockEarnProj * getPoolBlockPerDay(matured);
+    }
+
+    public static void synchCurrenciesFromCoinmarketcap(Context ctx, CurrencyEnum mCur) {
+        try {
+            //synch jason
+            RequestFuture<JSONArray> future = RequestFuture.newFuture();
+            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Constants.ETHER_STATS_URL, new JSONArray(), future, future);
+            JSONClientSingleton.getInstance(ctx).addToRequestQueue(request);
+            JSONArray response = future.get(); // this will block
+            Log.d(Constants.TAG, response.toString());
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            Type listType = new TypeToken<List<Ticker>>() {}.getType();
+            List<Ticker> posts = gson.fromJson(response.toString(), listType);
+            Ticker fnd = null;
+            for (Ticker currency : posts) {
+                if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
+                    fnd = currency;
+                }
+                //always save ETH
+                if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
+                    CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
+                }
+                //always save BTC
+                if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
+                    CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
+                }
+            }
+            CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
+        } catch (Exception e) {
+            Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
+        }
+    }
+
+    @NonNull
+    public static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher) {
+        Bundle myExtrasBundle = new Bundle();
+        Integer intervalMsec = Integer.valueOf(prefs.getString("pref_sync_freq", "" + AlarmManager.INTERVAL_HALF_HOUR)) /1000;
+        myExtrasBundle.putString("WALLETURL", prefs.getString("wallet_addr", null));
+        myExtrasBundle.putBoolean("NOTIFY_BLOCK", prefs.getBoolean("pref_notify_block", true));
+        myExtrasBundle.putBoolean("NOTIFY_OFFLINE", prefs.getBoolean("pref_notify_offline", true));
+        myExtrasBundle.putBoolean("NOTIFY_PAYMENT", prefs.getBoolean("pref_notify_payment", true));
+        return dispatcher.newJobBuilder()
+                // the JobService that will be called
+                .setService(MyJobService.class)
+                // uniquely identifies the job
+                .setTag("mpw-updater")
+                // one-off job
+                .setRecurring(true)
+                // don't persist past a device reboot
+                .setLifetime(Lifetime.FOREVER)
+                // start between freq and 300 seconds tolerance
+                .setTrigger(periodicTrigger(intervalMsec, 300))
+                // don't overwrite an existing job with the same tag
+                .setReplaceCurrent(true)
+                // retry with exponential backoff
+                //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                // constraints that need to be satisfied for the job to run
+                .setExtras(myExtrasBundle)
+                .build();
+    }
+
+    public static JobTrigger periodicTrigger(int frequency, int tolerance) {
+        return Trigger.executionWindow(frequency - tolerance, frequency);
     }
 }

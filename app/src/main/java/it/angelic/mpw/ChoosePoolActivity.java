@@ -2,6 +2,7 @@ package it.angelic.mpw;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -21,6 +22,11 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.JobTrigger;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -80,6 +86,16 @@ public class ChoosePoolActivity extends AppCompatActivity {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, new Boolean(prefs.getBoolean("skipIntro", false)).toString());
         mFirebaseAnalytics.logEvent("skip_intro", bundle);
 
+        //SERVICE Schedule
+        Boolean synchActive = prefs.getBoolean("pref_sync", true);
+
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+        if (synchActive) {
+            Job myJob = Utils.getJobUpdate(prefs, dispatcher);
+            dispatcher.schedule(myJob);
+        } else
+            dispatcher.cancelAll();
+
         if (skipIntro.isChecked()) {
             Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
             startActivity(miner);
@@ -89,6 +105,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         //admob
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
+
 
         ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
         poolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -337,7 +354,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
             }
 
-            synchCurrenciesFromCoinmarketcap();
+            //TODO togliere
+            Utils.synchCurrenciesFromCoinmarketcap(ChoosePoolActivity.this, mCur);
 
             try {
                 URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));
@@ -351,37 +369,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
             return true;
         }
 
-        public void synchCurrenciesFromCoinmarketcap() {
-            try {
-                //synch jason
-                RequestFuture<JSONArray> future = RequestFuture.newFuture();
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Constants.ETHER_STATS_URL, new JSONArray(), future, future);
-                JSONClientSingleton.getInstance(ChoosePoolActivity.this).addToRequestQueue(request);
-                JSONArray response = future.get(); // this will block
-                Log.d(Constants.TAG, response.toString());
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                Type listType = new TypeToken<List<Ticker>>() {}.getType();
-                List<Ticker> posts = gson.fromJson(response.toString(), listType);
-                Ticker fnd = null;
-                for (Ticker currency : posts) {
-                    if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
-                        fnd = currency;
-                    }
-                    //always save ETH
-                    if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
-                        CryptoSharedPreferencesUtils.saveEthereumValues(currency, ChoosePoolActivity.this);
-                    }
-                    //always save BTC
-                    if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
-                        CryptoSharedPreferencesUtils.saveBtcValues(currency, ChoosePoolActivity.this);
-                    }
-                }
-                CryptoSharedPreferencesUtils.saveEtherValues(fnd, ChoosePoolActivity.this);
-            } catch (Exception e) {
-                Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
-            }
-        }
 
         @Override
         protected void onPostExecute(final Boolean success) {

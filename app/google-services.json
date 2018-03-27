@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "67876882106",
+    "firebase_url": "https://mining-pool-watcher.firebaseio.com",
+    "project_id": "mining-pool-watcher",
+    "storage_bucket": "mining-pool-watcher.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67876882106:android:2369bc1228daa283",
+        "android_client_info": {
+          "package_name": "it.angelic.mpw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67876882106-6aqfnbvg2k6e0sivgmgfbd805udp5omk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.angelic.mpw",
+            "certificate_hash": "7d4481af095618de288b07e184230ec15f6e0818"
+          }
+        },
+        {
+          "client_id": "67876882106-fnruq4m00q0vg9rc6k33kad4o31omtv0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.angelic.mpw",
+            "certificate_hash": "6e01d9f6c0872f98b5bdc5da9fd146cad7fac706"
+          }
+        },
+        {
+          "client_id": "67876882106-r48nfpcr6m24eflh1t0p1v5unn1dp3bi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW2MH5famTBCWZyc6Z4xJt-NW8udAeIRQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67876882106-r48nfpcr6m24eflh1t0p1v5unn1dp3bi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

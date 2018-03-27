@@ -2,7 +2,6 @@ package it.angelic.mpw;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.Crashlytics;
+import com.firebase.jobdispatcher.JobParameters;
+import com.firebase.jobdispatcher.JobService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,33 +29,27 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
-import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
+import it.angelic.mpw.model.enums.CurrencyEnum;
+import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.support.v4.app.NotificationCompat.CATEGORY_PROGRESS;
 import static android.support.v4.app.NotificationCompat.CATEGORY_SERVICE;
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 import static it.angelic.mpw.Constants.LAST_TWO;
 import static it.angelic.mpw.Constants.TAG;
 
-/**
- * Receive per controllo esecuzione servizio. Viene invocato dopo il boot, e
- * all'USER_PRESENT
- * http://www.hascode.com/2011/11/managing-background-tasks-on-android
- * -using-the-alarm-manager/
- */
-@Deprecated
-public class WatchDogEventReceiver extends BroadcastReceiver {
+public class MyJobService extends JobService {
     final int NOTIFICATION_MINER_OFFLINE = 12;
 
     @Override
-    public void onReceive(final Context ctx, final Intent intent) {
+    public boolean onStartJob(JobParameters job) {
+        Log.e(TAG, "SERVICE START");
+        final Context ctx = getApplicationContext();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         try {
             final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
@@ -68,10 +63,11 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
             builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
             builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
             //load extra
-            final String minerAddr = intent.getStringExtra("WALLETURL");
-            final Boolean notifyBlock = intent.getBooleanExtra("NOTIFY_BLOCK", false);
-            final Boolean notifyOffline = intent.getBooleanExtra("NOTIFY_OFFLINE", false);
-            final Boolean notifyPayment = intent.getBooleanExtra("NOTIFY_PAYMENT", false);
+
+            final String minerAddr = job.getExtras().getString("WALLETURL");
+            final Boolean notifyBlock = job.getExtras().getBoolean("NOTIFY_BLOCK", false);
+            final Boolean notifyOffline = job.getExtras().getBoolean("NOTIFY_OFFLINE", false);
+            final Boolean notifyPayment = job.getExtras().getBoolean("NOTIFY_PAYMENT", false);
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)), null,
@@ -145,10 +141,22 @@ public class WatchDogEventReceiver extends BroadcastReceiver {
             }
             // Adding request to request queue
             JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReq);
+
+            //REFRESH coin values sincrono
+            Log.e(TAG, "SERVICE UPDATING CURRENCIES");
+            Utils.synchCurrenciesFromCoinmarketcap(ctx, mCur);
+
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
             Crashlytics.logException(se);
         }
+
+        return false; // Answers the question: "Is there still work going on?"
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters job) {
+        return false; // Answers the question: "Should this job be retried?"
     }
 
     private void sendOfflineNotification(Context ctx, String contentText, PoolEnum pool) {

@@ -192,7 +192,6 @@ public class MainActivity extends DrawerActivity {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)), null,
                 new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(final JSONObject response) {
                         Log.d(Constants.TAG, response.toString());
@@ -228,7 +227,6 @@ public class MainActivity extends DrawerActivity {
                         });
                     }
                 }, new Response.ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
