@@ -54,19 +54,18 @@
 
         <TextView
             android:id="@+id/textViewWorkerLastBeat"
-            android:layout_width="56dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             android:text="LastBeat"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/textViewWorkerHashrate3h"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="4dp"
-            app:layout_constraintVertical_bias="0.0"
-            android:layout_marginRight="4dp"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/buttonworkerOnline"

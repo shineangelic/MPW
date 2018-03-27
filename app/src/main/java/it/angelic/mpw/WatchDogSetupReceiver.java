@@ -1,31 +1,21 @@
 package it.angelic.mpw;
 
 import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
-
-import java.util.Date;
 
 import static it.angelic.mpw.Constants.TAG;
 
@@ -60,7 +50,7 @@ public class WatchDogSetupReceiver extends BroadcastReceiver {
 
             Job myJob = dispatcher.newJobBuilder()
                     // the JobService that will be called
-                    .setService(MyJobService.class)
+                    .setService(MPWService.class)
                     // uniquely identifies the job
                     .setTag("mpw-updater")
                     // one-off job

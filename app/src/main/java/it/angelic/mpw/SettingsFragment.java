@@ -9,8 +9,8 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
@@ -42,24 +42,50 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 // newValue is the value you choose
                 listFreqPreference.setEnabled((Boolean) newValue);
+                Log.w(Constants.TAG, "Changed SERVICE setting to: " + newValue);
+                Boolean nv = (Boolean) newValue;
+                FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
+                dispatcher.cancelAll();
+                if (nv) {
+                    Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
+                    dispatcher.schedule(myJob);
+                }
                 return true;
             }
         };
         service.setOnPreferenceChangeListener(listenerServ);
 
+        //Service FREQ listener
+        Preference.OnPreferenceChangeListener listenerServF = new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Integer nv = Integer.valueOf((String) newValue);
+                // newValue is the value you choose
+                Log.w(Constants.TAG, "Changed FREQ setting to: " + nv);
+
+                FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
+                dispatcher.cancelAll();
+
+                Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
+                dispatcher.schedule(myJob);
+
+                return true;
+            }
+        };
+        listFreqPreference.setOnPreferenceChangeListener(listenerServF);
+
         //Notification global
         Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-
-                Boolean nv= (Boolean) newValue;
+                Log.w(Constants.TAG, "Changed NOTIF setting to: " + prefs.getString("pref_sync_freq", null));
+                Boolean nv = (Boolean) newValue;
                 FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
+                dispatcher.cancelAll();
                 if (nv) {
-                    Job myJob = Utils.getJobUpdate(prefs, dispatcher);
+                    Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
                     dispatcher.schedule(myJob);
-                } else
-                    dispatcher.cancelAll();
-
+                }
                 // newValue is the value you choose
                 blockNotifications.setEnabled(nv);
                 offlineNotifications.setEnabled(nv);
@@ -69,14 +95,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         };
         globalNotifications.setOnPreferenceChangeListener(listener);
 
-        //service.setEnabled(true);
 
         //Listener x controllo correttezza
         walletAddr.setOnPreferenceChangeListener(new WalletPrefChangeListener(getActivity(), mPool, mCur));
         walletAddr.setSummary(getString(R.string.wallet_info, mPool.toString(), mCur.toString()));
-        walletAddr.setDialogTitle(mPool.toString()+" Network Login");
+        walletAddr.setDialogTitle(mPool.toString() + " Network Login");
 
     }
+
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
         if (preference instanceof PoolDialogPreference) {

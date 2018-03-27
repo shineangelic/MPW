@@ -1,5 +1,6 @@
 package it.angelic.mpw;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,6 +9,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
@@ -18,8 +21,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.Crashlytics;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
+import com.firebase.jobdispatcher.JobTrigger;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -43,7 +51,7 @@ import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 import static it.angelic.mpw.Constants.LAST_TWO;
 import static it.angelic.mpw.Constants.TAG;
 
-public class MyJobService extends JobService {
+public class MPWService extends JobService {
     final int NOTIFICATION_MINER_OFFLINE = 12;
 
     @Override
@@ -263,5 +271,37 @@ public class MyJobService extends JobService {
                 (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+    }
+
+    @NonNull
+    public static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher) {
+        Bundle myExtrasBundle = new Bundle();
+        Integer intervalMsec = Integer.valueOf(prefs.getString("pref_sync_freq", "" + AlarmManager.INTERVAL_HALF_HOUR)) /1000;
+        myExtrasBundle.putString("WALLETURL", prefs.getString("wallet_addr", null));
+        myExtrasBundle.putBoolean("NOTIFY_BLOCK", prefs.getBoolean("pref_notify_block", true));
+        myExtrasBundle.putBoolean("NOTIFY_OFFLINE", prefs.getBoolean("pref_notify_offline", true));
+        myExtrasBundle.putBoolean("NOTIFY_PAYMENT", prefs.getBoolean("pref_notify_payment", true));
+        return dispatcher.newJobBuilder()
+                // the JobService that will be called
+                .setService(MPWService.class)
+                // uniquely identifies the job
+                .setTag("mpw-updater")
+                // one-off job
+                .setRecurring(true)
+                // don't persist past a device reboot
+                .setLifetime(Lifetime.FOREVER)
+                // start between freq and 300 seconds tolerance
+                .setTrigger(periodicTrigger(intervalMsec, 300))
+                // don't overwrite an existing job with the same tag
+                .setReplaceCurrent(true)
+                // retry with exponential backoff
+                //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                // constraints that need to be satisfied for the job to run
+                .setExtras(myExtrasBundle)
+                .build();
+    }
+
+    public static JobTrigger periodicTrigger(int frequency, int tolerance) {
+        return Trigger.executionWindow(frequency - tolerance, frequency);
     }
 }

@@ -2,7 +2,6 @@ package it.angelic.mpw;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -19,34 +18,21 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
-import com.firebase.jobdispatcher.JobTrigger;
-import com.firebase.jobdispatcher.Trigger;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
-import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 
 /**
  * A login screen that offers login via email/password.
@@ -91,7 +77,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
         if (synchActive) {
-            Job myJob = Utils.getJobUpdate(prefs, dispatcher);
+            Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
             dispatcher.schedule(myJob);
         } else
             dispatcher.cancelAll();
