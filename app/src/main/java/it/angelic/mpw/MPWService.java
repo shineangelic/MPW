@@ -57,7 +57,7 @@ public class MPWService extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
         Log.e(TAG, "SERVICE START");
-        final Context ctx = getApplicationContext();
+        final Context ctx = MPWService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         try {
             final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
@@ -76,7 +76,7 @@ public class MPWService extends JobService {
             final Boolean notifyBlock = job.getExtras().getBoolean("NOTIFY_BLOCK", false);
             final Boolean notifyOffline = job.getExtras().getBoolean("NOTIFY_OFFLINE", false);
             final Boolean notifyPayment = job.getExtras().getBoolean("NOTIFY_PAYMENT", false);
-
+            Log.i(TAG, "NOTIFY_BLOCK " + notifyBlock + " notifyOffline: " + notifyOffline);
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)), null,
                     new Response.Listener<JSONObject>() {
@@ -90,13 +90,13 @@ public class MPWService extends JobService {
                             mDbHelper.logHomeStats(retrieved);
                             //dati semi grezzi
                             LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(LAST_TWO);
+                            Log.i(TAG, "data size > 1? : " +  ultimi.size() + " notifyOffline: " + ultimi.get(ultimi.get(0)).getMaturedTotal());
                             //controllo se manca qualcuno
-                            if (notifyBlock
+                            if (true/*notifyBlock
                                     && ultimi.size() > 1
-                                    && ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
+                                    && ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0*/) {
                                 sendBlockNotification(ctx, mPool.toString() + " has found " + ultimi.get(ultimi.get(0)).getMaturedTotal() + " blocks", mPool);
                             }
-
                         }
                     }, new Response.ErrorListener() {
 
@@ -153,7 +153,7 @@ public class MPWService extends JobService {
             //REFRESH coin values sincrono
             Log.e(TAG, "SERVICE UPDATING CURRENCIES");
             Utils.asynchCurrenciesFromCoinmarketcap(ctx, mCur);
-
+            Log.e(TAG, "SERVICE END");
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
             Crashlytics.logException(se);
@@ -278,10 +278,11 @@ public class MPWService extends JobService {
         Bundle myExtrasBundle = new Bundle();
         Integer intervalMsec = Integer.valueOf(prefs.getString("pref_sync_freq", "" + AlarmManager.INTERVAL_HALF_HOUR)) /1000;
         myExtrasBundle.putString("WALLETURL", prefs.getString("wallet_addr", null));
-        myExtrasBundle.putBoolean("NOTIFY_BLOCK", prefs.getBoolean("pref_notify_block", true));
-        myExtrasBundle.putBoolean("NOTIFY_OFFLINE", prefs.getBoolean("pref_notify_offline", true));
-        myExtrasBundle.putBoolean("NOTIFY_PAYMENT", prefs.getBoolean("pref_notify_payment", true));
-
+        if (prefs.getBoolean("pref_notify", true)) {
+            myExtrasBundle.putBoolean("NOTIFY_BLOCK", prefs.getBoolean("pref_notify_block", true));
+            myExtrasBundle.putBoolean("NOTIFY_OFFLINE", prefs.getBoolean("pref_notify_offline", true));
+            myExtrasBundle.putBoolean("NOTIFY_PAYMENT", prefs.getBoolean("pref_notify_payment", true));
+        }
         Log.w(Constants.TAG,"Built JobBuilder FREQ: " +intervalMsec);
         return dispatcher.newJobBuilder()
                 // the JobService that will be called

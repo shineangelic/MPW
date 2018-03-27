@@ -79,9 +79,9 @@ public class ChoosePoolActivity extends AppCompatActivity {
         if (synchActive) {
             Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
             dispatcher.schedule(myJob);
-        } else
+        } else {
             dispatcher.cancelAll();
-
+        }
         if (skipIntro.isChecked()) {
             Intent miner = new Intent(ChoosePoolActivity.this, MainActivity.class);
             startActivity(miner);
@@ -185,7 +185,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 if (prevPool.equalsIgnoreCase(((PoolEnum) poolSpinner.getItemAtPosition(u)).name())) {
                     poolSpinner.setSelection(u);
                     currencySpinner.setSelection(0);
-                    Log.i(Constants.TAG, "Restoring previous pool: " + poolSpinner.getSelectedItem());
+                    Log.i(Constants.TAG, "Restored previous pool: " + (((PoolEnum) poolSpinner.getItemAtPosition(u)).name()));
                     break;
                 }
             }

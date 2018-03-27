@@ -18,7 +18,7 @@ public class CryptoSharedPreferencesUtils {
     public static void saveBtcValues(@Nullable Ticker result, Context ctx) {
         SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
-
+        Log.w(Constants.TAG, "save BTC value: " + result);
         try {
             prefEditor.putString("BTCUSD", result.getPrice_usd());
             prefEditor.putString("BTCCHG", result.getPercent_change_24h());
@@ -36,7 +36,7 @@ public class CryptoSharedPreferencesUtils {
     public static void saveEthereumValues(@Nullable Ticker result, Context ctx) {
         SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
-
+        Log.w(Constants.TAG, "save ETH value: " + result);
         try {
             prefEditor.putString("ETHUSD", result.getPrice_usd());
             prefEditor.putString("ETHCHG", result.getPercent_change_24h());
@@ -54,7 +54,7 @@ public class CryptoSharedPreferencesUtils {
     public static void saveEtherValues(@Nullable Ticker result, Context ctx) {
         SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
-
+        Log.w(Constants.TAG, "save value: " + result);
         try {
             prefEditor.putString("CURUSD", result.getPrice_usd());
             prefEditor.putString("CURCHG", result.getPercent_change_24h());
