@@ -16,7 +16,7 @@ public class Constants {
     public static final String ACCOUNTS_STATS_URL = "/api/accounts/";
     public static final String BLOCKS_URL = "/api/blocks";
 
-    public static final String BASE_WEBSITE_URL = "http://www.";
+    public static final String BASE_WEBSITE_URL = "https://www.";
 
     //NOOB POOL
     public static final String NOOB_POOL_NAME = "Noob Pool";
