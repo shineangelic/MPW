@@ -14,17 +14,23 @@ import android.util.Log;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         addPreferencesFromResource(R.xml.preferences);
         //Crashlytics.getInstance().crash();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
         PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
 
@@ -47,11 +53,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
                 dispatcher.cancelAll();
                 if (nv) {
-
                     Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
                     dispatcher.mustSchedule(myJob);
                     Log.w(Constants.TAG, "SERVICE ACTIVE, JOB_ID: " );
                 }
+
+                //firebase log event
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, nv.toString());
+                mFirebaseAnalytics.logEvent("service_active", bundle);
+
+
                 return true;
             }
         };
@@ -65,17 +77,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 // newValue is the value you choose
                 Log.w(Constants.TAG, "Changed FREQ setting to: " + nv);
 
-                FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
-                dispatcher.cancelAll();
+                //pezza perche il val ancora non c'e
+                prefs.edit().putString("pref_sync_freq", ""+nv).apply();
 
+                FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
                 Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
                 dispatcher.schedule(myJob);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, ""+nv);
+                mFirebaseAnalytics.logEvent("service_freq", bundle);
 
                 return true;
             }
         };
         listFreqPreference.setOnPreferenceChangeListener(listenerServF);
-
 
         //Notification global
         Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
@@ -87,17 +103,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 blockNotifications.setEnabled(nv);
                 offlineNotifications.setEnabled(nv);
                 paymentNotifications.setEnabled(nv);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, ""+nv);
+                mFirebaseAnalytics.logEvent("service_notifications", bundle);
+
                 return true;
             }
         };
         globalNotifications.setOnPreferenceChangeListener(listener);
 
-
         //Listener x controllo correttezza
         walletAddr.setOnPreferenceChangeListener(new WalletPrefChangeListener(getActivity(), mPool, mCur));
         walletAddr.setSummary(getString(R.string.wallet_info, mPool.toString(), mCur.toString()));
         walletAddr.setDialogTitle(mPool.toString() + " Network Login");
-
     }
 
     @Override

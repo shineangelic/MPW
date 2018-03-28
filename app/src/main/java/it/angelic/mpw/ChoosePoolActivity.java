@@ -340,7 +340,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
             }
 
             //TODO togliere
-            Utils.synchCurrenciesFromCoinmarketcap(ChoosePoolActivity.this, mCur);
+            //Utils.synchCurrenciesFromCoinmarketcap(ChoosePoolActivity.this, mCur);
 
             try {
                 URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));

@@ -354,52 +354,5 @@ class Utils {
         }
     }
 
-    public static void asynchCurrenciesFromCoinmarketcap(final Context ctx, final CurrencyEnum mCur) {
-        try {
-            JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
-                    Constants.ETHER_STATS_URL, null,
-                    new Response.Listener<JSONArray>() {
 
-                        @Override
-                        public void onResponse(final JSONArray response) {
-                            Log.d(Constants.TAG, response.toString());
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson gson = builder.create();
-                            Log.d(Constants.TAG, response.toString());
-                            Type listType = new TypeToken<List<Ticker>>() {
-                            }.getType();
-                            List<Ticker> posts = gson.fromJson(response.toString(), listType);
-                            Ticker fnd = null;
-                            for (Ticker currency : posts) {
-                                if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
-                                    fnd = currency;
-                                }
-                                //always save ETH
-                                if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
-                                    CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
-                                }
-                                //always save BTC
-                                if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
-                                    CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
-                                }
-                            }
-                            //eventually resets  when fnd = null
-                            CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
-
-                        }
-                    }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                    Crashlytics.logException(error);
-                }
-            });
-
-            // Adding request to request queue
-            JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonArrayCurrenciesReq);
-        } catch (Exception e) {
-            Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
-        }
-    }
 }

@@ -30,6 +30,7 @@ import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 import com.firebase.jobdispatcher.JobTrigger;
 import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -86,7 +87,7 @@ public class MPWService extends JobService {
             final Boolean notifyBlock = job.getExtras().getBoolean("NOTIFY_BLOCK", false);
             final Boolean notifyOffline = job.getExtras().getBoolean("NOTIFY_OFFLINE", false);
             final Boolean notifyPayment = job.getExtras().getBoolean("NOTIFY_PAYMENT", false);
-            Log.i(TAG, "NOTIFY_BLOCK " + notifyBlock + " notifyOffline: " + notifyOffline);
+
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)), null,
                     new Response.Listener<JSONObject>() {
@@ -100,13 +101,13 @@ public class MPWService extends JobService {
                             mDbHelper.logHomeStats(retrieved);
                             //dati semi grezzi
                             LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(LAST_TWO);
-                            Log.i(TAG, "data size > 1? : " +  ultimi.size() + " notifyOffline: " + ultimi.get(ultimi.get(0)).getMaturedTotal());
+                            Log.d(TAG, "data size: " +  ultimi.size() + " notifyOffline: " + ultimi.get(ultimi.get(0)).getMaturedTotal());
                             //controllo se manca qualcuno
                             if (notifyBlock
                                     && ultimi.size() > 1
                                     && ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
-                                Log.w(TAG, "Send notification");
-                                sendBlockNotification(getApplication(), mPool.toString() + " has found " + ultimi.get(ultimi.get(0)).getMaturedTotal() + " blocks", mPool);
+                                int diff = ultimi.get(ultimi.get(0)).getMaturedTotal() - ultimi.get(ultimi.get(1)).getMaturedTotal();
+                                sendBlockNotification(getApplication(),diff + " new block. " + mPool.toString() + " has found " + ultimi.get(ultimi.get(0)).getMaturedTotal() + " blocks", mPool);
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -164,15 +165,11 @@ public class MPWService extends JobService {
                 });
                 JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReqWallet);
             }else{
-                //job end
+                //job end tutto bene
                 MPWService.this.jobFinished(job,false);
             }
             // Adding request to request queue
             JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReq);
-
-            //REFRESH coin values sincrono
-            Log.e(TAG, "SERVICE UPDATING CURRENCIES");
-            asynchCurrenciesFromCoinmarketcap(ctx, mCur, job);
 
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
@@ -182,58 +179,6 @@ public class MPWService extends JobService {
         return true; // Answers the question: "Is there still work going on?"
     }
 
-    private  void asynchCurrenciesFromCoinmarketcap(final Context ctx, final CurrencyEnum mCur,final JobParameters job) {
-        try {
-            JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
-                    Constants.ETHER_STATS_URL, null,
-                    new Response.Listener<JSONArray>() {
-
-                        @Override
-                        public void onResponse(final JSONArray response) {
-                            Log.d(Constants.TAG, response.toString());
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson gson = builder.create();
-                            Log.d(Constants.TAG, response.toString());
-                            Type listType = new TypeToken<List<Ticker>>() {
-                            }.getType();
-                            List<Ticker> posts = gson.fromJson(response.toString(), listType);
-                            Ticker fnd = null;
-                            for (Ticker currency : posts) {
-                                if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
-                                    fnd = currency;
-                                }
-                                //always save ETH
-                                if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
-                                    CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
-                                }
-                                //always save BTC
-                                if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
-                                    CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
-                                }
-                            }
-                            //eventually resets  when fnd = null
-                            CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
-                            Log.e(TAG, "SERVICE END Ok2");
-                            MPWService.this.jobFinished(job,false);
-
-                        }
-                    }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, "SERVICE END KO2");
-                    VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                    Crashlytics.logException(error);
-                    MPWService.this.jobFinished(job,true);
-                }
-            });
-
-            // Adding request to request queue
-            JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonArrayCurrenciesReq);
-        } catch (Exception e) {
-            Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
-        }
-    }
 
     @Override
     public boolean onStopJob(JobParameters job) {
@@ -396,7 +341,7 @@ public class MPWService extends JobService {
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(true)
                 // retry with exponential backoff
-                //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 // constraints that need to be satisfied for the job to run
                 .setExtras(myExtrasBundle)
                 .build();
