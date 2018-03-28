@@ -152,18 +152,17 @@ public class ChoosePoolActivity extends AppCompatActivity {
             }
         });
 
-        //convoluto
-       /* mWalletView.setText(prefs.getString("wallet_addr_"
-                + ((PoolEnum) poolSpinner.getSelectedItem()).name()
-                + "_"
-                + ((CurrencyEnum) currencySpinner.getSelectedItem()).name(), ""));
-        */
-        restoreLastSettings(prefs);
-
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
+        restoreLastSettings(prefs);
         //ADS
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();

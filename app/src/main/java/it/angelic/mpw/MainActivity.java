@@ -169,7 +169,7 @@ public class MainActivity extends DrawerActivity {
         toggle.syncState();
 
 
-
+        Utils.asynchCurrenciesFromCoinmarketcap(this, mCur);
         //ADS
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -237,7 +237,7 @@ public class MainActivity extends DrawerActivity {
             }
         });
 
-        Utils.asynchCurrenciesFromCoinmarketcap(this, mCur);
+
         /*
         JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
                 Constants.ETHER_STATS_URL, null,

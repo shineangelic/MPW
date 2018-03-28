@@ -42,13 +42,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 // newValue is the value you choose
                 listFreqPreference.setEnabled((Boolean) newValue);
-                Log.w(Constants.TAG, "Changed SERVICE setting to: " + newValue);
+
                 Boolean nv = (Boolean) newValue;
                 FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
                 dispatcher.cancelAll();
                 if (nv) {
+
                     Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
-                    dispatcher.schedule(myJob);
+                    dispatcher.mustSchedule(myJob);
+                    Log.w(Constants.TAG, "SERVICE ACTIVE, JOB_ID: " );
                 }
                 return true;
             }
@@ -73,6 +75,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         };
         listFreqPreference.setOnPreferenceChangeListener(listenerServF);
+
 
         //Notification global
         Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {

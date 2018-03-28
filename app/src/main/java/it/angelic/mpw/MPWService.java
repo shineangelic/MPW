@@ -1,6 +1,7 @@
 package it.angelic.mpw;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -19,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -30,18 +33,23 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
+import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
@@ -56,6 +64,7 @@ public class MPWService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters job) {
+        final JobParameters jobC = job;
         Log.e(TAG, "SERVICE START");
         final Context ctx = MPWService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -63,6 +72,7 @@ public class MPWService extends JobService {
             final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
             final CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
             Log.i(TAG, "Miner Pool Watcher Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
+            Log.i(TAG, "SERVICE working on:" +mPool.toString() + " - " + mCur.toString());
             final PoolDbHelper mDbHelper = new PoolDbHelper(ctx, mPool, mCur);
             final NotificationManager mNotifyMgr =
                     (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
@@ -92,10 +102,11 @@ public class MPWService extends JobService {
                             LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(LAST_TWO);
                             Log.i(TAG, "data size > 1? : " +  ultimi.size() + " notifyOffline: " + ultimi.get(ultimi.get(0)).getMaturedTotal());
                             //controllo se manca qualcuno
-                            if (true/*notifyBlock
+                            if (notifyBlock
                                     && ultimi.size() > 1
-                                    && ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0*/) {
-                                sendBlockNotification(ctx, mPool.toString() + " has found " + ultimi.get(ultimi.get(0)).getMaturedTotal() + " blocks", mPool);
+                                    && ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
+                                Log.w(TAG, "Send notification");
+                                sendBlockNotification(getApplication(), mPool.toString() + " has found " + ultimi.get(ultimi.get(0)).getMaturedTotal() + " blocks", mPool);
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -136,30 +147,92 @@ public class MPWService extends JobService {
                                     sendPaymentNotification(ctx, "You received a payment: " +
                                             Utils.formatEthCurrency(ctx,ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()), mCur.toString() + " payment from " + mPool.toString());
                                 }
+
+                                Log.e(TAG, "SERVICE END Ok1");
+
+                                MPWService.this.jobFinished(jobC,false);
                             }
                         }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "SERVICE END KO1");
+                        MPWService.this.jobFinished(jobC,true);
                         VolleyLog.d(TAG, "Error: " + error.getMessage());
                         // hide the progress dialog
                     }
                 });
                 JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReqWallet);
+            }else{
+                //job end
+                MPWService.this.jobFinished(job,false);
             }
             // Adding request to request queue
             JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReq);
 
             //REFRESH coin values sincrono
             Log.e(TAG, "SERVICE UPDATING CURRENCIES");
-            Utils.asynchCurrenciesFromCoinmarketcap(ctx, mCur);
-            Log.e(TAG, "SERVICE END");
+            asynchCurrenciesFromCoinmarketcap(ctx, mCur, job);
+
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
             Crashlytics.logException(se);
         }
 
-        return false; // Answers the question: "Is there still work going on?"
+        return true; // Answers the question: "Is there still work going on?"
+    }
+
+    private  void asynchCurrenciesFromCoinmarketcap(final Context ctx, final CurrencyEnum mCur,final JobParameters job) {
+        try {
+            JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
+                    Constants.ETHER_STATS_URL, null,
+                    new Response.Listener<JSONArray>() {
+
+                        @Override
+                        public void onResponse(final JSONArray response) {
+                            Log.d(Constants.TAG, response.toString());
+                            GsonBuilder builder = new GsonBuilder();
+                            Gson gson = builder.create();
+                            Log.d(Constants.TAG, response.toString());
+                            Type listType = new TypeToken<List<Ticker>>() {
+                            }.getType();
+                            List<Ticker> posts = gson.fromJson(response.toString(), listType);
+                            Ticker fnd = null;
+                            for (Ticker currency : posts) {
+                                if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
+                                    fnd = currency;
+                                }
+                                //always save ETH
+                                if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
+                                    CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
+                                }
+                                //always save BTC
+                                if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
+                                    CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
+                                }
+                            }
+                            //eventually resets  when fnd = null
+                            CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
+                            Log.e(TAG, "SERVICE END Ok2");
+                            MPWService.this.jobFinished(job,false);
+
+                        }
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "SERVICE END KO2");
+                    VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                    Crashlytics.logException(error);
+                    MPWService.this.jobFinished(job,true);
+                }
+            });
+
+            // Adding request to request queue
+            JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonArrayCurrenciesReq);
+        } catch (Exception e) {
+            Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
+        }
     }
 
     @Override
@@ -168,6 +241,15 @@ public class MPWService extends JobService {
     }
 
     private void sendOfflineNotification(Context ctx, String contentText, PoolEnum pool) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            /* Create or update. */
+            NotificationChannel channel = new NotificationChannel("MPWminerChannel",
+                    "MPW block notfications",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(channel);
+        }
         Intent resultIntent = new Intent(ctx, WalletActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
@@ -195,16 +277,23 @@ public class MPWService extends JobService {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mBuilder.setSound(alarmSound);
 
-        // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+
         // Builds the notification and issues it.
-        mNotifyMgr.notify(NOTIFICATION_MINER_OFFLINE, mBuilder.build());
+        mNotificationManager.notify(NOTIFICATION_MINER_OFFLINE, mBuilder.build());
 
     }
 
     private void sendBlockNotification(Context ctx, String contentText, PoolEnum pool) {
         Intent resultIntent = new Intent(ctx, BlocksActivity.class);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            /* Create or update. */
+            NotificationChannel channel = new NotificationChannel("MPWblockChannel",
+                    "MPW block notfications",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            mNotificationManager.createNotificationChannel(channel);
+        }
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
         PendingIntent resultPendingIntent =
@@ -216,7 +305,7 @@ public class MPWService extends JobService {
                 );
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(ctx)
+                new NotificationCompat.Builder(ctx, "MPWblockChannel")
                         .setSmallIcon(R.drawable.ic_insert_link_chain_24dp)
                         .setContentTitle("Block Found on " + pool.toString())
                         .setCategory(CATEGORY_PROGRESS)
@@ -232,13 +321,23 @@ public class MPWService extends JobService {
         // Sets an ID for the notification
         int mNotificationId = 13;
         // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+
         // Builds the notification and issues it.
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        mNotificationManager.notify(mNotificationId, mBuilder.build());
+
+
     }
 
     private void sendPaymentNotification(Context ctx, String contentText, String contentTitle) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            /* Create or update. */
+            NotificationChannel channel = new NotificationChannel("MPWpaymentsChannel",
+                    "MPW block notfications",
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+        }
         Intent resultIntent = new Intent(ctx, PaymentsActivity.class);
         // Because clicking the notification opens a new ("special") activity, there's
         // no need to create an artificial back stack.
@@ -266,11 +365,9 @@ public class MPWService extends JobService {
         mBuilder.setLights(Color.WHITE, 500, 1000);
         // Sets an ID for the notification
         int mNotificationId = 14;
-        // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
+
         // Builds the notification and issues it.
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        mNotificationManager.notify(mNotificationId, mBuilder.build());
     }
 
     @NonNull
@@ -291,6 +388,7 @@ public class MPWService extends JobService {
                 .setTag("mpw-updater")
                 // one-off job
                 .setRecurring(true)
+
                 // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
                 // start between freq and 300 seconds tolerance
