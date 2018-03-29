@@ -88,10 +88,8 @@ public class ChoosePoolActivity extends AppCompatActivity {
             finish();
         }
 
-
         //admob
         MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
-
 
         ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
         poolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -347,9 +345,9 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 URLConnection connection = myUrl.openConnection();
                 connection.setConnectTimeout(2000);
                 connection.connect();
-
             } catch (Exception e) {
                 connectError = true;
+            } finally {
             }
             return true;
         }

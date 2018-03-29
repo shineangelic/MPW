@@ -191,7 +191,7 @@ public class MPWService extends JobService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             /* Create or update. */
             NotificationChannel channel = new NotificationChannel("MPWminerChannel",
-                    "MPW block notfications",
+                    "Miner offline notifications",
                     NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(channel);
         }
@@ -207,7 +207,7 @@ public class MPWService extends JobService {
                 );
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(ctx)
+                new NotificationCompat.Builder(ctx, "MPWminerChannel")
                         .setSmallIcon(R.drawable.ic_money_off_black_24dp)
                         .setContentTitle("One of your "+pool.toString() +" workers went offline")
                         .setCategory(CATEGORY_SERVICE)
@@ -295,7 +295,7 @@ public class MPWService extends JobService {
                 );
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(ctx)
+                new NotificationCompat.Builder(ctx, "MPWpaymentsChannel")
                         .setSmallIcon(R.drawable.ic_payment_black_24dp)
                         .setContentTitle(contentTitle)
                         .setCategory(CATEGORY_PROGRESS)
@@ -327,22 +327,14 @@ public class MPWService extends JobService {
         }
         Log.w(Constants.TAG,"Built JobBuilder FREQ: " +intervalMsec);
         return dispatcher.newJobBuilder()
-                // the JobService that will be called
                 .setService(MPWService.class)
-                // uniquely identifies the job
                 .setTag("mpw-updater")
-                // one-off job
                 .setRecurring(true)
-
-                // don't persist past a device reboot
                 .setLifetime(Lifetime.FOREVER)
-                // start between freq and 300 seconds tolerance
                 .setTrigger(periodicTrigger(intervalMsec, (intervalMsec/100)*10))
-                // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(true)
                 // retry with exponential backoff
-                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                // constraints that need to be satisfied for the job to run
+                //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 .setExtras(myExtrasBundle)
                 .build();
     }

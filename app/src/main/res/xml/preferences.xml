@@ -13,7 +13,7 @@
         <android.support.v7.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_sync"
-            android:summary="app will connect to currently selected pool in background every hour to retrieve fresh data"
+            android:summary="app will connect to currently selected pool in background to refresh data"
             android:title="Service enabled" />
         <android.support.v7.preference.ListPreference
             android:defaultValue="1800000"

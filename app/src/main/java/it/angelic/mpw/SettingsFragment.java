@@ -10,6 +10,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
@@ -54,8 +55,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 dispatcher.cancelAll();
                 if (nv) {
                     Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
-                    dispatcher.mustSchedule(myJob);
-                    Log.w(Constants.TAG, "SERVICE ACTIVE, JOB_ID: " );
+                    int res  = dispatcher.schedule(myJob);
+                    if (res != dispatcher.SCHEDULE_RESULT_SUCCESS){
+                        Toast.makeText(getActivity(),"Cannot enable service. Is Play Services up to date? Notifications won't work", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                    Log.w(Constants.TAG, "SERVICE ACTIVE, schedule res: " +res);
                 }
 
                 //firebase log event

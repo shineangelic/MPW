@@ -22,10 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
@@ -33,20 +30,16 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -57,9 +50,6 @@ import it.angelic.mpw.model.db.GranularityEnum;
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.db.PoolQueryGrouper;
 import it.angelic.mpw.model.enums.BackToEnum;
-
-import it.angelic.mpw.model.enums.CurrencyEnum;
-import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 
 public class MainActivity extends DrawerActivity {
@@ -152,8 +142,8 @@ public class MainActivity extends DrawerActivity {
                         else if (radioMin.isChecked())
                             granoEnum = GranularityEnum.MINUTE;
                         int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
-                        View radioButton =  findViewById(radioButtonID);
-                        LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String)radioButton.getTag()));
+                        View radioButton = findViewById(radioButtonID);
+                        LinkedMap<Date, HomeStats> storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String) radioButton.getTag()));
                         ChartUtils.drawDifficultyHistory(textViewNetDiffTitle, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
                         ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum), (LineView) findViewById(R.id.line_view_hashrate), granoEnum);
                     }
@@ -173,8 +163,8 @@ public class MainActivity extends DrawerActivity {
 
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
-            Job myJob = MPWCoinmarketcapService.getJobUpdate(dispatcher);
-            dispatcher.schedule(myJob);
+        Job myJob = MPWCoinmarketcapService.getJobUpdate(dispatcher);
+        dispatcher.schedule(myJob);
 
         //ADS
         AdView mAdView = findViewById(R.id.adView);
@@ -210,8 +200,8 @@ public class MainActivity extends DrawerActivity {
                                 mDbHelper.logHomeStats(retrieved);
                                 //dati semi grezzi
                                 int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
-                                View radioButton =  findViewById(radioButtonID);
-                                storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String)radioButton.getTag()));
+                                View radioButton = findViewById(radioButtonID);
+                                storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String) radioButton.getTag()));
                                 updateCurrentStats();
                                 final RadioButton radioDay = findViewById(R.id.radioButtonDay);
                                 final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
@@ -226,7 +216,7 @@ public class MainActivity extends DrawerActivity {
                                         PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
                                         (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
 
-                                ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia,granoEnum),
+                                ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
                                         (LineView) findViewById(R.id.line_view_hashrate),
                                         granoEnum);
                             }

@@ -139,17 +139,19 @@ public class BlocksActivity extends DrawerActivity {
 
                                     SummaryStatistics sts = doApacheMath(retrieved.getMatured());
 
+                                    if (retrieved.getMaturedTotal() > 1) {//otherwise inconsistent
+                                        textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
+                                        textViewMaxBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
+                                        textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
+                                        textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
+                                        Locale current = getResources().getConfiguration().locale;
+                                        textViewBlocksPerDayValue.setText(String.format(current, "%.3f", Utils.getPoolBlockPerDay(retrieved.getMatured())));
+                                    }
+
                                     if (mAdapter == null) {
                                         mAdapter = new BlockAdapter(retrieved.getMatured(), mCur);
                                         mRecyclerView.setAdapter(mAdapter);
                                     }
-                                    textViewMeanBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMean() / 1000));
-                                    textViewMaxBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
-                                    textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
-                                    textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
-                                    Locale current = getResources().getConfiguration().locale;
-                                    textViewBlocksPerDayValue.setText(String.format(current,"%.3f",Utils.getPoolBlockPerDay(retrieved.getMatured())));
-
                                     mAdapter.setBlocksArray(retrieved.getMatured());
                                     mAdapter.notifyDataSetChanged();
                                 }else
@@ -188,7 +190,6 @@ public class BlocksActivity extends DrawerActivity {
         //a oggi, calcolo ultimo intervallo aperto
         intervals[maturi.size() - 1] = (new Date().getTime() - revElements.get(maturi.size() - 1).getTimestamp().getTime());
 
-
         // Get a DescriptiveStatistics instance
         SummaryStatistics stats = new SummaryStatistics();
 
@@ -197,25 +198,17 @@ public class BlocksActivity extends DrawerActivity {
             stats.addValue(intervals[im]);
         }
 
-        // Compute some statistics
-        // double mean = stats.getMean();
-        // double std = stats.getStandardDeviation();
-        // double median = stats.getPercentile(50);
         return stats;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

@@ -30,6 +30,7 @@ import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 import com.firebase.jobdispatcher.JobTrigger;
 import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -71,16 +72,16 @@ public class MPWCoinmarketcapService extends JobService {
         try {
             final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
             final CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
-            Log.i(TAG, "Miner Pool Watcher Coinmarketcap Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
-            Log.i(TAG, "SERVICE working on:" +mPool.toString() + " - " + mCur.toString());
+            Log.w(TAG, "Miner Pool Watcher Coinmarketcap Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
+            Log.i(TAG, "SERVICE MARKETCAP working on:" +mPool.toString() + " - " + mCur.toString());
             //load extra
 
             //REFRESH coin values sincrono
-            Log.e(TAG, "SERVICE UPDATING CURRENCIES");
+            Log.e(TAG, "SERVICE MARKETCAP UPDATING CURRENCIES");
             asynchCurrenciesFromCoinmarketcap(ctx, mCur, job);
 
         }catch (Exception se){
-            Log.e(TAG, "SERVICE ERROR: "+se);
+            Log.e(TAG, "SERVICE MARKETCAP ERROR: "+se);
             Crashlytics.logException(se);
         }
 
@@ -118,7 +119,7 @@ public class MPWCoinmarketcapService extends JobService {
                             }
                             //eventually resets  when fnd = null
                             CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
-                            Log.e(TAG, "SERVICE END Ok2");
+                            Log.e(TAG, "SERVICE MARKETCAP END Ok2");
                             MPWCoinmarketcapService.this.jobFinished(job,false);
 
                         }
@@ -126,7 +127,7 @@ public class MPWCoinmarketcapService extends JobService {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e(TAG, "SERVICE END KO2");
+                    Log.e(TAG, "SERVICE MARKETCAP END KO2");
                     VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
                     Crashlytics.logException(error);
                     MPWCoinmarketcapService.this.jobFinished(job,true);
@@ -167,7 +168,7 @@ public class MPWCoinmarketcapService extends JobService {
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(false)
                 // retry with exponential backoff
-                //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 // constraints that need to be satisfied for the job to run
                 .setExtras(myExtrasBundle)
                 .build();
