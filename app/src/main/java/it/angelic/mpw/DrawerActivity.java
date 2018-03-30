@@ -75,10 +75,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         backgroundPool.setImageResource(R.drawable.side_nav_bar);
         curLogo.setImageResource(R.mipmap.ic_pool_watcher);
         switch (mPool){
-            case HASHINGPARTY:
-                backgroundPool.setImageResource(R.mipmap.ic_hashparty_foreground);
-                curLogo.setImageResource(R.mipmap.pool_hashparty);
-                break;
+
             case NOOBPOOL:
                 curLogo.setImageResource(R.mipmap.pool_noob);
                 break;

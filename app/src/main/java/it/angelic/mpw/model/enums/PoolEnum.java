@@ -27,13 +27,6 @@ public enum PoolEnum {
     ETHTEAM("EthTeam", "ethteam.com",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
     }}, true),
-    HASHINGPARTY("Hashing Party", "hashing.party", false, new ArrayList<CurrencyEnum>() {{
-        add(CurrencyEnum.ETH);
-        add(CurrencyEnum.ETC);
-        add(CurrencyEnum.UBQ);
-        add(CurrencyEnum.DBIX);
-        add(CurrencyEnum.VIC);
-    }}, false),
     MINERPOOL("Minerpool", "minerpool.net", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ELLA);
         add(CurrencyEnum.ETZ);
