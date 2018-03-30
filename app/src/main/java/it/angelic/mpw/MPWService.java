@@ -60,6 +60,12 @@ import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 import static it.angelic.mpw.Constants.LAST_TWO;
 import static it.angelic.mpw.Constants.TAG;
 
+/**
+ * TEST with
+ * adb shell dumpsys activity service GcmService  | findstr it.angelic
+ *
+ *
+ */
 public class MPWService extends JobService {
     final int NOTIFICATION_MINER_OFFLINE = 12;
 
@@ -316,7 +322,7 @@ public class MPWService extends JobService {
     }
 
     @NonNull
-    public static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher) {
+    public static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher, boolean replaceCurrent) {
         Bundle myExtrasBundle = new Bundle();
         Integer intervalMsec = Integer.valueOf(prefs.getString("pref_sync_freq", "" + AlarmManager.INTERVAL_HALF_HOUR)) /1000;
         myExtrasBundle.putString("WALLETURL", prefs.getString("wallet_addr", null));
