@@ -113,7 +113,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         + "_"
                         + ((CurrencyEnum) currencySpinner.getAdapter().getItem(currencySpinner.getSelectedItemPosition())).name(), "");
                 mWalletView.setText(prevWallet);
-                Log.i(Constants.TAG, "poolSpinner list: " + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name());
+                Log.d(Constants.TAG, "poolSpinner list: " + ((PoolEnum) poolSpinner.getAdapter().getItem(position)).name());
             }
 
             @Override
@@ -132,7 +132,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                         + ((CurrencyEnum) currencySpinner.getAdapter().getItem(position)).name();
                 String prevWallet = prefs.getString(xCode, "");
                 mWalletView.setText(prevWallet.length() == 0 ? getString(R.string.no_wallet_set) : Utils.formatEthAddress(prevWallet));
-                Log.i(Constants.TAG, "currencySpinner list: " + currencySpinner.getItemAtPosition(currencySpinner.getSelectedItemPosition()));
+                Log.d(Constants.TAG, "currencySpinner list: " + currencySpinner.getItemAtPosition(currencySpinner.getSelectedItemPosition()));
             }
 
             @Override
