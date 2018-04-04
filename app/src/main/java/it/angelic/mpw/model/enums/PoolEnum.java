@@ -9,7 +9,7 @@ import it.angelic.mpw.Constants;
  */
 
 public enum PoolEnum {
-    NOOBPOOL(Constants.NOOB_POOL_NAME, "noobpool.com", false, new ArrayList<CurrencyEnum>() {{
+    NOOBPOOL("Noob Pool", "noobpool.com", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
     }}, false),
@@ -24,9 +24,6 @@ public enum PoolEnum {
     /*ELLAISMDEV("Ella Dev Pool", "ellaism.org", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ELLA);
     }}, true, "pool"),*/
-    ETHTEAM("EthTeam", "ethteam.com",false, new ArrayList<CurrencyEnum>() {{
-        add(CurrencyEnum.ETC);
-    }}, true),
     MINERPOOL("Minerpool", "minerpool.net", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ELLA);
         add(CurrencyEnum.ETZ);
@@ -52,6 +49,12 @@ public enum PoolEnum {
         add(CurrencyEnum.MUSIC);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBIQ);
+    }}, false),
+    SOYMINERO("SoyMinero", "soyminero.es", false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ELLA);
+        //add(CurrencyEnum.MSR);
+        //add(CurrencyEnum.SUMO);
     }}, false),
     TWOMINERS("2miners", "2miners.com", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);

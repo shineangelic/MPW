@@ -21,12 +21,15 @@ public enum CurrencyEnum {
     ETZ("EtherZero"),
 	EXP("Expanse"),
 	KMD("Komodo"),
+    KRB("Karbo"),
 	LTC("Litecoin"),
     MUSIC("Musicoin"),
     MC("Musicoin"),//MAXPOOL names its way
     MONA("MonaCoin"), //lol
+    MSR("Masari"),
     XMR("Monero"),
     PIRL("Pirl","https://poseidon.pirl.io/explorer"), //ahah
+    SUMO("Sumo"),
     THC("HempCoin"),
     UBQ("Ubiq", "https://ubiqscan.io"),
     UBIQ("Ubiq", "https://ubiqscan.io"),//MAXPOOL names its way

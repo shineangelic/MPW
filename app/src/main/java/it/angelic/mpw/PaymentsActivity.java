@@ -84,9 +84,14 @@ public class PaymentsActivity extends DrawerActivity {
         textViewWalletValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(Constants.HTTPS_ETHERSCAN_IO_ADDRESS + minerAddr));
-                startActivity(i);
+                if (mCur.getScannerSite() != null) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(mCur.getScannerSite() + "/address/" + minerAddr));
+                    startActivity(i);
+                } else {
+                    Snackbar.make(view, "Blockchain explorer not available for "+mCur.toString(), Snackbar.LENGTH_SHORT)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
