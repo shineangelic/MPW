@@ -1,7 +1,7 @@
 # MPW
 
 Mining Pool Watcher is a generic Android client for [open-ethereum-pool](https://github.com/sammy007/open-ethereum-pool).
-It stores data retrieved via JSON to show charts and miners statistics. It computes estimated earnings and plots payments history.
+It stores on a local SQLite database data retrieved via JSON, in order to show charts and rich miners statistics. It computes estimated earnings and plots payments history.
 
 ![Miner Pool Watcher](https://lh3.googleusercontent.com/ycsUtCMMXIM3QneCkj2lIn14w-GwfMa1dVOG_waloShgHg3g3dpVzLo5F37tmXkO3Q=w300-rw)
 

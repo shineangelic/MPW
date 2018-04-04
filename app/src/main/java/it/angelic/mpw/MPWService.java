@@ -151,8 +151,8 @@ public class MPWService extends JobService {
                                 }
                                 if (notifyPayment && ultimi.keySet().size() >= LAST_TWO &&
                                         ultimi.get(ultimi.firstKey()).getPayments().size() > ultimi.get(ultimi.get(1)).getPayments().size()) {
-                                    sendPaymentNotification(ctx, "You received a payment: " +
-                                            Utils.formatEthCurrency(ctx,ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount()), mCur.toString() + " payment from " + mPool.toString());
+                                    sendPaymentNotification(ctx, "You received a payment of " +
+                                            Utils.formatCurrency(ctx,ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount(), mCur), mCur.toString() + " from " + mPool.toString());
                                 }
 
                                 Log.e(TAG, "SERVICE END Ok1");
