@@ -309,6 +309,7 @@ class Utils {
 
         // Add the data from the array
         for (Matured m : matured) {
+            //sort of 'works, dunno why' thing
             summer += Double.valueOf(m.getReward()) / 1000000000d;
             cnt++;
         }
@@ -320,39 +321,5 @@ class Utils {
         double blockEarnProj = sharePercent * avp;
         return blockEarnProj * getPoolBlockPerDay(matured);
     }
-
-    public static void synchCurrenciesFromCoinmarketcap(Context ctx, CurrencyEnum mCur) {
-        try {
-            //synch jason
-            RequestFuture<JSONArray> future = RequestFuture.newFuture();
-            JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, Constants.ETHER_STATS_URL, new JSONArray(), future, future);
-            JSONClientSingleton.getInstance(ctx).addToRequestQueue(request);
-            JSONArray response = future.get(); // this will block
-            Log.d(Constants.TAG, response.toString());
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
-            Type listType = new TypeToken<List<Ticker>>() {
-            }.getType();
-            List<Ticker> posts = gson.fromJson(response.toString(), listType);
-            Ticker fnd = null;
-            for (Ticker currency : posts) {
-                if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
-                    fnd = currency;
-                }
-                //always save ETH
-                if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
-                    CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
-                }
-                //always save BTC
-                if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
-                    CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
-                }
-            }
-            CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
-        } catch (Exception e) {
-            Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
-        }
-    }
-
 
 }

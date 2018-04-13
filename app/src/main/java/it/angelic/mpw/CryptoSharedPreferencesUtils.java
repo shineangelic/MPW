@@ -30,7 +30,6 @@ public class CryptoSharedPreferencesUtils {
             prefEditor.remove("BTCTIMESTAMP");
         }
         prefEditor.commit();
-
     }
 
     public static void saveEthereumValues(@Nullable Ticker result, Context ctx) {

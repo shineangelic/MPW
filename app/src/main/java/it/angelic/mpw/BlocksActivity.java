@@ -59,7 +59,6 @@ public class BlocksActivity extends DrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blocks);
 
-
         mDbHelper = new PoolDbHelper(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
 

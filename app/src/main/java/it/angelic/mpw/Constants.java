@@ -17,8 +17,7 @@ public class Constants {
 
     public static final String BASE_WEBSITE_URL = "https://www.";
 
-    //NOOB POOL
-
-    static final String ETHER_STATS_URL = "https://api.coinmarketcap.com/v1/ticker/?limit=1000";
+    static final String ETHER_STATS_URL = "https://api.coinmarketcap.com/v1/ticker/?";
+    static final String ETHER_STATS_COIN_LIMIT = "limit=1000";
 
 }

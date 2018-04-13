@@ -76,7 +76,14 @@ public class MPWService extends JobService {
         final Context ctx = MPWService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         try {
-            final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+            String xStr = prefs.getString("poolEnum", "");
+
+            if ("".equals(xStr)){
+                //no pool no party
+                return false;
+            }
+
+            final PoolEnum mPool = PoolEnum.valueOf(xStr);
             final CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
             Log.i(TAG, "Miner Pool Watcher Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
             Log.i(TAG, "SERVICE working on:" +mPool.toString() + " - " + mCur.toString());
@@ -124,7 +131,6 @@ public class MPWService extends JobService {
                 }
             });
 
-
             if (minerAddr != null) {
                 Log.i(TAG, "refreshing wallet " + minerAddr + " notify: " + notifyBlock);
                 JsonObjectRequest jsonObjReqWallet = new JsonObjectRequest(Request.Method.GET,
@@ -152,7 +158,7 @@ public class MPWService extends JobService {
                                 if (notifyPayment && ultimi.keySet().size() >= LAST_TWO &&
                                         ultimi.get(ultimi.firstKey()).getPayments().size() > ultimi.get(ultimi.get(1)).getPayments().size()) {
                                     sendPaymentNotification(ctx, "You received a payment of " +
-                                            Utils.formatCurrency(ctx,ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount(), mCur), mCur.toString() + " from " + mPool.toString());
+                                            Utils.formatCurrency(ctx,ultimi.get(ultimi.firstKey()).getPayments().get(0).getAmount(), mCur),  " from " + mPool.toString());
                                 }
 
                                 Log.e(TAG, "SERVICE END Ok1");

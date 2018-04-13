@@ -70,16 +70,10 @@ public enum PoolEnum {
     }}, false),
     DOLOMITIPOOL("Dolomiti Pool", "pool.athesis.com",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
-    }}, true);
-   /* MINERPOOLFR("Mining Pool", "mining-pool.fr",true,new ArrayList<CurrencyEnum>() {{
+    }}, true),
+    MININGPOOLITA("Mining pool ita", "miningpool-it.tk",true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
-        add(CurrencyEnum.ELLA);
-        add(CurrencyEnum.EXP);
-        //add(CurrencyEnum.MONERO);
-        add(CurrencyEnum.MUSIC);
-        add(CurrencyEnum.PIRL);
-        add(CurrencyEnum.UBIQ);
-    }}, false );*/
+    }}, true);
     //human friendly name
     private final String friendlyName;
     //dominio di primo e secondo liv.
@@ -90,14 +84,11 @@ public enum PoolEnum {
     private final Boolean omitCurrency;
     //qualche genio cambia la radice del sito
     private final String radixSuffix;
+    //list of currencies supported on pool
     private final ArrayList<CurrencyEnum> supportedCurrencies;
+
     PoolEnum(String friendlyName, String wr, Boolean https, ArrayList<CurrencyEnum> sfp, Boolean omitCurrency) {
-        this.friendlyName = friendlyName;
-        this.webRoot = wr;
-        supportedCurrencies = sfp;
-        httpsOnly = https;
-        this.omitCurrency = omitCurrency;
-        radixSuffix = "";
+        this(friendlyName,wr,https,sfp,omitCurrency,"");
     }
     PoolEnum(String friendlyName, String wr, Boolean https, ArrayList<CurrencyEnum> sfp, Boolean omit,String rad) {
         this.friendlyName = friendlyName;

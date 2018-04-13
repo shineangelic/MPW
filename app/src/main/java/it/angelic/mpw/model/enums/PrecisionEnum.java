@@ -1,5 +1,8 @@
 package it.angelic.mpw.model.enums;
 
+/**
+ * Plain old and manual precision quick format
+ */
 public enum PrecisionEnum {
     ONE_DIGIT("%.1f"),
     TWO_DIGIT("%.2f"),

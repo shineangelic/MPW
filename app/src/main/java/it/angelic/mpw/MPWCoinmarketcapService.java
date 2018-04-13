@@ -57,6 +57,7 @@ import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 import static android.support.v4.app.NotificationCompat.CATEGORY_PROGRESS;
 import static android.support.v4.app.NotificationCompat.CATEGORY_SERVICE;
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
+import static it.angelic.mpw.Constants.ETHER_STATS_COIN_LIMIT;
 import static it.angelic.mpw.Constants.LAST_TWO;
 import static it.angelic.mpw.Constants.TAG;
 
@@ -91,7 +92,7 @@ public class MPWCoinmarketcapService extends JobService {
     private  void asynchCurrenciesFromCoinmarketcap(final Context ctx, final CurrencyEnum mCur,final JobParameters job) {
         try {
             JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
-                    Constants.ETHER_STATS_URL, null,
+                    Constants.ETHER_STATS_URL + ETHER_STATS_COIN_LIMIT, null,
                     new Response.Listener<JSONArray>() {
 
                         @Override

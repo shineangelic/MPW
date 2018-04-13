@@ -1,18 +1,19 @@
 package it.angelic.mpw.model.enums;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * Enums names matter, as webroot is decided upon that
  * Created by shine@angelic.it on 31/01/2018.
  */
 public enum CurrencyEnum {
     BTC("Bitcoin"),
-    BTG("Bitcoin Gold"),
     BCN("Bytecoin"),
     BTX("Bitcore"),
     DASH("Dash"),
     DCR("Decred"),
 	DBIX("Dubai Coin"),
-	DOGE("Dogecoin"),
     ELLA("Ellaism"),
 	EMC2("Einstenium"), //argh!
 	ETH("Ethereum", "https://etherscan.io"),
@@ -22,7 +23,6 @@ public enum CurrencyEnum {
 	EXP("Expanse"),
 	KMD("Komodo"),
     KRB("Karbo"),
-	LTC("Litecoin"),
     MUSIC("Musicoin"),
     MC("Musicoin"),//MAXPOOL names its way
     MONA("MonaCoin"), //lol
@@ -39,12 +39,13 @@ public enum CurrencyEnum {
     ZEN("Zencash"),
     ZEC("ZCash");
 
+    @NonNull
     private final String friendlyName;
 
     public String getScannerSite() {
         return scannerSite;
     }
-
+    @Nullable
     private String scannerSite;
 
     CurrencyEnum(String friendlyName){
