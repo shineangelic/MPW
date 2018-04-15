@@ -245,7 +245,6 @@ class Utils {
     public static String getHomeStatsURL(SharedPreferences prefs) {
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
-        //prefs.getString("wallet_addr" + PoolEnum.valueOf(mPool).name() + "_" + CurrencyEnum.valueOf(mCur).name(), "");
         PoolEnum puil = PoolEnum.valueOf(mPool);
         String compose = (puil.getOmitCurrency() ? "" : mCur.toLowerCase()) + puil.getRadixSuffix();
         return puil.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + puil.getWebRoot() + Constants.HOME_STATS_URL;
@@ -280,7 +279,7 @@ class Utils {
         if (minerAddr == null || minerAddr.isEmpty())
             return "";
         //boh
-        if (!minerAddr.startsWith("0x"))
+        if (!minerAddr.startsWith("0x") || minerAddr.length() < 3)
             return minerAddr;
 
         return "0x" + minerAddr.substring(2).toUpperCase();
@@ -294,10 +293,10 @@ class Utils {
         Date lastD = matured.get(matured.size() - 1).getTimestamp();
 
         long difference = firstDate.getTime() - lastD.getTime();
-        long diff = TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS);
-        Log.i("blocks interval:", diff + "");
+        long diffHours = TimeUnit.HOURS.convert(difference, TimeUnit.MILLISECONDS);
+        Log.d("blocks interval:", diffHours + "");
 
-        return matured.size() / (double) diff;
+        return (matured.size() / (double) diffHours) / 24;
     }
 
     public static double getPoolBlockAvgReward(List<Matured> matured) {

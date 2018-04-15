@@ -71,7 +71,7 @@ public enum PoolEnum {
     DOLOMITIPOOL("Dolomiti Pool", "pool.athesis.com",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}, true),
-    MININGPOOLITA("Mining pool ita", "europool.me",true, new ArrayList<CurrencyEnum>() {{
+    MININGPOOLITA("Europool", "europool.me",true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
     }}, false),
     DIGIPOOL("Digipools", "digipools.org",false, new ArrayList<CurrencyEnum>() {{
