@@ -10,9 +10,9 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
-import it.angelic.mpw.model.db.PoolDbHelper;
 
 /**
  * Formats the watched EditText to a public ethereum address

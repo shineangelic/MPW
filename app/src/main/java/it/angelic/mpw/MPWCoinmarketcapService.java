@@ -1,19 +1,9 @@
 package it.angelic.mpw;
 
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
@@ -22,7 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.Job;
@@ -36,29 +25,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import it.angelic.mpw.model.MyDateTypeAdapter;
-import it.angelic.mpw.model.MyTimeStampTypeAdapter;
-import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
-import it.angelic.mpw.model.jsonpojos.home.HomeStats;
-import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
-import static android.support.v4.app.NotificationCompat.CATEGORY_PROGRESS;
-import static android.support.v4.app.NotificationCompat.CATEGORY_SERVICE;
-import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 import static it.angelic.mpw.Constants.ETHER_STATS_COIN_LIMIT;
-import static it.angelic.mpw.Constants.LAST_TWO;
 import static it.angelic.mpw.Constants.TAG;
 
 public class MPWCoinmarketcapService extends JobService {

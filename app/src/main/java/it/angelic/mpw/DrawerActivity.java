@@ -15,11 +15,12 @@ import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
+
+import static android.app.UiModeManager.MODE_NIGHT_AUTO;
 
 /**
  * Created by shine@angelic.it on 20/11/2017.
@@ -37,7 +38,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         //SET APP'S THEME
-        AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", "0")));
+        AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", ""+ MODE_NIGHT_AUTO)));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         ImageView curLogo = headerLayout.findViewById(R.id.imageViewCurrencyLogo);
         ImageView backgroundPool = headerLayout.findViewById(R.id.backgroundPool);
         ImageView imageViewCurrencyLogoFoot = drawer.findViewById(R.id.imageViewCurrencyLogoFoot);
-        LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
+        //LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
         TextView poolT = headerLayout.findViewById(R.id.navTextPool);
         TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
         ImageView imageViewWrench = headerLayout.findViewById(R.id.imageViewWrench);
@@ -68,8 +69,8 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 startActivity(miner);
             }
         });
-        poolT.setText(mPool.toString() + " - "+ mCur.name());
-        poolTW.setText(Constants.BASE_WEBSITE_URL + mPool.getWebRoot());
+        poolT.setText(String.format("%s - %s", mPool.toString(),  mCur.name()));
+        poolTW.setText(String.format("%s%s", Constants.BASE_WEBSITE_URL, mPool.getWebRoot()));
 
         imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ethereum_logo);
         backgroundPool.setImageResource(R.drawable.side_nav_bar);
@@ -100,10 +101,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case MININGPOOLITA:
                 curLogo.setImageResource(R.mipmap.ic_europool_logo);
                 break;
-            /*case MINERPOOLFR:
-                curLogo.setImageResource(R.mipmap.ic_minerpoolfr_logo);
-                break;*/
-
         }
         switch (mCur){
             case ETH:

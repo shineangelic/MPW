@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -127,7 +126,7 @@ public class BlocksActivity extends DrawerActivity {
                                 if (retrieved.getMaturedTotal() > 0) {
                                     StringBuilder txtTit = new StringBuilder();
                                     txtTit.append(retrieved.getMaturedTotal()).append(" ").append(mCur.toString());
-                                    txtTit.append(" ").append("Blocks");
+                                    txtTit.append(" ").append("blocks");
 
 
                                     if (retrieved.getImmature() != null && retrieved.getImmature().size() > 0)

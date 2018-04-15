@@ -2,8 +2,6 @@ package it.angelic.mpw.model.enums;
 
 import java.util.ArrayList;
 
-import it.angelic.mpw.Constants;
-
 /**
  * Created by shine@angelic.it on 31/01/2018.
  */
