@@ -157,7 +157,7 @@ class Utils {
             return "" + diffHours + " hr.";
 
         float diffDays = diffHours / (24f);
-        return String.format(Locale.getDefault(), "%.2f", diffDays) + " days";
+        return String.format(Locale.getDefault(), "%.0f", diffDays) + " days";
     }
 
     /**

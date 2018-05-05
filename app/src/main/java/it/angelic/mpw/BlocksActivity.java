@@ -27,6 +27,9 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,6 +54,7 @@ public class BlocksActivity extends DrawerActivity {
     private TextView textViewMeanBlockTimeValue;
     private TextView textViewBlockTimeStdDevValue;
     private TextView textViewBlocksPerDayValue;
+    private TextView textViewBlockDiff;
 
 
     @Override
@@ -66,6 +70,7 @@ public class BlocksActivity extends DrawerActivity {
         textViewMeanBlockTimeValue = findViewById(R.id.textViewMeanBlockTimeValue);
         textViewBlockTimeStdDevValue = findViewById(R.id.textViewBlockTimeStdDevValue);
         textViewBlocksPerDayValue = findViewById(R.id.textViewBlocksPerDayValue);
+
 
         GsonBuilder builder = new GsonBuilder();
         mRecyclerView = findViewById(R.id.blocks_recycler_view);
@@ -142,6 +147,7 @@ public class BlocksActivity extends DrawerActivity {
                                         textViewMaxBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMax() / 1000));
                                         textViewMinBlockTimeValue.setText(Utils.getScaledTime((long) sts.getMin() / 1000));
                                         textViewBlockTimeStdDevValue.setText(Utils.getScaledTime((long) sts.getStandardDeviation() / 1000));
+
                                         Locale current = getResources().getConfiguration().locale;
                                         textViewBlocksPerDayValue.setText(String.format(current, "%.3f", Utils.getPoolBlockPerDay(retrieved.getMatured())));
                                     }

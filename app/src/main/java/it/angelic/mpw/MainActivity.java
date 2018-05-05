@@ -77,16 +77,6 @@ public class MainActivity extends DrawerActivity {
     private GsonBuilder builder;
     private PoolDbHelper mDbHelper;
 
-
-   /* private static long getAverageBlockSecondsSincePoolsBirth(HomeStats lastHit) {
-        final Date firstBlockDate = new Date();//2017/07/15
-        firstBlockDate.setTime(1500099900000L);
-        long datediffFirst = (new Date().getTime() - firstBlockDate.getTime()) / 1000;
-        //meno uno perche` il conto parte dal secondo blocco. Il primo boh
-        return datediffFirst / (lastHit.getMaturedTotal() - 1);
-    }*/
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -120,7 +110,7 @@ public class MainActivity extends DrawerActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Async Refresh Sent", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
-                issueRefresh(mDbHelper, builder);
+                issueAsynchRefresh(mDbHelper, builder);
             }
         });
 
@@ -180,10 +170,10 @@ public class MainActivity extends DrawerActivity {
         Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
         //importante refresh
         mDbHelper = new PoolDbHelper(this, mPool, mCur);
-        issueRefresh(mDbHelper, builder);
+        issueAsynchRefresh(mDbHelper, builder);
     }
 
-    private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder) {
+    private void issueAsynchRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder) {
         Log.i(Constants.TAG, "JsonObjectRequest for: " + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)));
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this)), null,
@@ -233,49 +223,6 @@ public class MainActivity extends DrawerActivity {
             }
         });
 
-
-        /*
-        JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
-                Constants.ETHER_STATS_URL, null,
-                new Response.Listener<JSONArray>() {
-
-                    @Override
-                    public void onResponse(final JSONArray response) {
-                        Log.d(Constants.TAG, response.toString());
-                        hashText.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Gson gson = builder.create();
-                                Log.d(Constants.TAG, response.toString());
-                                Type listType = new TypeToken<List<Ticker>>() {}.getType();
-                                List<Ticker> posts = gson.fromJson(response.toString(), listType);
-                                Ticker fnd = null;
-                                for (Ticker currency : posts) {
-                                    if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
-                                        fnd = currency;
-                                    }
-                                    //always save ETH
-                                    if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
-                                        CryptoSharedPreferencesUtils.saveEthereumValues(currency, MainActivity.this);
-                                    }
-                                    //always save BTC
-                                    if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
-                                        CryptoSharedPreferencesUtils.saveBtcValues(currency, MainActivity.this);
-                                    }
-                                }
-                                //eventually resets  when fnd = null
-                                CryptoSharedPreferencesUtils.saveEtherValues(fnd, MainActivity.this);
-                            }
-                        });
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                Crashlytics.logException(error);
-            }
-        });*/
 
         // Adding request to request queue
         JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);

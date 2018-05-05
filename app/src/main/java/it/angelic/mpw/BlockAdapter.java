@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import it.angelic.mpw.model.enums.CurrencyEnum;
@@ -77,6 +81,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         private final TextView textViewBlockUncleHeight;
         private final Context ctx;
         private final ImageView imageView2;
+        private final TextView textViewBlockDiff;
 
         public BlockViewHolder(View v) {
             super(v);
@@ -91,6 +96,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockRewardValue = v.findViewById(R.id.textViewBlockRewardValue);
             textViewBlockUncleHeight = v.findViewById(R.id.textViewBlockUncleHeight);
             textViewBlockUncleHeightValue = v.findViewById(R.id.textViewBlockUncleHeightValue);
+            textViewBlockDiff = v.findViewById(R.id.textViewBlockDiff);
             imageView2 = v.findViewById(R.id.imageView2);
 
         }
@@ -125,6 +131,17 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
                 textViewBlockRewardValue.setText(Utils.formatCurrency(ctx,Long.valueOf(game.getReward()) / 1000000000, cur));
             }catch (Exception io ){
                 textViewBlockRewardValue.setText("NA");
+            }
+            try {
+                MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
+                // Variance % = Pool Shares / Network Difficulty Thanks to alfred
+                BigDecimal bigDecX = new BigDecimal(game.getShares());
+                BigDecimal bigDecY = new BigDecimal(game.getDifficulty());
+                BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
+                textViewBlockDiff.setText("Difficulty (variance "+bd3.stripTrailingZeros().toPlainString() + "%)");
+            } catch (Exception e) {
+                Log.e(Constants.TAG, "Errore refresh variance: " + e.getMessage());
+                e.printStackTrace();
             }
             if (!game.getUncle()) {
                 isUncle.setVisibility(View.INVISIBLE);
