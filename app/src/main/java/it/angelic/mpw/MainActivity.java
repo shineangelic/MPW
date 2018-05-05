@@ -256,15 +256,10 @@ public class MainActivity extends DrawerActivity {
             roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
             noobText.setText(String.format(getString(R.string.tot_block_found), mPool.toString(), lastHit.getMaturedTotal(), mCur.name()));
             try {
-                MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
-                // Variance % = Pool Shares / Network Difficulty Thanks to alfred
-                BigDecimal bigDecX = new BigDecimal(lastHit.getStats().getRoundShares());
-                BigDecimal bigDecY = new BigDecimal(Long.parseLong(lastHit.getNodes().get(0).getDifficulty()));
-                BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
-
-                textViewVarianceValue.setText(bd3.stripTrailingZeros().toPlainString() + "%");
+                BigDecimal bVar = Utils.computeBlockVariance(lastHit.getStats().getRoundShares(), Long.parseLong(lastHit.getNodes().get(0).getDifficulty()));
+                textViewVarianceValue.setText(bVar.stripTrailingZeros().toPlainString() + "%");
             } catch (Exception e) {
-                Log.e(Constants.TAG, "Errore refresh share perc: " + e.getMessage());
+                Log.e(Constants.TAG, "Errore refresh computeBlockVariance: " + e.getMessage());
                 e.printStackTrace();
             }
         } catch (Exception e) {

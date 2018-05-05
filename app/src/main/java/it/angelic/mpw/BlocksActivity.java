@@ -54,7 +54,6 @@ public class BlocksActivity extends DrawerActivity {
     private TextView textViewMeanBlockTimeValue;
     private TextView textViewBlockTimeStdDevValue;
     private TextView textViewBlocksPerDayValue;
-    private TextView textViewBlockDiff;
 
 
     @Override
@@ -129,13 +128,15 @@ public class BlocksActivity extends DrawerActivity {
                                 Block retrieved = gson.fromJson(response.toString(), Block.class);
 
                                 if (retrieved.getMaturedTotal() > 0) {
+                                    //Title
                                     StringBuilder txtTit = new StringBuilder();
                                     txtTit.append(retrieved.getMaturedTotal()).append(" ").append(mCur.toString());
                                     txtTit.append(" ").append("blocks");
 
 
-                                    if (retrieved.getImmature() != null && retrieved.getImmature().size() > 0)
+                                    if (retrieved.getImmature() != null && retrieved.getImmature().size() > 0) {
                                         txtTit.append(" and ").append(retrieved.getImmature().size()).append(" immature");
+                                    }
                                     txtTit.append(" found on ").append(mPool.toString());
 
                                     textViewBlocksTitle.setText(txtTit);
@@ -153,7 +154,7 @@ public class BlocksActivity extends DrawerActivity {
                                     }
 
                                     if (mAdapter == null) {
-                                        mAdapter = new BlockAdapter(retrieved.getMatured(), mCur);
+                                        mAdapter = new BlockAdapter(retrieved.getMatured(), mCur, BlocksActivity.this);
                                         mRecyclerView.setAdapter(mAdapter);
                                     }
                                     mAdapter.setBlocksArray(retrieved.getMatured());
@@ -162,7 +163,6 @@ public class BlocksActivity extends DrawerActivity {
                                     textViewBlocksTitle.setText("No Block found on " + mPool.toString());
                             }
                         });
-
 
                     }
                 }, new Response.ErrorListener() {
@@ -215,7 +215,6 @@ public class BlocksActivity extends DrawerActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent opzioni = new Intent(this, SettingsActivity.class);
             startActivity(opzioni);

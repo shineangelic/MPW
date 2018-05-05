@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.List;
 
 import it.angelic.mpw.model.enums.CurrencyEnum;
@@ -27,17 +25,18 @@ import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
     private final CurrencyEnum cur;
     private List<Matured> blocksArray;
+    private  Context ctx;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public BlockAdapter(List<Matured> myDataset, CurrencyEnum curr) {
+    public BlockAdapter(List<Matured> myDataset, CurrencyEnum curr, Context v) {
         blocksArray = myDataset;
         cur = curr;
+        ctx = v;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public BlockViewHolder onCreateViewHolder(ViewGroup parent,
-                                              int viewType) {
+    public BlockViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_block, parent, false);
         // Task 2
@@ -47,14 +46,13 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(BlockViewHolder holder, int position) {
-
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.bindBlock(blocksArray.get(position), cur);
 
     }
 
-    public void setBlocksArray( List<Matured> blocksArray) {
+    public void setBlocksArray(List<Matured> blocksArray) {
         this.blocksArray = blocksArray;
     }
 
@@ -67,7 +65,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    static class BlockViewHolder extends RecyclerView.ViewHolder {
+     class BlockViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private final TextView mTextView;
         private final CheckBox isOrphan;
@@ -79,17 +77,19 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         private final TextView textViewBlockRewardValue;
         private final TextView textViewBlockUncleHeightValue;
         private final TextView textViewBlockUncleHeight;
-        private final Context ctx;
+       //
         private final ImageView imageView2;
         private final TextView textViewBlockDiff;
+        private final TextView textViewBlockWhen;
 
         public BlockViewHolder(View v) {
             super(v);
-            ctx = v.getContext();
+            //ctx = v.getContext();
             mTextView = v.findViewById(R.id.blockTransactionId);
             isOrphan = v.findViewById(R.id.checkBoxBlockOrphan);
             isUncle = v.findViewById(R.id.checkBoxBlockUncle);
             textViewBlockWhenValue = v.findViewById(R.id.textViewBlockWhenValue);
+            textViewBlockWhen = v.findViewById(R.id.textViewBlockWhen);
             textViewBlockSharesValue = v.findViewById(R.id.textViewBlockSharesValue);
             textViewBlockDiffValue = v.findViewById(R.id.textViewBlockDiffValue);
             textViewBlockHeightValue = v.findViewById(R.id.textViewBlockHeightValue);
@@ -114,7 +114,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
                         //ClipboardManager clipboard = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
                         //ClipData clip = ClipData.newPlainText("NoobPool Client", "0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13");
                         //clipboard.setPrimaryClip(clip);
-                        Snackbar.make(view, "Blockchain explorer not available for "+cur.toString(), Snackbar.LENGTH_SHORT)
+                        Snackbar.make(view, "Blockchain explorer not available for " + cur.toString(), Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
                 }
@@ -123,22 +123,19 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             imageView2.setOnClickListener(list);
             isUncle.setChecked(game.getUncle());
             isOrphan.setChecked(game.getOrphan());
+            textViewBlockWhen.setText(new StringBuilder().append("Block found ").append(Utils.getTimeAgo(game.getTimestamp())).toString());
             textViewBlockWhenValue.setText(MainActivity.yearFormatExtended.format(game.getTimestamp()));
             textViewBlockSharesValue.setText(Utils.formatBigNumber(game.getShares()));
             textViewBlockDiffValue.setText(Utils.formatBigNumber(game.getDifficulty()));
             textViewBlockHeightValue.setText("" + game.getHeight());
             try {
-                textViewBlockRewardValue.setText(Utils.formatCurrency(ctx,Long.valueOf(game.getReward()) / 1000000000, cur));
-            }catch (Exception io ){
+                textViewBlockRewardValue.setText(Utils.formatCurrency(ctx, Long.valueOf(game.getReward()) / 1000000000, cur));
+            } catch (Exception io) {
                 textViewBlockRewardValue.setText("NA");
             }
             try {
-                MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
-                // Variance % = Pool Shares / Network Difficulty Thanks to alfred
-                BigDecimal bigDecX = new BigDecimal(game.getShares());
-                BigDecimal bigDecY = new BigDecimal(game.getDifficulty());
-                BigDecimal bd3 = bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
-                textViewBlockDiff.setText("Difficulty (variance "+bd3.stripTrailingZeros().toPlainString() + "%)");
+                BigDecimal bd3 = Utils.computeBlockVariance(game.getShares(), game.getDifficulty());
+                textViewBlockDiff.setText(String.format("Difficulty (variance %s%%)", bd3.stripTrailingZeros().toPlainString()));
             } catch (Exception e) {
                 Log.e(Constants.TAG, "Errore refresh variance: " + e.getMessage());
                 e.printStackTrace();

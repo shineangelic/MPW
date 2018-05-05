@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.IllegalFormatException;
@@ -58,6 +61,30 @@ class Utils {
 
     }
 
+    public static float condenseHashRate(Long aLong) {
+        // Kilobyte Check
+        //double roundOff = Math.round(a * 100.0) / 100.0;
+        float kilo = aLong / 1024f;
+        float mega = kilo / 1024f;
+        float giga = mega / 1024f;
+        float tera = giga / 1024f;
+        float peta = tera / 1024f;
+
+        // Determine which value to send back
+        if (peta > 1)
+            return peta;
+        else if (tera > 1)
+            return Math.round(tera * 100.0) / 100.0f;
+        else if (giga > 1)
+            return Math.round(giga * 100.0) / 100.0f;
+        else if (mega > 1)
+            return Math.round(mega * 100.0) / 100.0f;
+        else if (kilo > 1)
+            return Math.round(kilo * 100.0) / 100.0f;
+        else
+            return Math.round(aLong * 100.0) / 100.0f;
+    }
+
     /**
      * Condense a file size in bytes to its highest form (i.e. KB, MB, GB, etc)
      *
@@ -100,29 +127,6 @@ class Utils {
         return formatBigNumber(bytes, PrecisionEnum.TWO_DIGIT);
     }
 
-    public static float condenseHashRate(Long aLong) {
-        // Kilobyte Check
-        //double roundOff = Math.round(a * 100.0) / 100.0;
-        float kilo = aLong / 1024f;
-        float mega = kilo / 1024f;
-        float giga = mega / 1024f;
-        float tera = giga / 1024f;
-        float peta = tera / 1024f;
-
-        // Determine which value to send back
-        if (peta > 1)
-            return peta;
-        else if (tera > 1)
-            return Math.round(tera * 100.0) / 100.0f;
-        else if (giga > 1)
-            return Math.round(giga * 100.0) / 100.0f;
-        else if (mega > 1)
-            return Math.round(mega * 100.0) / 100.0f;
-        else if (kilo > 1)
-            return Math.round(kilo * 100.0) / 100.0f;
-        else
-            return Math.round(aLong * 100.0) / 100.0f;
-    }
 
     public static String getTimeAgo(Date ref) {
         Calendar cp = Calendar.getInstance();
@@ -158,26 +162,6 @@ class Utils {
 
         float diffDays = diffHours / (24f);
         return String.format(Locale.getDefault(), "%.0f", diffDays) + " days";
-    }
-
-    /**
-     * Indicates whether the specified app ins installed and can used as an intent. This
-     * method checks the package manager for installed packages that can
-     * respond to an intent with the specified app. If no suitable package is
-     * found, this method returns false.
-     *
-     * @param context The application's environment.
-     * @param appName The name of the package you want to check
-     * @return True if app is installed
-     */
-    public static boolean isAppAvailable(Context context, String appName) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            pm.getPackageInfo(appName, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
     }
 
     public static String formatGenericCurrency(Context ctx, Long balance) {
@@ -281,7 +265,7 @@ class Utils {
         long diffHours = TimeUnit.HOURS.convert(difference, TimeUnit.MILLISECONDS);
         Log.d("blocks interval:", diffHours + "");
 
-        return (matured.size() / (double) diffHours) / 24;
+        return matured.size() / ((double) diffHours / 24);
     }
 
     public static double getPoolBlockAvgReward(List<Matured> matured) {
@@ -304,6 +288,20 @@ class Utils {
         double avp = getPoolBlockAvgReward(matured);
         double blockEarnProj = sharePercent * avp;
         return blockEarnProj * getPoolBlockPerDay(matured);
+    }
+
+    /**
+     *  Variance % = Pool Shares / Network Difficulty Thanks to alfred
+     *
+     * @param roundShares
+     * @param difficulty
+     * @return Variance in perc.
+     */
+    public static BigDecimal computeBlockVariance(long roundShares, long difficulty) {
+        MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
+        BigDecimal bigDecX = new BigDecimal(roundShares);
+        BigDecimal bigDecY = new BigDecimal(difficulty);
+        return bigDecX.divide(bigDecY, mc).multiply(new BigDecimal(100));
     }
 
 }
