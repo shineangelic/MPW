@@ -41,6 +41,7 @@ public class JSONClientSingleton {
         if (queue == null) {
             queue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
+
         return queue;
     }
 

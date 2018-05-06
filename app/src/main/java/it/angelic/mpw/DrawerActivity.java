@@ -70,10 +70,13 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         ImageView imageViewCurrencyLogoFoot = drawer.findViewById(R.id.imageViewCurrencyLogoFoot);
         //LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
 
-        PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
-        HomeStats lHit = mDbHelper.getLastHomeStats(1).getValue(0);
-        refreshHeaderInfo(lHit);
-
+        try {
+            PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
+            HomeStats lHit = mDbHelper.getLastHomeStats(1).getValue(0);
+            refreshHeaderInfo(lHit);
+        }catch (Exception amen){
+            Log.w(Constants.TAG, "errore refresh nav panel:",amen);
+        }
         imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ethereum_logo);
         backgroundPool.setImageResource(R.drawable.side_nav_bar);
         curLogo.setImageResource(R.mipmap.ic_pool_watcher);

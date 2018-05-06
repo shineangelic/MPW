@@ -29,6 +29,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -64,63 +67,6 @@ public class MinersActivity extends DrawerActivity {
     private TextView textViewOldestMinerValue;
 
 
-    private int fetchRandomGuy() {
-        int ret = 0;
-        ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList(MinerSortEnum.LAST_SEEN);//ordinamento irrilevante
-        //choose a random one if no empty
-        if (miners.size() > 0) {
-            for (int i = 0; i < 5; i++) {
-                final MinerDBRecord rec = miners.get(new Random(new Date().getTime()).nextInt(miners.size()));
-                fetchMinerStats(rec);
-                ret ++;
-            }
-        }
-
-        return ret;
-    }
-
-    private void fetchMinerStats(final MinerDBRecord rec) {
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + rec.getAddress(), null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        //update known miners TABLE
-                        Log.d(Constants.TAG, response.toString());
-                        Gson gson = builder.create();
-                        // Register an adapter to manage the date types as long values
-                        final Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
-
-                        if (retrieved.getWorkersTotal() > (rec.getTopMiners() == null ? -1 : rec.getTopMiners()))
-                            rec.setTopMiners(retrieved.getWorkersTotal());
-                        if (retrieved.getCurrentHashrate() > (rec.getTopHr() == null ? -1 : rec.getTopHr()))
-                            rec.setTopHr(retrieved.getCurrentHashrate());
-
-                        rec.setPaid(retrieved.getStats().getPaid());
-                        try {//compute first paymt
-                            Payment pp = retrieved.getPayments().get(retrieved.getPayments().size() - 1);
-                            rec.setFirstSeen(pp.getTimestamp());
-                        } catch (Exception io) {
-                            //dont look back in anger
-                        }
-                        rec.setAvgHr(rec.getAvgHr() == null ? retrieved.getHashrate() : ((rec.getAvgHr() + retrieved.getHashrate()) / 2));
-                        // aggiorna UI
-                        rec.setLastSeen(retrieved.getStats().getLastShare());
-                        rec.setBlocksFound(retrieved.getStats().getBlocksFound());
-                        mDbHelper.updateMiner(rec);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e(Constants.TAG, "Error: " + error.getMessage());
-            }
-        });
-
-        // Adding request to request queue
-        JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +81,7 @@ public class MinersActivity extends DrawerActivity {
         textViewHighestHashrateValue = findViewById(R.id.textViewHighestHashrateValue);
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
         textViewOldestMinerValue = findViewById(R.id.textViewOldestMinerValue);
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +136,15 @@ public class MinersActivity extends DrawerActivity {
         radioGroupBackTo.setOnCheckedChangeListener(mescola);
 
         Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
+
+        try {
+            FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+            Job myJob = MPWMinersService.getJobUpdate(dispatcher);
+            dispatcher.mustSchedule(myJob);
+        }catch (Exception ee){
+            Snackbar.make(textViewBlocksTitle, "Miner list can't be updated: "+ee.getMessage(), Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show();
+        }
     }
 
     private void issueRefresh() {
@@ -206,7 +162,6 @@ public class MinersActivity extends DrawerActivity {
                                 Gson gson = builder.create();
                                 // Register an adapter to manage the date types as long values
                                 MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
-
                                 RadioButton rb = findViewById(R.id.radioButtonLastSeen);//sort order
                                 new UpdateUIAsynchTask(retrieved, rb.isChecked() ? MinerSortEnum.LAST_SEEN : MinerSortEnum.HASHRATE).execute();
                             }
@@ -347,7 +302,7 @@ public class MinersActivity extends DrawerActivity {
             updateRecordStats(retrieved);
             min = mDbHelper.getMinerList(sortOrder);
 
-            return ""+fetchRandomGuy();
+            return "";
         }
 
         @Override
@@ -361,7 +316,7 @@ public class MinersActivity extends DrawerActivity {
                 mAdapter.setMinersArray(min);
                 mAdapter.notifyDataSetChanged();
             }
-            Snackbar.make(textViewBlocksTitle, "Updated " + result + " miners.The more you refresh the accurate it gets", Snackbar.LENGTH_SHORT)
+            Snackbar.make(textViewBlocksTitle, min.size() + " miners updated", Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show();
         }
 

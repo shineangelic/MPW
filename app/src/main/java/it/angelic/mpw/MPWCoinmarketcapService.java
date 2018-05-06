@@ -42,7 +42,7 @@ public class MPWCoinmarketcapService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters job) {
-        Log.e(TAG, "SERVICE START");
+        Log.e(TAG, "SERVICE2 START");
         final Context ctx = MPWCoinmarketcapService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         try {
@@ -150,7 +150,5 @@ public class MPWCoinmarketcapService extends JobService {
                 .build();
     }
 
-    public static JobTrigger periodicTrigger(int frequency, int tolerance) {
-        return Trigger.executionWindow(frequency - tolerance, frequency);
-    }
+
 }

@@ -36,6 +36,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -107,13 +108,24 @@ public class MPWService extends JobService {
                             mDbHelper.logHomeStats(retrieved);
                             //dati semi grezzi
                             LinkedMap<Date, HomeStats> ultimi = mDbHelper.getLastHomeStats(LAST_TWO);
-                            Log.d(TAG, "data size: " +  ultimi.size() + " notifyOffline: " + ultimi.get(ultimi.get(0)).getMaturedTotal());
+                            HomeStats lastat = ultimi.get(ultimi.get(0));
+                            Log.d(TAG, "data size: " +  ultimi.size() + " notifyOffline: " + lastat.getMaturedTotal());
                             //controllo se manca qualcuno
                             if (notifyBlock
                                     && ultimi.size() > 1
-                                    && ultimi.get(ultimi.get(0)).getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
-                                int diff = ultimi.get(ultimi.get(0)).getMaturedTotal() - ultimi.get(ultimi.get(1)).getMaturedTotal();
-                                sendBlockNotification(getApplication(),diff + " new block. " + mPool.toString() + " has found " + ultimi.get(ultimi.get(0)).getMaturedTotal() + " blocks", mPool);
+                                    && lastat.getMaturedTotal().compareTo(ultimi.get(ultimi.get(1)).getMaturedTotal()) > 0) {
+                                StringBuilder notifText = new StringBuilder();
+                                int diff = lastat.getMaturedTotal() - ultimi.get(ultimi.get(1)).getMaturedTotal();
+                                notifText.append(diff).append(" new block. ");
+                                notifText.append(mPool.toString() ).append(" found ").append(lastat.getMaturedTotal()).append(" ").append(mCur).append(" blocks");
+                                try {
+                                    BigDecimal bd3 = Utils.computeBlockVariance(lastat.getStats().getRoundShares(), Long.parseLong(lastat.getNodes().get(0).getDifficulty()));
+                                    notifText.append(". ").append(bd3.stripTrailingZeros().toPlainString()).append("%").append(" variance");
+                                } catch (Exception e) {
+                                    Log.w(Constants.TAG, "Errore variance: " + e.getMessage());
+                                }
+
+                                sendBlockNotification(getApplication(), notifText.toString(), mPool);
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -170,6 +182,7 @@ public class MPWService extends JobService {
                 });
                 JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonObjReqWallet);
             }else{
+                Log.e(TAG, "SERVICE END Ok2");
                 //job end tutto bene
                 MPWService.this.jobFinished(job,false);
             }
