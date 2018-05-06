@@ -102,11 +102,11 @@ public class MPWMinersService extends JobService {
             Crashlytics.logException(se);
             MPWMinersService.this.jobFinished(job, true);
             Log.e(TAG, "SERVICE MINERS END KO");
-            return true;
+            return false;
         }
         MPWMinersService.this.jobFinished(job, false);
         Log.e(TAG, "SERVICE MINERS END Ok");
-        return false; // Answers the question: "Is there still work going on?"
+        return true; // Answers the question: "Is there still work going on?"
     }
 
     private void fetchMinerStats(final MinerDBRecord rec, final GsonBuilder builder) {
@@ -143,7 +143,7 @@ public class MPWMinersService extends JobService {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e(Constants.TAG, "Error: " + error.getMessage());
+                VolleyLog.e(Constants.TAG, "Miner Service Error: " + error.getMessage());
             }
         });
 

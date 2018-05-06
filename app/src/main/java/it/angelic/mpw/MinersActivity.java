@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
 
 import it.angelic.mpw.model.MyDateTypeAdapter;
 import it.angelic.mpw.model.MyTimeStampTypeAdapter;
@@ -50,8 +49,6 @@ import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.MinerSortEnum;
 import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
-import it.angelic.mpw.model.jsonpojos.wallet.Payment;
-import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 
 public class MinersActivity extends DrawerActivity {
