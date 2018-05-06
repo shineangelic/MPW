@@ -378,10 +378,9 @@ public class PoolDbHelper extends SQLiteOpenHelper {
             Gson gson = builder.create();
             do {
                 try {
-                    HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), HomeStats.class);
+                    HomeStats retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.HomeStats_.COLUMN_NAME_JSON)), HomeStats.class);
                     cnt++;
-                    // Adding contact to list
-                    Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_DTM)));
+                    Date curDate = new Date(cursor.getLong(cursor.getColumnIndexOrThrow(DataBaseContract.HomeStats_.COLUMN_NAME_DTM)));
                     ret.put(curDate, retrieved);
                 } catch (Exception ce) {
                     Log.e(TAG, "Cant read HomeStats entry: " + ce.getMessage());

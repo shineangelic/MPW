@@ -2,7 +2,6 @@ package it.angelic.mpw;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
@@ -164,7 +163,7 @@ class Utils {
         return String.format(Locale.getDefault(), "%.0f", diffDays) + " days";
     }
 
-    public static String formatGenericCurrency(Context ctx, Long balance) {
+    private static String formatGenericCurrency(Context ctx, Long balance) {
         Locale current = ctx.getResources().getConfiguration().locale;
         return String.format(current, PrecisionEnum.FIVE_DIGIT.getFormat(), (balance / 1000000000F));
     }
@@ -268,7 +267,7 @@ class Utils {
         return matured.size() / ((double) diffHours / 24);
     }
 
-    public static double getPoolBlockAvgReward(List<Matured> matured) {
+    private static double getPoolBlockAvgReward(List<Matured> matured) {
         if (matured == null || matured.size() < 1)
             return 0;
 

@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,14 +40,14 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
     }
 
     @Override
-    public MinerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MinerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_miner, parent, false);
         // Task 2
         return new MinerAdapter.MinerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MinerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MinerViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.bindBlock(minersArray.get(position), mPool, mCur);

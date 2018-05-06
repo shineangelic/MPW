@@ -42,7 +42,6 @@ public class MPWCoinmarketcapService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters job) {
-        final JobParameters jobC = job;
         Log.e(TAG, "SERVICE START");
         final Context ctx = MPWCoinmarketcapService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);

@@ -263,6 +263,7 @@ public class WalletActivity extends DrawerActivity {
         try {
             MathContext mc = new MathContext(4, RoundingMode.HALF_UP);
             HomeStats last = mDbHelper.getLastHomeStats(1).getValue(0);
+            refreshHeaderInfo(last);
             // bigIntX is a BigInteger
             BigDecimal bigDecX = new BigDecimal(lastHit.getRoundShares());
             BigDecimal bigDecY = new BigDecimal(last.getStats().getRoundShares());

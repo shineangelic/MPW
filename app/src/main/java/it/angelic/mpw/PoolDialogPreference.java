@@ -25,9 +25,6 @@ public class PoolDialogPreference extends DialogPreference {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    @Override
-    protected void onClick() {
-        super.onClick();
-    }
+
 
 }

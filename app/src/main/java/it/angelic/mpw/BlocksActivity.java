@@ -27,9 +27,6 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;

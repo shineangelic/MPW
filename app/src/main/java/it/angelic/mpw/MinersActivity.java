@@ -59,7 +59,7 @@ public class MinersActivity extends DrawerActivity {
     private PoolDbHelper mDbHelper;
     private TextView textViewHighestHashrateValue;
     private TextView textViewMostPaidMinerValue;
-    private TextView textViewolde;
+
     private GsonBuilder builder;
     private TextView textViewOldestMinerValue;
 

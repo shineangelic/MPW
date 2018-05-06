@@ -35,8 +35,6 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -234,29 +232,30 @@ public class MainActivity extends DrawerActivity {
      */
     private void updateCurrentStats() {
         try {
-            HomeStats lastHit = storia.get(storia.lastKey());
+            HomeStats lastHomeStats = storia.get(storia.lastKey());
+            refreshHeaderInfo(lastHomeStats);
             try {
                 Calendar when = Calendar.getInstance();
                 when.setTimeZone(TimeZone.getDefault());
-                when.setTime(lastHit.getStats().getLastBlockFound());
+                when.setTime(lastHomeStats.getStats().getLastBlockFound());
                 lastFoundTextLabel.setText(getString(R.string.last_block_found) + " " + Utils.getTimeAgo(when));
-                lastFoundText.setText(yearFormatExtended.format(lastHit.getStats().getLastBlockFound()));
+                lastFoundText.setText(yearFormatExtended.format(lastHomeStats.getStats().getLastBlockFound()));
             } catch (Exception ee) {
                 Log.w(Constants.TAG, "No block found yet?");
             }
-            textViewNetDiffValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getDifficulty())));
+            textViewNetDiffValue.setText(Utils.formatBigNumber(Long.parseLong(lastHomeStats.getNodes().get(0).getDifficulty())));
             Calendar lastB = Calendar.getInstance();
-            lastB.setTime(lastHit.getNodes().get(0).getLastBeat());
+            lastB.setTime(lastHomeStats.getNodes().get(0).getLastBeat());
             yearFormatExtended.setTimeZone(TimeZone.getDefault());
             poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
 
-            onlineMinersText.setText("" + (lastHit.getMinersTotal() == null ? 0 : lastHit.getMinersTotal()));
-            textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHit.getNodes().get(0).getHeight())));
-            poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHit.getHashrate().toString())));
-            roundSharesText.setText(Utils.formatBigNumber(lastHit.getStats().getRoundShares()));
-            noobText.setText(String.format(getString(R.string.tot_block_found), mPool.toString(), lastHit.getMaturedTotal(), mCur.name()));
+            onlineMinersText.setText("" + (lastHomeStats.getMinersTotal() == null ? 0 : lastHomeStats.getMinersTotal()));
+            textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHomeStats.getNodes().get(0).getHeight())));
+            poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHomeStats.getHashrate().toString())));
+            roundSharesText.setText(Utils.formatBigNumber(lastHomeStats.getStats().getRoundShares()));
+            noobText.setText(String.format(getString(R.string.tot_block_found), mPool.toString(), lastHomeStats.getMaturedTotal(), mCur.name()));
             try {
-                BigDecimal bVar = Utils.computeBlockVariance(lastHit.getStats().getRoundShares(), Long.parseLong(lastHit.getNodes().get(0).getDifficulty()));
+                BigDecimal bVar = Utils.computeBlockVariance(lastHomeStats.getStats().getRoundShares(), Long.parseLong(lastHomeStats.getNodes().get(0).getDifficulty()));
                 textViewVarianceValue.setText(bVar.stripTrailingZeros().toPlainString() + "%");
             } catch (Exception e) {
                 Log.e(Constants.TAG, "Errore refresh computeBlockVariance: " + e.getMessage());

@@ -12,13 +12,21 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.apache.commons.collections4.map.LinkedMap;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
+import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 
 import static android.app.UiModeManager.MODE_NIGHT_AUTO;
 
@@ -31,6 +39,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     PoolEnum mPool;
     CurrencyEnum mCur;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +47,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         //SET APP'S THEME
-        AppCompatDelegate.setDefaultNightMode( Integer.valueOf(prefs.getString("pref_theme", ""+ MODE_NIGHT_AUTO)));
+        AppCompatDelegate.setDefaultNightMode(Integer.valueOf(prefs.getString("pref_theme", "" + MODE_NIGHT_AUTO)));
     }
 
     @Override
@@ -49,33 +58,26 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
-       final DrawerLayout drawer =  findViewById(R.id.drawer_layout);
 
-         navigationView.setNavigationItemSelectedListener(this);
+
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        navigationView.setNavigationItemSelectedListener(this);
         //set proper pool info
         View headerLayout = navigationView.getHeaderView(0);
         ImageView curLogo = headerLayout.findViewById(R.id.imageViewCurrencyLogo);
         ImageView backgroundPool = headerLayout.findViewById(R.id.backgroundPool);
         ImageView imageViewCurrencyLogoFoot = drawer.findViewById(R.id.imageViewCurrencyLogoFoot);
         //LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
-        TextView poolT = headerLayout.findViewById(R.id.navTextPool);
-        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
-        ImageView imageViewWrench = headerLayout.findViewById(R.id.imageViewWrench);
-        imageViewWrench.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawer.closeDrawers();
-                Intent miner = new Intent(DrawerActivity.this, SettingsActivity.class);
-                startActivity(miner);
-            }
-        });
-        poolT.setText(String.format("%s - %s", mPool.toString(),  mCur.name()));
-        poolTW.setText(String.format("%s%s", Constants.BASE_WEBSITE_URL, mPool.getWebRoot()));
+
+        PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        HomeStats lHit = mDbHelper.getLastHomeStats(1).getValue(0);
+        refreshHeaderInfo(lHit);
 
         imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ethereum_logo);
         backgroundPool.setImageResource(R.drawable.side_nav_bar);
         curLogo.setImageResource(R.mipmap.ic_pool_watcher);
-        switch (mPool){
+        switch (mPool) {
 
             case NOOBPOOL:
                 curLogo.setImageResource(R.mipmap.pool_noob);
@@ -102,7 +104,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 curLogo.setImageResource(R.mipmap.ic_europool_logo);
                 break;
         }
-        switch (mCur){
+        switch (mCur) {
             case ETH:
             case ETC:
                 //gia` cosi, e` default
@@ -129,6 +131,33 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 break;
         }
 
+    }
+
+    protected void refreshHeaderInfo(HomeStats lHit  ) {
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        View headerLayout = navigationView.getHeaderView(0);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        TextView navTextPoolStats = headerLayout.findViewById(R.id.navTextPoolStats);
+        TextView poolTW = headerLayout.findViewById(R.id.navTextPoolWebSite);
+        TextView sidbarPoolTitle = headerLayout.findViewById(R.id.navTextPool);
+        ImageView imageViewWrench = headerLayout.findViewById(R.id.imageViewWrench);
+        imageViewWrench.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.closeDrawers();
+                Intent miner = new Intent(DrawerActivity.this, SettingsActivity.class);
+                startActivity(miner);
+            }
+        });
+        sidbarPoolTitle.setText(String.format("%s - %s", mPool.toString(), mCur.name()));
+        poolTW.setText(String.format("%s%s", Constants.BASE_WEBSITE_URL, mPool.getWebRoot()));
+        try {
+            BigDecimal bVar = Utils.computeBlockVariance(lHit.getStats().getRoundShares(), Long.parseLong(lHit.getNodes().get(0).getDifficulty()));
+            navTextPoolStats.setText(String.format("%s miners - Variance %s", lHit.getMinersTotal(),   bVar.stripTrailingZeros().toPlainString() + "%"));
+        } catch (Exception er) {
+            Log.w(Constants.TAG, "Cant write sidebar stats");
+            navTextPoolStats.setText("");
+        }
     }
 
     @Override

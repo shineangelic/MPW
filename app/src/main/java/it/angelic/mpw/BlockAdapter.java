@@ -3,6 +3,7 @@ package it.angelic.mpw;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,7 +26,7 @@ import it.angelic.mpw.model.jsonpojos.blocks.Matured;
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
     private final CurrencyEnum cur;
     private List<Matured> blocksArray;
-    private  Context ctx;
+    private final Context ctx;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public BlockAdapter(List<Matured> myDataset, CurrencyEnum curr, Context v) {
@@ -35,8 +36,9 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     }
 
     // Create new views (invoked by the layout manager)
+    @NonNull
     @Override
-    public BlockViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BlockViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_block, parent, false);
         // Task 2
@@ -45,7 +47,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(BlockViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BlockViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.bindBlock(blocksArray.get(position), cur);
@@ -82,7 +84,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         private final TextView textViewBlockDiff;
         private final TextView textViewBlockWhen;
 
-        public BlockViewHolder(View v) {
+        BlockViewHolder(View v) {
             super(v);
             //ctx = v.getContext();
             mTextView = v.findViewById(R.id.blockTransactionId);
@@ -101,7 +103,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
 
         }
 
-        public void bindBlock(final Matured game, final CurrencyEnum cur) {
+        void bindBlock(final Matured game, final CurrencyEnum cur) {
             mTextView.setText(game.getHash().toUpperCase());
             View.OnClickListener list = new View.OnClickListener() {
                 @Override

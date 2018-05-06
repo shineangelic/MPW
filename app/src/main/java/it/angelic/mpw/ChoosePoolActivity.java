@@ -347,7 +347,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 connection.connect();
             } catch (Exception e) {
                 connectError = true;
-            } finally {
             }
             return true;
         }
