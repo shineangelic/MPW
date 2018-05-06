@@ -18,10 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.commons.collections4.map.LinkedMap;
-
 import java.math.BigDecimal;
-import java.util.Date;
 
 import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;

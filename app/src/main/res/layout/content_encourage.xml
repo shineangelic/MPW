@@ -15,7 +15,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="Miner Pool Watcher is a free app made by a blockchain enthusiast. Please send some support to encourage further developments, 0.01ETH would be nice if you like the app and want additional functionalities. Many thanks to Alfred, MrMartha, Ravenigma and Noob for donations"
+        android:text="Miner Pool Watcher is a free app made by a blockchain enthusiast. Please send some support to encourage further developments, 0.01ETH would be nice if you like the app and want additional functionalities. Many thanks to Alfred, MrMartha, Ravenigma, impulse and Noob for donations"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,6 +49,35 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
+        android:id="@+id/textViewAnotherSupport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Another way of giving a bit of support is by clicking on the following banner. I've chosen not to use intertitials or other kinds of annoying ads, but this app still required some work and time so please consider clicking those from time to time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonCopy" />
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adViewEncourage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/ad_unit_encourage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewAnotherSupport" />
+
+    <TextView
         android:id="@+id/textView6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -57,12 +86,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:text="This app doesn't hold nor transmits any personal information. Data is kept private at the only purpose of drawing charts. Internet connection is only required to download stats and data."
+        android:text="This app doesn't neither hold nor transmits any personal information. Data is kept private at the only purpose of drawing charts. Internet connection is only required to download stats and data."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonCopy"
         app:layout_constraintVertical_bias="0.531" />
+
+
 
 </android.support.constraint.ConstraintLayout>

@@ -2,7 +2,6 @@ package it.angelic.mpw;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
@@ -16,7 +15,6 @@ import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
-import com.firebase.jobdispatcher.JobTrigger;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
@@ -45,12 +43,12 @@ import static it.angelic.mpw.Constants.TAG;
  * Service to retrieve and save other miners' detail By wallet JSON call
  */
 public class MPWMinersService extends JobService {
-    final int NOTIFICATION_MINER_OFFLINE = 12;
+
     private PoolDbHelper mDbHelper;
 
     @NonNull
     public static Job getJobUpdate(FirebaseJobDispatcher dispatcher) {
-        Bundle myExtrasBundle = new Bundle();
+        // Bundle myExtrasBundle = new Bundle();
 
         Log.w(Constants.TAG, "Built JobBuilder Coinmarketcap");
         return dispatcher.newJobBuilder()
@@ -70,17 +68,13 @@ public class MPWMinersService extends JobService {
                 // retry with exponential backoff
                 .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
                 // constraints that need to be satisfied for the job to run
-                .setExtras(myExtrasBundle)
+                //.setExtras(myExtrasBundle)
                 .build();
-    }
-
-    public static JobTrigger periodicTrigger(int frequency, int tolerance) {
-        return Trigger.executionWindow(frequency - tolerance, frequency);
     }
 
     @Override
     public boolean onStartJob(JobParameters job) {
-        Log.e(TAG, "SERVICE3 START");
+        Log.e(TAG, "SERVICE MINERS START");
         final Context ctx = MPWMinersService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         try {
@@ -95,29 +89,27 @@ public class MPWMinersService extends JobService {
             builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
             builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
-            //REFRESH coin values sincrono
+
             Log.e(TAG, "SERVICE MINERS UPDATING");
             ArrayList<MinerDBRecord> miners = mDbHelper.getMinerList(MinerSortEnum.LAST_SEEN);//ordinamento irrilevante
             //choose a random one if no empty
-            if (miners.size() > 0) {
-                for (MinerDBRecord miner : miners) {
-                    fetchMinerStats(miner, builder);
-                }
+            for (MinerDBRecord miner : miners) {
+                fetchMinerStats(miner, builder);
             }
 
         } catch (Exception se) {
             Log.e(TAG, "SERVICE MINERS ERROR: " + se);
             Crashlytics.logException(se);
-            MPWMinersService.this.jobFinished(job,true);
-            Log.e(TAG, "SERVICE END KO");
+            MPWMinersService.this.jobFinished(job, true);
+            Log.e(TAG, "SERVICE MINERS END KO");
             return true;
         }
-        MPWMinersService.this.jobFinished(job,false);
+        MPWMinersService.this.jobFinished(job, false);
         Log.e(TAG, "SERVICE MINERS END Ok");
         return false; // Answers the question: "Is there still work going on?"
     }
 
-    private void fetchMinerStats(final MinerDBRecord rec,final GsonBuilder builder) {
+    private void fetchMinerStats(final MinerDBRecord rec, final GsonBuilder builder) {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + rec.getAddress(), null,
                 new Response.Listener<JSONObject>() {
@@ -157,12 +149,7 @@ public class MPWMinersService extends JobService {
 
         // Adding request to request queue
         JSONClientSingleton.getInstance(this).addToRequestQueue(jsonObjReq);
-        //breathe a bit, since this service only retrieves 'detailed and non urgent info
-        try {
-            JSONClientSingleton.getInstance(this).wait(500);
-        }catch (InterruptedException ie){
-            //amen
-        }
+
     }
 
     @Override

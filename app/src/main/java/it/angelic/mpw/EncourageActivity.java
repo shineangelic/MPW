@@ -12,6 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class EncourageActivity extends AppCompatActivity {
 
     @Override
@@ -49,4 +52,12 @@ public class EncourageActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //ADS
+        AdView mAdView = findViewById(R.id.adViewEncourage);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
 }

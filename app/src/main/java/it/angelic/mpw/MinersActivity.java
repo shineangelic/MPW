@@ -111,7 +111,7 @@ public class MinersActivity extends DrawerActivity {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationViewInterna = findViewById(R.id.navigation_view);
@@ -141,6 +141,7 @@ public class MinersActivity extends DrawerActivity {
             FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
             Job myJob = MPWMinersService.getJobUpdate(dispatcher);
             dispatcher.mustSchedule(myJob);
+
         }catch (Exception ee){
             Snackbar.make(textViewBlocksTitle, "Miner list can't be updated: "+ee.getMessage(), Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show();
