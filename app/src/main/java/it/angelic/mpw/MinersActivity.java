@@ -232,7 +232,7 @@ public class MinersActivity extends DrawerActivity {
     @NonNull
     private ArrayList<MinerDBRecord> updateUIRecordStats(ArrayList<MinerDBRecord> minerDbList) {
         long hihr = 0;
-        Long hiPaid = Long.valueOf(0);
+        Long hiPaid = 0l;
         Integer hiPaidIdx = null;
         Date oldestDt = new Date();
         Integer minDateSeeIdx = null;

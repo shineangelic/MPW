@@ -15,7 +15,7 @@
         tools:layout_editor_absoluteX="180dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,13 +36,16 @@
                 android:id="@+id/blockTransactionId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:maxLines="1"
                 android:text="0xTRANSACTION"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintStart_toEndOf="@+id/imageView2"
-                card_view:layout_constraintTop_toTopOf="parent" />
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
 
             <TextView
                 android:id="@+id/textViewBlockWhen"
@@ -73,7 +76,7 @@
                 android:id="@+id/checkBoxBlockUncle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:enabled="false"
                 android:text="Uncle Block"
                 android:textColor="@color/colorPrimary"
@@ -85,15 +88,15 @@
                 android:id="@+id/checkBoxBlockOrphan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="6dp"
                 android:enabled="false"
                 android:text="Orphan Block"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockHeightValue"
-                android:layout_marginRight="8dp" />
+                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockHeightValue" />
 
             <TextView
                 android:id="@+id/textViewBlockShares"
@@ -103,7 +106,8 @@
                 android:layout_marginTop="8dp"
                 android:text="Shares"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhen" />
+                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhen"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockSharesValue"
@@ -115,7 +119,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockWhenValue" />
+                card_view:layout_constraintTop_toBottomOf="@id/textViewBlockWhenValue"
+                android:layout_marginRight="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockDiff"
@@ -125,7 +130,8 @@
                 android:layout_marginTop="8dp"
                 android:text="Difficulty"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockShares" />
+                card_view:layout_constraintTop_toBottomOf="@id/textViewBlockShares"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockDiffValue"
@@ -137,7 +143,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockSharesValue" />
+                card_view:layout_constraintTop_toBottomOf="@id/textViewBlockSharesValue"
+                android:layout_marginRight="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockHeight"
@@ -147,7 +154,8 @@
                 android:layout_marginTop="8dp"
                 android:text="height"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockDiff" />
+                card_view:layout_constraintTop_toBottomOf="@id/textViewBlockDiff"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockHeightValue"
@@ -159,7 +167,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockDiffValue" />
+                card_view:layout_constraintTop_toBottomOf="@id/textViewBlockDiffValue"
+                android:layout_marginRight="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockUncleHeight"
@@ -169,7 +178,8 @@
                 android:layout_marginTop="8dp"
                 android:text="Uncle Height"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/checkBoxBlockUncle" />
+                card_view:layout_constraintTop_toBottomOf="@id/checkBoxBlockUncle"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockReward"
@@ -180,7 +190,8 @@
                 android:text="Reward"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockUncleHeight" />
+                card_view:layout_constraintTop_toBottomOf="@id/textViewBlockUncleHeight"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockUncleHeightValue"
@@ -192,7 +203,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/checkBoxBlockOrphan" />
+                card_view:layout_constraintTop_toBottomOf="@id/checkBoxBlockOrphan"
+                android:layout_marginRight="8dp" />
 
             <TextView
                 android:id="@+id/textViewBlockRewardValue"
@@ -205,16 +217,19 @@
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockUncleHeightValue" />
+                card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockUncleHeightValue"
+                android:layout_marginRight="8dp" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/ic_insert_link_chain_24dp"
-                android:tint="@color/colorAccent"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 android:contentDescription="payment icon"
+                android:tint="@color/colorAccent"
+                app:srcCompat="@drawable/ic_insert_link_chain_24dp"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>

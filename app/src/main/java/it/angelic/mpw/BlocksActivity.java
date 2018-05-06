@@ -198,8 +198,8 @@ public class BlocksActivity extends DrawerActivity {
         SummaryStatistics stats = new SummaryStatistics();
 
         // Add the data from the array
-        for (int im = 0; im < intervals.length; im++) {
-            stats.addValue(intervals[im]);
+        for (long interval : intervals) {
+            stats.addValue(interval);
         }
 
         return stats;

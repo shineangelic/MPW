@@ -87,7 +87,7 @@ class ChartUtils {
         int[] ret = new int[colArr.size()];
         int i = 0;
         for (Integer e : colArr)
-            ret[i++] = e.intValue();
+            ret[i++] = e;
         chart.setColorArray(ret);
         Assert.assertTrue(dataLists.size() == colArr.size());
         chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
@@ -205,7 +205,7 @@ class ChartUtils {
         int[] ret = new int[colArr.size()];
         int i = 0;
         for (Integer e : colArr)
-            ret[i++] = e.intValue();
+            ret[i++] = e;
         chart.setColorArray(ret);
         ArrayList<ArrayList<Float>> dataLists = new ArrayList<>();
         dataLists.add(dataList);

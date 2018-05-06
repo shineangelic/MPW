@@ -18,7 +18,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
+
             android:text="Date"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/textViewWorkerHashrate"
@@ -37,7 +37,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
+
             android:text="Amount"
             android:textAlignment="viewStart"
             app:layout_constraintBottom_toBottomOf="parent"

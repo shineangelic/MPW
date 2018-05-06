@@ -54,7 +54,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPaymentTitle"
+        app:layout_constraintTop_toBottomOf="@id/textViewPaymentTitle"
         tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"

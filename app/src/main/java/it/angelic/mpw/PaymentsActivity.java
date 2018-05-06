@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -89,7 +90,7 @@ public class PaymentsActivity extends DrawerActivity {
                     i.setData(Uri.parse(mCur.getScannerSite() + "/address/" + minerAddr));
                     startActivity(i);
                 } else {
-                    Snackbar.make(view, "Blockchain explorer not available for "+mCur.toString(), Snackbar.LENGTH_SHORT)
+                    Snackbar.make(view, "Blockchain explorer not available for " + mCur.toString(), Snackbar.LENGTH_SHORT)
                             .setAction("Action", null).show();
                 }
             }
@@ -114,10 +115,13 @@ public class PaymentsActivity extends DrawerActivity {
         mAdView.loadAd(adRequest);
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
+
+
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
         final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
         issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + minerAddr);
+
     }
 
     private void issueRefresh(final PoolDbHelper mDbHelper, final GsonBuilder builder, String url) {
@@ -201,12 +205,12 @@ public class PaymentsActivity extends DrawerActivity {
             //By current currency
             TableRow rowCur = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
             ((TextView) rowCur.findViewById(R.id.textViewProjEmpty)).setText(mCur.name());
-            Double dayP = Utils.getDailyProfitProjection(shareperc, matured.getMatured());
-            ((TextView) rowCur.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP, PrecisionEnum.TWO_DIGIT));
-            ((TextView) rowCur.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * 7, PrecisionEnum.TWO_DIGIT));
+            Double dailyProfit = Utils.getDailyProfitProjection(shareperc, matured.getMatured());
+            ((TextView) rowCur.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dailyProfit, PrecisionEnum.TWO_DIGIT));
+            ((TextView) rowCur.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dailyProfit * 7, PrecisionEnum.TWO_DIGIT));
             Calendar c = Calendar.getInstance();
             int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
-            ((TextView) rowCur.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayP * monthMaxDays, PrecisionEnum.TWO_DIGIT));
+            ((TextView) rowCur.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dailyProfit * monthMaxDays, PrecisionEnum.TWO_DIGIT));
 
             minersTable.addView(rowCur);
             //CAZZO DI DOLLARI
@@ -214,8 +218,8 @@ public class PaymentsActivity extends DrawerActivity {
                 TableRow rowCurEl = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_projection_color, null);
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjEmpty)).setText(" $ ");
                 SharedPreferences settings = PaymentsActivity.this.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
-                Double val = Double.valueOf(settings.getString("CURUSD", "0"));
-               Double dayPD = dayP * val.doubleValue();
+                Double curDollarValue = Double.valueOf(settings.getString("CURUSD", "0"));
+                Double dayPD = dailyProfit * curDollarValue;
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD));
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD * 7));
                 ((TextView) rowCurEl.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatUSDCurrency(PaymentsActivity.this, dayPD * monthMaxDays));
@@ -230,10 +234,9 @@ public class PaymentsActivity extends DrawerActivity {
                         ((TextView) rowCurEl2.findViewById(R.id.textViewProjDayCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayPDETH, PrecisionEnum.TWO_DIGIT));
                         ((TextView) rowCurEl2.findViewById(R.id.textViewProjWeekCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayPDETH * 7, PrecisionEnum.TWO_DIGIT));
                         ((TextView) rowCurEl2.findViewById(R.id.textViewProjMonthCur)).setText(Utils.formatGenericCurrency(PaymentsActivity.this, dayPDETH * monthMaxDays, PrecisionEnum.TWO_DIGIT));
-
                         minersTable.addView(rowCurEl2);
                     } catch (Exception oioi) {
-                        Log.w(Constants.TAG, "Internal Row 3 fail",oioi);
+                        Log.w(Constants.TAG, "Internal Row 3 fail", oioi);
                     }
                 }
             } catch (Exception oioi) {
@@ -251,10 +254,6 @@ public class PaymentsActivity extends DrawerActivity {
     private void drawPaymentsTable(Wallet retrieved) {
         TableLayout minersTable = findViewById(R.id.tableLayoutPayments);
         minersTable.removeAllViews();
-        //table header
-        TableRow row = (TableRow) LayoutInflater.from(PaymentsActivity.this).inflate(R.layout.row_payment, null);
-        (row.findViewById(R.id.buttonPay)).setVisibility(View.INVISIBLE);
-        minersTable.addView(row);
 
         for (final Payment thispay : retrieved.getPayments()) {
             //one row for each payment
@@ -267,16 +266,28 @@ public class PaymentsActivity extends DrawerActivity {
                     if (mCur.getScannerSite() != null) {
                         //mostra transazione pagamento
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(mCur.getScannerSite() +"/tx/" + thispay.getTx()));
+                        i.setData(Uri.parse(mCur.getScannerSite() + "/tx/" + thispay.getTx()));
                         startActivity(i);
                     } else {
-                        Snackbar.make(view, "Blockchain explorer not available for "+mCur.toString(), Snackbar.LENGTH_SHORT)
+                        Snackbar.make(view, "Blockchain explorer not available for " + mCur.toString(), Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
                 }
             });
             minersTable.addView(rowt);
         }
+        final HorizontalScrollView hsv = findViewById(R.id.horizontalScrollViewPayments);
+        // autoscroll to the right
+        hsv.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hsv.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+
+                //hsv.smoothScrollBy(hsv.getWidth(), 0);
+            }
+        }, 200);
+
+
     }
 
 
