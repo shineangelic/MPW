@@ -38,18 +38,17 @@ import static it.angelic.mpw.Constants.ETHER_STATS_COIN_LIMIT;
 import static it.angelic.mpw.Constants.TAG;
 
 public class MPWCoinmarketcapService extends JobService {
-    final int NOTIFICATION_MINER_OFFLINE = 12;
 
     @Override
     public boolean onStartJob(JobParameters job) {
-        Log.e(TAG, "SERVICE START");
+        Log.e(TAG, "SERVICE MARKETCAP START");
         final Context ctx = MPWCoinmarketcapService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         try {
             final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
             final CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
             Log.w(TAG, "Miner Pool Watcher Coinmarketcap Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
-            Log.i(TAG, "SERVICE MARKETCAP working on:" +mPool.toString() + " - " + mCur.toString());
+            Log.i(TAG, "SERVICE MARKETCAP working on:" + mCur.toString());
             //load extra
 
             //REFRESH coin values sincrono
