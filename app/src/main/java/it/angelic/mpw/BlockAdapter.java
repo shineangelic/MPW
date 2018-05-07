@@ -130,13 +130,6 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockHeightValue.setText("" + game.getHeight());
             try {
                 textViewBlockRewardValue.setText(Utils.formatCurrency(ctx, Double.valueOf(game.getReward()) / 1000000000, cur));
-            } catch (NumberFormatException io) {
-                try {
-                    textViewBlockRewardValue.setText(Utils.formatCurrency(ctx, Double.valueOf(game.getReward().substring(0, game.getReward().length() - 9)), cur));
-                } catch (Exception ble) {
-                    textViewBlockRewardValue.setText("NA");
-                }
-
             } catch (Exception e){
                 textViewBlockRewardValue.setText("NA");
             }

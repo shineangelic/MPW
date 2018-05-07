@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -95,6 +96,7 @@ public class MainActivity extends DrawerActivity {
         textViewNetDiffValue = findViewById(R.id.textViewNetDiffValue);
         lastFoundTextLabel = findViewById(R.id.textViewLastBlock);
         lastFoundText = findViewById(R.id.textViewWalPaymentsValue);
+
         onlineMinersText = findViewById(R.id.textViewWalCurHashrateValue);
         textViewBlockChainHeightValue = findViewById(R.id.textViewBlockChainHeightValue);
         poolHashrateText = findViewById(R.id.textViewPoolHashrateValue);
@@ -148,7 +150,6 @@ public class MainActivity extends DrawerActivity {
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
 
 
     }
@@ -209,6 +210,18 @@ public class MainActivity extends DrawerActivity {
                                 ChartUtils.drawHashrateHistory(hashText, PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
                                         (LineView) findViewById(R.id.line_view_hashrate),
                                         granoEnum);
+
+                                final HorizontalScrollView horizontalScrollView = findViewById(R.id.horizontalScrollView);
+                                final HorizontalScrollView horizontalScrollViewHashrate = findViewById(R.id.horizontalScrollViewHashrate);
+                                // autoscroll to the right
+                                horizontalScrollView.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        horizontalScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+                                        horizontalScrollViewHashrate.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+                                        //hsv.smoothScrollBy(hsv.getWidth(), 0);
+                                    }
+                                }, 200);
                             }
                         });
                     }

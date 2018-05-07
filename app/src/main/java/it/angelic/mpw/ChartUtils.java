@@ -3,6 +3,7 @@ package it.angelic.mpw;
 import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
 import junit.framework.Assert;
@@ -165,6 +166,7 @@ class ChartUtils {
         chart.setBottomTextList(labelsArr);
         chart.setColorArray(new int[]{textViewNetDiffTitle.getResources().getColor(R.color.colorPrimary), Color.CYAN});
         chart.setDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
+
     }
 
     static void drawWorkersHistory(LineView chart, LinkedMap<Date, Wallet> storia, GranularityEnum checkedRadioButtonId) {

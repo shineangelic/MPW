@@ -43,6 +43,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         final android.support.v7.preference.SwitchPreferenceCompat blockNotifications = (SwitchPreferenceCompat) findPreference("pref_notify_block");
         final android.support.v7.preference.SwitchPreferenceCompat paymentNotifications = (SwitchPreferenceCompat) findPreference("pref_notify_payment");
 
+        //interlock single notification settings
+        blockNotifications.setEnabled(globalNotifications.isChecked());
+        offlineNotifications.setEnabled(globalNotifications.isChecked());
+        paymentNotifications.setEnabled(globalNotifications.isChecked());
+
         //Service Enabled listener
         Preference.OnPreferenceChangeListener listenerServ = new Preference.OnPreferenceChangeListener() {
             @Override

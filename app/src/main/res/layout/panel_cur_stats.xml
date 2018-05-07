@@ -125,7 +125,7 @@
         android:textColor="#337ab7"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNetDiffValue" />
+        app:layout_constraintTop_toBottomOf="@id/textViewNetDiffValue" />
 
     <View
         android:id="@+id/viewSeparatorWallet2"
@@ -135,7 +135,7 @@
         android:layout_marginTop="8dp"
         android:background="#FFCCCCCC"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewBlockChainHeightValue" />
+        app:layout_constraintTop_toBottomOf="@id/textViewBlockChainHeightValue" />
 
     <TextView
         android:id="@+id/textViewLastBlock"
@@ -145,7 +145,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/last_block_found"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShare"
+        app:layout_constraintTop_toBottomOf="@id/textViewWalLastShare"
         android:layout_marginStart="8dp" />
 
     <TextView
@@ -159,7 +159,7 @@
         android:textColor="#337ab7"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalLastShareValue" />
+        app:layout_constraintTop_toBottomOf="@id/textViewWalLastShareValue" />
 
     <TextView
         android:id="@+id/textViewRoundShares"
