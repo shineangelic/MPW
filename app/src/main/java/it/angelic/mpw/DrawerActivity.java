@@ -169,61 +169,75 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            Intent opzioni = new Intent(DrawerActivity.this, MainActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_wallet) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            String minerAddr = pref.getString("wallet_addr", null);
+        switch (id) {
+            case R.id.nav_home: {
+                Intent opzioni = new Intent(DrawerActivity.this, MainActivity.class);
+                startActivity(opzioni);
+                break;
+            }
+            case R.id.nav_wallet: {
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+                String minerAddr = pref.getString("wallet_addr", null);
 
-            if (minerAddr == null || minerAddr.length() == 0) {
-                Snackbar.make(findViewById(android.R.id.content), "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
-                        .setAction("GO", new View.OnClickListener() {
+                if (minerAddr == null || minerAddr.length() == 0) {
+                    Snackbar.make(findViewById(android.R.id.content), "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
+                            .setAction("GO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent miner = new Intent(DrawerActivity.this, SettingsActivity.class);
+                                    startActivity(miner);
+                                }
+                            }).show();
+                } else {
+                    Intent miner = new Intent(this, WalletActivity.class);
+                    startActivity(miner);
+                }
+                break;
+            }
+            case R.id.nav_payment: {
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+                String minerAddr = pref.getString("wallet_addr", null);
+
+                if (minerAddr == null || minerAddr.length() == 0) {
+                    Snackbar.make(findViewById(android.R.id.content), "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
+                            .setAction("GO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent miner = new Intent(DrawerActivity.this, SettingsActivity.class);
+                                    startActivity(miner);
+                                }
+                            }).show();
+                } else {
+                    Intent miner = new Intent(this, PaymentsActivity.class);
+                    startActivity(miner);
+                }
+                break;
+            }
+            case R.id.nav_support: {
+                Intent opzioni = new Intent(DrawerActivity.this, EncourageActivity.class);
+                startActivity(opzioni);
+                break;
+            }
+            case R.id.nav_blocks: {
+                Intent bb = new Intent(DrawerActivity.this, BlocksActivity.class);
+                startActivity(bb);
+                break;
+            }
+            case R.id.nav_miners: {
+                Intent bb = new Intent(DrawerActivity.this, MinersActivity.class);
+                startActivity(bb);
+                break;
+            }
+            default:
+                Snackbar.make(findViewById(android.R.id.content), "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
+                        .setAction("WHAT?", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Intent miner = new Intent(DrawerActivity.this, SettingsActivity.class);
+                                Intent miner = new Intent(DrawerActivity.this, EncourageActivity.class);
                                 startActivity(miner);
                             }
                         }).show();
-            } else {
-                Intent miner = new Intent(this, WalletActivity.class);
-                startActivity(miner);
-            }
-        } else if (id == R.id.nav_payment) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            String minerAddr = pref.getString("wallet_addr", null);
-
-            if (minerAddr == null || minerAddr.length() == 0) {
-                Snackbar.make(findViewById(android.R.id.content), "Insert Public Address in Preferences", Snackbar.LENGTH_LONG)
-                        .setAction("GO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent miner = new Intent(DrawerActivity.this, SettingsActivity.class);
-                                startActivity(miner);
-                            }
-                        }).show();
-            } else {
-                Intent miner = new Intent(this, PaymentsActivity.class);
-                startActivity(miner);
-            }
-        } else if (id == R.id.nav_support) {
-            Intent opzioni = new Intent(DrawerActivity.this, EncourageActivity.class);
-            startActivity(opzioni);
-        } else if (id == R.id.nav_blocks) {
-            Intent bb = new Intent(DrawerActivity.this, BlocksActivity.class);
-            startActivity(bb);
-        } else if (id == R.id.nav_miners) {
-            Intent bb = new Intent(DrawerActivity.this, MinersActivity.class);
-            startActivity(bb);
-        } else {
-            Snackbar.make(findViewById(android.R.id.content), "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
-                    .setAction("WHAT?", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent miner = new Intent(DrawerActivity.this, EncourageActivity.class);
-                            startActivity(miner);
-                        }
-                    }).show();
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

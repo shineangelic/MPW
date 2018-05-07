@@ -69,7 +69,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         skipIntro = findViewById(R.id.skipIntro);
         skipIntro.setChecked(prefs.getBoolean("skipIntro", false));
         Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, new Boolean(prefs.getBoolean("skipIntro", false)).toString());
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Boolean.valueOf(prefs.getBoolean("skipIntro", false)).toString());
         mFirebaseAnalytics.logEvent("skip_intro", bundle);
 
         //SERVICE Schedule

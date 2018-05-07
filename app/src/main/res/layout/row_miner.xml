@@ -70,7 +70,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
-                android:textSize="46dp"
+                android:textSize="46sp"
                 android:textStyle="bold"
                 tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
 

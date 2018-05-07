@@ -39,6 +39,7 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
         minersArray = minatori;
     }
 
+    @NonNull
     @Override
     public MinerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_miner, parent, false);

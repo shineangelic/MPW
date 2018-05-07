@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            tools:srcCompat="@mipmap/ic_hashparty_foreground"
+            tools:srcCompat="@mipmap/ic_launcher_foreground"
             app:srcCompat="@drawable/side_nav_bar"/>
 
 

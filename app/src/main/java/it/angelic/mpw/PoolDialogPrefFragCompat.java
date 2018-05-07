@@ -9,7 +9,6 @@ import android.support.v7.preference.PreferenceManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class PoolDialogPrefFragCompat extends PreferenceDialogFragmentCompat {
-    private FirebaseAnalytics mFirebaseAnalytics;
     public PoolDialogPrefFragCompat(){
         super();
 
@@ -28,10 +27,10 @@ public class PoolDialogPrefFragCompat extends PreferenceDialogFragmentCompat {
     public void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
             prefs.edit().putBoolean("skipIntro",false).apply();
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, new Boolean(prefs.getBoolean("skipIntro", false)).toString());
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, Boolean.valueOf(prefs.getBoolean("skipIntro", false)).toString());
             mFirebaseAnalytics.logEvent("skip_intro", bundle);
             // do things
             Intent opzioni = new Intent(getActivity(), ChoosePoolActivity.class);
