@@ -185,7 +185,7 @@ public class MinersActivity extends DrawerActivity {
     @NonNull
     private ArrayList<MinerDBRecord> updateUIRecordStats(ArrayList<MinerDBRecord> minerDbList) {
         long hihr = 0;
-        Long hiPaid = 0l;
+        Double hiPaid = 0d;
         Integer hiPaidIdx = null;
         Date oldestDt = new Date();
         Integer minDateSeeIdx = null;
@@ -198,7 +198,7 @@ public class MinersActivity extends DrawerActivity {
                 hihrIdx = cnt;
             }
             //DB only
-            long minp = minerDbrec.getPaid() == null ? 0 : minerDbrec.getPaid();
+            double minp = minerDbrec.getPaid() == null ? 0 : minerDbrec.getPaid();
             if (minp > hiPaid) {
                 hiPaid = minp;
                 hiPaidIdx = cnt;

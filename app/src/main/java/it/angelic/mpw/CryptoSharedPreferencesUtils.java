@@ -15,6 +15,26 @@ import static it.angelic.mpw.Constants.TAG;
  */
 
 public class CryptoSharedPreferencesUtils {
+
+    public static void cleanValues(Context ctx){
+        SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = settings.edit();
+        Log.w(Constants.TAG, "Cleaning marketCap stats");
+        prefEditor.remove("BTCUSD");
+        prefEditor.remove("BTCCHG");
+        prefEditor.remove("BTCTIMESTAMP");
+
+        prefEditor.remove("ETHUSD");
+        prefEditor.remove("ETHCHG");
+        prefEditor.remove("ETHTIMESTAMP");
+
+        prefEditor.remove("CURUSD");
+        prefEditor.remove("CURCHG");
+        prefEditor.remove("CURTIMESTAMP");
+
+        prefEditor.apply();
+    }
+
     public static void saveBtcValues(@Nullable Ticker result, Context ctx) {
         SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = settings.edit();
@@ -24,7 +44,7 @@ public class CryptoSharedPreferencesUtils {
             prefEditor.putString("BTCCHG", result.getPercent_change_24h());
             prefEditor.putLong("BTCTIMESTAMP", Long.valueOf(result.getLast_updated()) * 1000);
         } catch (Exception ie) {
-            Log.e(TAG, "Impossible  to save ETH values: " + ie.getMessage());
+            Log.e(TAG, "Impossible  to save BTC values: " + ie.getMessage());
             prefEditor.remove("BTCUSD");
             prefEditor.remove("BTCCHG");
             prefEditor.remove("BTCTIMESTAMP");

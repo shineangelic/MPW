@@ -10,7 +10,7 @@ private Double balance = 0d;
 private Integer blocksFound;
 private Long immature;
 private Date lastShare;
-private Long paid;
+private Double paid;
 private Long pending;
 
 private final static long serialVersionUID = -3508834706692198488L;
@@ -47,11 +47,11 @@ public void setLastShare(Date lastShare) {
 this.lastShare = lastShare;
 }
 
-public Long getPaid() {
+public Double getPaid() {
 return paid;
 }
 
-public void setPaid(Long paid) {
+public void setPaid(Double paid) {
 this.paid = paid;
 }
 

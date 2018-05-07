@@ -312,6 +312,11 @@ public class ChoosePoolActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
             try {
+                String prevCur = prefs.getString("curEnum", "");
+                if (!prevCur.equals(mCur.name())){
+                    //clean curency value
+                    CryptoSharedPreferencesUtils.cleanValues(ChoosePoolActivity.this);
+                }
 
                 prefs.edit().putString("poolEnum", mPool.name()).apply();
                 prefs.edit().putString("curEnum", mCur.name()).apply();
@@ -337,14 +342,13 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
             }
 
-            //TODO togliere
-            //Utils.synchCurrenciesFromCoinmarketcap(ChoosePoolActivity.this, mCur);
 
             try {
                 URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));
                 URLConnection connection = myUrl.openConnection();
                 connection.setConnectTimeout(2000);
                 connection.connect();
+
             } catch (Exception e) {
                 connectError = true;
             }

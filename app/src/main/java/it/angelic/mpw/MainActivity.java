@@ -150,6 +150,11 @@ public class MainActivity extends DrawerActivity {
         toggle.syncState();
 
 
+
+    }
+
+    @Override
+    protected void onStart() {
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
         Job myJob = MPWCoinmarketcapService.getJobUpdate(dispatcher);
         dispatcher.schedule(myJob);
@@ -158,10 +163,7 @@ public class MainActivity extends DrawerActivity {
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-    }
 
-    @Override
-    protected void onStart() {
         super.onStart();
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setCheckedItem(R.id.nav_home);

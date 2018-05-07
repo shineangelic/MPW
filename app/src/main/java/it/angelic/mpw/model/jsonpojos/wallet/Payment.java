@@ -6,17 +6,17 @@ import java.util.Date;
 public class Payment implements Serializable
 {
 
-private Long amount;
+private Double amount;
 private Date timestamp;
 private String tx;
 
 private final static long serialVersionUID = 9059762457675286124L;
 
-public Long getAmount() {
+public Double getAmount() {
 return amount;
 }
 
-public void setAmount(Long amount) {
+public void setAmount(Double amount) {
 this.amount = amount;
 }
 

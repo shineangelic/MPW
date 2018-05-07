@@ -14,7 +14,7 @@ public class MinerDBRecord {
     private Long hashRate;
     private Boolean offline;
     private String address;
-    private Long paid;
+    private Double paid;
     private Integer topMiners;
     private Long topHr;
     private Long avgHr;
@@ -60,11 +60,11 @@ public class MinerDBRecord {
         this.address = address;
     }
 
-    public Long getPaid() {
+    public Double getPaid() {
         return paid;
     }
 
-    public void setPaid(Long paid) {
+    public void setPaid(Double paid) {
         this.paid = paid;
     }
 

@@ -138,7 +138,7 @@ public class MPWCoinmarketcapService extends JobService {
                 // don't persist past a device reboot
                 .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
                 // start between freq and 300 seconds tolerance
-                .setTrigger(Trigger.executionWindow(2,30))
+                .setTrigger(Trigger.executionWindow(2,10))
                 // don't overwrite an existing job with the same tag
                 .setReplaceCurrent(false)
                 // retry with exponential backoff
@@ -148,7 +148,6 @@ public class MPWCoinmarketcapService extends JobService {
                 .build();
     }
 
-    public static JobTrigger periodicTrigger(int frequency, int tolerance) {
-        return Trigger.executionWindow(frequency - tolerance, frequency);
-    }
+
+
 }

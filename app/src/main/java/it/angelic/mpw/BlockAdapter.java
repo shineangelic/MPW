@@ -25,8 +25,8 @@ import it.angelic.mpw.model.jsonpojos.blocks.Matured;
  */
 public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHolder> {
     private final CurrencyEnum cur;
-    private List<Matured> blocksArray;
     private final Context ctx;
+    private List<Matured> blocksArray;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public BlockAdapter(List<Matured> myDataset, CurrencyEnum curr, Context v) {
@@ -67,7 +67,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-     class BlockViewHolder extends RecyclerView.ViewHolder {
+    class BlockViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private final TextView mTextView;
         private final CheckBox isOrphan;
@@ -79,7 +79,7 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
         private final TextView textViewBlockRewardValue;
         private final TextView textViewBlockUncleHeightValue;
         private final TextView textViewBlockUncleHeight;
-       //
+        //
         private final ImageView imageView2;
         private final TextView textViewBlockDiff;
         private final TextView textViewBlockWhen;
@@ -129,8 +129,15 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
             textViewBlockDiffValue.setText(Utils.formatBigNumber(game.getDifficulty()));
             textViewBlockHeightValue.setText("" + game.getHeight());
             try {
-                textViewBlockRewardValue.setText(Utils.formatCurrency(ctx, Long.valueOf(game.getReward()) / 1000000000, cur));
-            } catch (Exception io) {
+                textViewBlockRewardValue.setText(Utils.formatCurrency(ctx, Double.valueOf(game.getReward()) / 1000000000, cur));
+            } catch (NumberFormatException io) {
+                try {
+                    textViewBlockRewardValue.setText(Utils.formatCurrency(ctx, Double.valueOf(game.getReward().substring(0, game.getReward().length() - 9)), cur));
+                } catch (Exception ble) {
+                    textViewBlockRewardValue.setText("NA");
+                }
+
+            } catch (Exception e){
                 textViewBlockRewardValue.setText("NA");
             }
             try {

@@ -38,11 +38,11 @@ class Utils {
     private static String formatHashrate(long bytes, String precision) throws IllegalFormatException {
 
         // Kilobyte Check
-        float kilo = bytes / 1024f;
-        float mega = kilo / 1024f;
-        float giga = mega / 1024f;
-        float tera = giga / 1024f;
-        float peta = tera / 1024f;
+        float kilo = bytes / 1000f;
+        float mega = kilo / 1000f;
+        float giga = mega / 1000f;
+        float tera = giga / 1000f;
+        float peta = tera / 1000f;
 
         // Determine which value to send back
         if (peta > 1)
@@ -63,11 +63,11 @@ class Utils {
     public static float condenseHashRate(Long aLong) {
         // Kilobyte Check
         //double roundOff = Math.round(a * 100.0) / 100.0;
-        float kilo = aLong / 1024f;
-        float mega = kilo / 1024f;
-        float giga = mega / 1024f;
-        float tera = giga / 1024f;
-        float peta = tera / 1024f;
+        float kilo = aLong / 1000f;
+        float mega = kilo / 1000f;
+        float giga = mega / 1000f;
+        float tera = giga / 1000f;
+        float peta = tera / 1000f;
 
         // Determine which value to send back
         if (peta > 1)
@@ -163,7 +163,7 @@ class Utils {
         return String.format(Locale.getDefault(), "%.0f", diffDays) + " days";
     }
 
-    private static String formatGenericCurrency(Context ctx, Long balance) {
+    private static String formatGenericCurrency(Context ctx, Double balance) {
         Locale current = ctx.getResources().getConfiguration().locale;
         return String.format(current, PrecisionEnum.FIVE_DIGIT.getFormat(), (balance / 1000000000F));
     }
@@ -178,11 +178,11 @@ class Utils {
         return String.format(current, PrecisionEnum.TWO_DIGIT.getFormat(), (balance / 1000000000F));
     }
 
-    public static String formatCurrency(Context ctx, Long balance, CurrencyEnum cur) {
+    public static String formatCurrency(Context ctx, Double balance, CurrencyEnum cur) {
         return formatGenericCurrency(ctx, balance) + " " + cur.name();
     }
 
-    public static String formatEthCurrency(Context ctx, Long balance) {
+    public static String formatEthCurrency(Context ctx, Double balance) {
         return formatCurrency(ctx, balance, CurrencyEnum.ETH);
     }
 

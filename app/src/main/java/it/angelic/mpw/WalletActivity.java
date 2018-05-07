@@ -228,7 +228,7 @@ public class WalletActivity extends DrawerActivity {
     /**
      * Update header with last persisted DB row
      */
-    private void updateCurrentStats(final Wallet lastHit, final PoolDbHelper mDbHelper, Long avgPending) {
+    private void updateCurrentStats(final Wallet lastHit, final PoolDbHelper mDbHelper, Double avgPending) {
 
         Calendar when = Calendar.getInstance();
         try {
@@ -282,7 +282,7 @@ public class WalletActivity extends DrawerActivity {
             textViewWalRoundSharesPercValue.setText("NA");
         }
         try {
-            textViewPendingBalanceValue.setText(Utils.formatCurrency(WalletActivity.this,lastHit.getStats().getBalance().longValue(), mCur));
+            textViewPendingBalanceValue.setText(Utils.formatCurrency(WalletActivity.this,lastHit.getStats().getBalance(), mCur));
         } catch (Exception ie) {
             Log.e(Constants.TAG, "Errore refresh Pending: " + ie.getMessage());
             textViewPendingBalanceValue.setText("NA");
@@ -343,7 +343,7 @@ public class WalletActivity extends DrawerActivity {
 
         private Wallet last;
         private PoolDbHelper mDbHelper;
-        private Long avg;
+        private Double avg;
         private ObjectAnimator objectanimator;
         private boolean mCanceled;
 

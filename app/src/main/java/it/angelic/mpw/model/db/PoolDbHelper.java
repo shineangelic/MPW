@@ -255,11 +255,11 @@ public class PoolDbHelper extends SQLiteOpenHelper {
      * @return average 'pending' increase per block
      */
 
-    public Long getAveragePending() {
+    public Double getAveragePending() {
         int cnt = 0;
         int rec = 0;
-        Long pendings = 0L;
-        Long prevPending = 0L;
+        Double pendings = 0d;
+        Double prevPending = 0d;
 
         SQLiteDatabase db = this.getReadableDatabase();
         // Cursor cursor = db.rawQuery(selectQuery, null);
@@ -278,11 +278,11 @@ public class PoolDbHelper extends SQLiteOpenHelper {
             try {
 
                 Wallet camp = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
-                prevPending = camp.getStats().getBalance().longValue();
+                prevPending = camp.getStats().getBalance();
                 do {
                     Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
                     rec++;
-                    Long curPending = retrieved.getStats().getBalance().longValue();
+                    Double curPending = retrieved.getStats().getBalance() ;
                     if (curPending > prevPending) {
                         Log.d(TAG, "Block detected in history. Prev balance: " + prevPending + " current: " + curPending);
                         cnt++;
@@ -298,7 +298,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         Log.i(TAG, "SELECT DONE. PENDINGS HISTORY SIZE: " + cnt + " FROM RECORDS: " + rec);
         cursor.close();
         if (cnt == 0)
-            return 0L;
+            return 0d;
         return pendings / cnt;
     }
 
@@ -470,7 +470,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
                     if (!cursor.isNull(cursor.getColumnIndexOrThrow(DataBaseContract.Miner_.COLUMN_NAME_TOPMINERS)))
                         ret.setTopMiners(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseContract.Miner_.COLUMN_NAME_TOPMINERS)));
                     if (!cursor.isNull(cursor.getColumnIndexOrThrow(DataBaseContract.Miner_.COLUMN_NAME_PAID)))
-                        ret.setPaid(cursor.getLong(cursor.getColumnIndexOrThrow(DataBaseContract.Miner_.COLUMN_NAME_PAID)));
+                        ret.setPaid(cursor.getDouble(cursor.getColumnIndexOrThrow(DataBaseContract.Miner_.COLUMN_NAME_PAID)));
                     if (!cursor.isNull(cursor.getColumnIndexOrThrow(DataBaseContract.Miner_.COLUMN_NAME_BLOCKS_FOUND)))
                         ret.setBlocksFound(cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseContract.Miner_.COLUMN_NAME_BLOCKS_FOUND)));
                     retL.add(ret);
