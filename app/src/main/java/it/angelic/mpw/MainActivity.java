@@ -202,7 +202,6 @@ public class MainActivity extends DrawerActivity {
                                 else if (radioMin.isChecked())
                                     granoEnum = GranularityEnum.MINUTE;
 
-
                                 ChartUtils.drawDifficultyHistory(textViewNetDiffTitle,
                                         PoolQueryGrouper.groupAvgQueryResult(storia, granoEnum),
                                         (LineView) findViewById(R.id.line_view_difficulty), granoEnum);
