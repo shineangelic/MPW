@@ -69,17 +69,23 @@ public enum PoolEnum {
     DOLOMITIPOOL("Dolomiti Pool", "pool.athesis.com",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
     }}, true),
-    MININGPOOLITA("Europool", "europool.me",true, new ArrayList<CurrencyEnum>() {{
+    /*MININGPOOLITA("Europool", "europool.me",true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
-    }}, false),
-    DIGIPOOL("Digipools", "digipools.org",false, new ArrayList<CurrencyEnum>() {{
+    }}, false),*/
+    ANORAK("Anorak.Tech", "anorak.tech",true, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ETC);
+        add(CurrencyEnum.UBIQ);
+        add(CurrencyEnum.PIRL);
+    }}, false);
+    /*DIGIPOOL("Digipools", "digipools.org",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.EXP);
         add(CurrencyEnum.MUSIC);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.ELLA);
         add(CurrencyEnum.UBIQ);
-    }}, false);
+    }}, false);*/
     //human friendly name
     private final String friendlyName;
     //dominio di primo e secondo liv.
