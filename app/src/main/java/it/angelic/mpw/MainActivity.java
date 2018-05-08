@@ -227,7 +227,7 @@ public class MainActivity extends DrawerActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
+                VolleyLog.e(Constants.TAG, "Error: " + error.getMessage());
                 Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
                         .show();
                 // prevent stale data appear

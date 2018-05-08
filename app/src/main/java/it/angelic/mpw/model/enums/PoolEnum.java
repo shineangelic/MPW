@@ -77,6 +77,10 @@ public enum PoolEnum {
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.UBIQ);
         add(CurrencyEnum.PIRL);
+    }}, false),
+    GIGANTPOOL("Gigantpool", "gigantpool.com",false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+        add(CurrencyEnum.XMR);
     }}, false);
     /*DIGIPOOL("Digipools", "digipools.org",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
