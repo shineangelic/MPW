@@ -35,7 +35,8 @@ public enum CurrencyEnum {
     UBIQ("Ubiq", "https://ubiqscan.io"),//MAXPOOL names its way
     VIC("Victorium"),
     XVG("Verge"),
-    WHALE("Whalecoin"),
+    WHALE("Whalecoin", "https://explorer.whalecoin.org/"),
+    AKROMA("Akroma"),
     ZEN("Zencash"),
     ZEC("ZCash");
 

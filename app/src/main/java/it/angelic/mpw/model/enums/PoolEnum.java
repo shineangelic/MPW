@@ -81,6 +81,11 @@ public enum PoolEnum {
     GIGANTPOOL("Gigantpool", "gigantpool.com",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.XMR);
+    }}, false),
+    CHILEMINERS("Chileminers", "chileminers.cl",false, new ArrayList<CurrencyEnum>() {{
+        add(CurrencyEnum.ETH);
+        add(CurrencyEnum.AKROMA);
+        add(CurrencyEnum.WHALE);
     }}, false);
     /*DIGIPOOL("Digipools", "digipools.org",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
