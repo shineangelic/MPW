@@ -61,7 +61,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 if (nv) {
                     Job myJob = MPWService.getJobUpdate(prefs, dispatcher, true);
                     int res  = dispatcher.schedule(myJob);
-                    if (res != dispatcher.SCHEDULE_RESULT_SUCCESS){
+                    if (res != FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS){
                         Toast.makeText(getActivity(),"Cannot enable service. Is Play Services up to date? Notifications won't work", Toast.LENGTH_SHORT).show();
                         return false;
                     }

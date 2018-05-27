@@ -33,7 +33,7 @@ import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 
-import static it.angelic.mpw.Constants.ETHER_STATS_COIN_LIMIT;
+import static it.angelic.mpw.Constants.COINMKCAP_STATS_COIN_LIMIT;
 import static it.angelic.mpw.Constants.TAG;
 
 public class MPWCoinmarketcapService extends JobService {
@@ -65,7 +65,7 @@ public class MPWCoinmarketcapService extends JobService {
     private  void asynchCurrenciesFromCoinmarketcap(final Context ctx, final CurrencyEnum mCur,final JobParameters job) {
         try {
             JsonArrayRequest jsonArrayCurrenciesReq = new JsonArrayRequest(Request.Method.GET,
-                    Constants.ETHER_STATS_URL + ETHER_STATS_COIN_LIMIT, null,
+                    Constants.COINMKCAP_STATS_URL + COINMKCAP_STATS_COIN_LIMIT, null,
                     new Response.Listener<JSONArray>() {
 
                         @Override

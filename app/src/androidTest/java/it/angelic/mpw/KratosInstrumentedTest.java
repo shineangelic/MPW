@@ -50,7 +50,7 @@ public class KratosInstrumentedTest {
     private String minerAddr;
 
     @Before
-    public void useAppContext() throws Exception {
+    public void useAppContext() {
         // Context of the app under test.
         appContext = InstrumentationRegistry.getTargetContext();
         String fileName = "FILE_NAME";
@@ -63,7 +63,7 @@ public class KratosInstrumentedTest {
     }
 
     @Test
-    public void testJsonRequest() throws Exception {
+    public void testJsonRequest() {
         final GsonBuilder builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -95,7 +95,7 @@ public class KratosInstrumentedTest {
     }
 
     @Test
-    public void testJsonBlockRequest() throws Exception {
+    public void testJsonBlockRequest() {
 
         final GsonBuilder builder = new GsonBuilder();
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -125,7 +125,7 @@ public class KratosInstrumentedTest {
     }
 
     @Test
-    public void testJsonMinerRequest() throws Exception {
+    public void testJsonMinerRequest() {
 
         final GsonBuilder builder = new GsonBuilder();
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -155,7 +155,7 @@ public class KratosInstrumentedTest {
     }
 
     @Test
-    public void testJsonWalletRequest() throws Exception {
+    public void testJsonWalletRequest() {
 
         final GsonBuilder builder = new GsonBuilder();
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
@@ -184,7 +184,7 @@ public class KratosInstrumentedTest {
     }
 
     @Test
-    public void testPref() throws Exception {
+    public void testPref() {
         String fileName = "FILE_NAME";
 
         SharedPreferences sharedPreferences = appContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);

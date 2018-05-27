@@ -8,18 +8,20 @@ import java.util.List;
 public class Wallet implements Serializable {
 
     private final static long serialVersionUID = 7538259390724172001L;
-    private Long currentHashrate;
+    private Long currentHashrate= 0L;
     private Long hashrate = 0L;
     private Integer pageSize;
-    private List<Payment> payments = new ArrayList<>();
+
     private Integer paymentsTotal;
     private Long roundShares;
     private Stats stats = new Stats();
-    private HashMap<String, Worker> workers;
+
     private Integer workersOffline = 0;
     private Integer workersOnline = 0;
     private Integer workersTotal = 0;
 
+    private List<Payment> payments = new ArrayList<>();
+    private HashMap<String, Worker> workers = new HashMap<>();
 
 
     public Long getCurrentHashrate() {
