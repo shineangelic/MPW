@@ -84,6 +84,7 @@ public enum PoolEnum {
     }}, false),
     CHILEMINERS("Chileminers", "chileminers.cl",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ETC);
         add(CurrencyEnum.AKROMA);
         add(CurrencyEnum.WHALE);
     }}, false);

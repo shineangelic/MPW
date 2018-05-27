@@ -47,13 +47,14 @@ public enum CurrencyEnum {
     public String getScannerSite() {
         return scannerSite;
     }
+
     @Nullable
     private String scannerSite;
 
     CurrencyEnum(@NonNull String friendlyName){
         this.friendlyName = friendlyName;
     }
-    CurrencyEnum(@NonNull String friendlyName, @Nullable String scanner){
+    CurrencyEnum(@NonNull String friendlyName, @NonNull String scanner){
         this.friendlyName = friendlyName;
         this.scannerSite = scanner;
     }
