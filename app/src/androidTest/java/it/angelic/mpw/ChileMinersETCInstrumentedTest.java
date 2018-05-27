@@ -44,7 +44,7 @@ import static org.junit.Assert.fail;
  */
 @RunWith(AndroidJUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class NoobPoolInstrumentedTest {
+public class ChileMinersETCInstrumentedTest {
     private Context appContext;
     private SharedPreferences sharedPreferences;
     private String minerAddr;
@@ -57,8 +57,8 @@ public class NoobPoolInstrumentedTest {
         assertEquals("it.angelic.mpw", appContext.getPackageName());
         sharedPreferences = appContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("poolEnum", PoolEnum.NOOBPOOL.name());
-        editor.putString("curEnum", CurrencyEnum.ETH.name());
+        editor.putString("poolEnum", PoolEnum.CHILEMINERS.name());
+        editor.putString("curEnum", CurrencyEnum.ETC.name());
         editor.commit();
     }
 

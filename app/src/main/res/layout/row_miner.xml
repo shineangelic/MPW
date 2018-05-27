@@ -40,7 +40,8 @@
 
                 android:adjustViewBounds="true"
                 android:alpha="0.6"
-                card_view:srcCompat="@color/colorPrimary" />
+                card_view:srcCompat="@color/colorPrimary"
+                android:contentDescription="Pool's background" />
 
             <ImageView
                 android:id="@+id/imageViewMinersLink"

@@ -95,7 +95,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         super.finalize();
     }
 
-    public void cleanOldData(SQLiteDatabase db) {
+    public static void cleanOldData(SQLiteDatabase db) {
 
         Calendar oneMonthAgo = Calendar.getInstance();
         oneMonthAgo.add(Calendar.MONTH, -1);
