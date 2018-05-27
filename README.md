@@ -15,7 +15,19 @@ It's also published on [playconsole](https://play.google.com/store/apps/details?
  * [MaterialSpinner](https://github.com/ganfra/MaterialSpinner)
  * [Commons-math](https://github.com/apache/commons-math)
  
- ## Privacy
+## Supported pools
+ 
+ * NoobPool
+ * Cryptopool
+ * MaxHash
+ * XEMiners
+ * ChileMiners
+ * 2miners
+ * Nevermining
+ * Kratospool
+ * Soyminero
+ 
+## Privacy
 
 Play store requires me to advise you about the fact Mining Pool Watcher is requesting READ_PHONE_STATE permission. Actually, the app has nothing to do with 'phone' and you can check it in the sources. Permission is required by a library, after I had to move to [firebase-job-scheduler](https://github.com/firebase/firebase-jobdispatcher-android) to ensure your blocks finding were reported and your pools payments notified.
 
