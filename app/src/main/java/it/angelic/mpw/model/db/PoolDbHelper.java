@@ -156,8 +156,8 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public int updateMiner(MinerDBRecord retrieved) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public int updateMiner(MinerDBRecord retrieved, SQLiteDatabase db) {
+
         ContentValues values = new ContentValues();
 
         values.put(DataBaseContract.Miner_.COLUMN_NAME_LASTSEEN, retrieved.getLastSeen().getTime());

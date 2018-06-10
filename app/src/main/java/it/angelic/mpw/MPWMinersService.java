@@ -2,6 +2,7 @@ package it.angelic.mpw;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
@@ -45,6 +46,7 @@ import static it.angelic.mpw.Constants.TAG;
 public class MPWMinersService extends JobService {
 
     private PoolDbHelper mDbHelper;
+    private SQLiteDatabase db;
 
     @NonNull
     public static Job getJobUpdate(FirebaseJobDispatcher dispatcher) {
@@ -84,6 +86,7 @@ public class MPWMinersService extends JobService {
             Log.i(TAG, "SERVICE MINERS working on:" + mPool.toString() + " - " + mCur.toString());
 
             mDbHelper = new PoolDbHelper(this, mPool, mCur);
+            db = mDbHelper.getWritableDatabase();
             final GsonBuilder builder = new GsonBuilder();
             //gestione UNIX time lungo e non
             builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -104,6 +107,7 @@ public class MPWMinersService extends JobService {
             Log.e(TAG, "SERVICE MINERS END KO");
             return false;
         }
+        //db.close();
         MPWMinersService.this.jobFinished(job, false);
         Log.e(TAG, "SERVICE MINERS END Ok");
         return true; // Answers the question: "Is there still work going on?"
@@ -138,7 +142,8 @@ public class MPWMinersService extends JobService {
                         // aggiorna UI
                         rec.setLastSeen(retrieved.getStats().getLastShare());
                         rec.setBlocksFound(retrieved.getStats().getBlocksFound());
-                        mDbHelper.updateMiner(rec);
+
+                        mDbHelper.updateMiner(rec,db);
                     }
                 }, new Response.ErrorListener() {
             @Override
