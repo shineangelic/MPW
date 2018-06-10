@@ -226,7 +226,7 @@ public class MPWService extends JobService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx, "MPWminerChannel")
-                        .setSmallIcon(R.drawable.ic_money_off_black_24dp)
+                        .setSmallIcon(R.drawable.ic_offline_notification)
                         .setContentTitle("One of your "+pool.toString() +" workers went offline")
                         .setCategory(CATEGORY_SERVICE)
                         .setAutoCancel(true)
@@ -269,7 +269,7 @@ public class MPWService extends JobService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx, "MPWblockChannel")
-                        .setSmallIcon(R.drawable.ic_insert_link_chain_24dp)
+                        .setSmallIcon(R.drawable.ic_block_notification)
                         .setContentTitle("Block Found on " + pool.toString())
                         .setCategory(CATEGORY_PROGRESS)
                         .setAutoCancel(true)
@@ -314,7 +314,7 @@ public class MPWService extends JobService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx, "MPWpaymentsChannel")
-                        .setSmallIcon(R.drawable.ic_payment_black_24dp)
+                        .setSmallIcon(R.drawable.ic_payment_notification)
                         .setContentTitle(contentTitle)
                         .setCategory(CATEGORY_PROGRESS)
                         .setAutoCancel(true)

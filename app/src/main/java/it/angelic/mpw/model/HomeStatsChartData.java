@@ -16,7 +16,7 @@ public class HomeStatsChartData implements Serializable {
     private Long hashrateMin;
     private Integer immatureTotal;
     private Integer maturedTotal;
-    private List<Node> nodes = null;
+    private List<Node> nodes ;
     private Calendar now;//serve a distinguere timestamp
     private Stats stats;
 

@@ -3,7 +3,6 @@ package it.angelic.mpw;
 import android.graphics.Color;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
-import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
 import junit.framework.Assert;

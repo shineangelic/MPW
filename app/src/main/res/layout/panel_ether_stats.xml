@@ -12,6 +12,7 @@
         android:text="TextView"
         android:textSize="10sp"
         android:textStyle="italic"
+        android:maxLines="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewWhoPaid"
         android:layout_marginLeft="8dp" />
@@ -22,7 +23,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:contentDescription="Ethereum icon"
+        android:contentDescription="Currency icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_ethereum_logo"

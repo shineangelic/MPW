@@ -13,7 +13,7 @@ public class HomeStats implements Serializable {
     private Integer immatureTotal;
     private Integer maturedTotal;
     private Integer minersTotal;
-    private List<Node> nodes = null;
+    private List<Node> nodes;
     private Calendar now;//serve a distinguere timestamp
     private Stats stats;
 

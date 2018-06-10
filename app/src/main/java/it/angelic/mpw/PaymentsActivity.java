@@ -186,7 +186,7 @@ public class PaymentsActivity extends DrawerActivity {
     }
 
     private void drawProjectionTable(final PoolDbHelper mDbHelper, Block matured) {
-        Double shareperc = 0d;
+        Double shareperc;
 
         TableLayout minersTable = findViewById(R.id.tableLayoutProjections);
         minersTable.removeAllViews();

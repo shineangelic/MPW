@@ -259,7 +259,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         int cnt = 0;
         int rec = 0;
         Double pendings = 0d;
-        Double prevPending = 0d;
+        Double prevPending;
 
         SQLiteDatabase db = this.getReadableDatabase();
         // Cursor cursor = db.rawQuery(selectQuery, null);

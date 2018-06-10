@@ -143,7 +143,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@id/tableLayoutProjections" />
+                card_view:layout_constraintTop_toBottomOf="@id/tableLayoutProjections"
+                android:layout_marginLeft="8dp" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 

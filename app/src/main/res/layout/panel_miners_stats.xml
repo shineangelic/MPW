@@ -17,7 +17,8 @@
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/textViewOldestMinerLink"
-        app:layout_constraintTop_toBottomOf="@id/textViewMostPaidMinerLink" />
+        app:layout_constraintTop_toBottomOf="@id/textViewMostPaidMinerLink"
+        android:layout_marginRight="8dp" />
 
     <View
         android:id="@+id/viewSeparatorBlocks"
@@ -48,7 +49,8 @@
         android:textColor="#337ab7"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/textViewMostPaidMinerLink"
-        app:layout_constraintTop_toBottomOf="@+id/textViewHighestHashrateLink" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewHighestHashrateLink"
+        android:layout_marginRight="8dp" />
 
     <TextView
         android:id="@+id/textViewHighestHashrate"
@@ -69,7 +71,8 @@
         android:textColor="#337ab7"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/textViewHighestHashrateLink"
-        app:layout_constraintTop_toTopOf="@+id/viewSeparatorBlocks" />
+        app:layout_constraintTop_toTopOf="@+id/viewSeparatorBlocks"
+        android:layout_marginRight="8dp" />
 
     <TextView
         android:id="@+id/textViewOldestMiner"

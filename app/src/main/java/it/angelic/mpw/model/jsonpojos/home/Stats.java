@@ -44,7 +44,7 @@ public class Stats implements Serializable {
             return roundShares;
         if (roundSharesDiff != null)
             return roundSharesDiff;
-        return 0l;
+        return 0L;
     }
 
     public void setRoundShares(Long roundShares) {

@@ -160,7 +160,8 @@
                     android:layout_marginTop="8dp"
                     android:text="Blocks Found"
                     card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockShares" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewBlockShares"
+                    android:layout_marginLeft="8dp" />
 
                 <TextView
                     android:id="@+id/textViewMinerBlockFoundValue"
@@ -172,7 +173,8 @@
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textViewHashrateValue" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewHashrateValue"
+                    android:layout_marginRight="8dp" />
 
                 <CheckBox
                     android:id="@+id/checkBoxMinerOffline"
@@ -184,7 +186,8 @@
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerBlockFoundValue" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/textViewMinerBlockFoundValue"
+                    android:layout_marginRight="8dp" />
 
                 <TextView
                     android:id="@+id/textViewMinerPaid"
@@ -195,7 +198,8 @@
                     android:text="Total Paid"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     card_view:layout_constraintStart_toStartOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline"
+                    android:layout_marginLeft="8dp" />
 
 
                 <TextView
@@ -209,7 +213,8 @@
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     card_view:layout_constraintEnd_toEndOf="parent"
-                    card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline" />
+                    card_view:layout_constraintTop_toBottomOf="@+id/checkBoxMinerOffline"
+                    android:layout_marginRight="8dp" />
             </android.support.constraint.ConstraintLayout>
         </RelativeLayout>
 

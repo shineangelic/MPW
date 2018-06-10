@@ -110,9 +110,14 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
                     } else {
                         ClipboardManager clipboard = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText("Mining Pool Watcher", game.getAddress());
-                        clipboard.setPrimaryClip(clip);
-                        Snackbar.make(view, "Blockchain explorer not available for "+cur.toString()+". Address copied to clipboard", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+                        try {
+                            clipboard.setPrimaryClip(clip);
+                            Snackbar.make(view, "Blockchain explorer not available for "+cur.toString()+". Address copied to clipboard", Snackbar.LENGTH_SHORT)
+                                    .setAction("Action", null).show();
+                        } catch (NullPointerException npe){
+                            //nevermind
+                        }
+
                     }
                 }
             };
