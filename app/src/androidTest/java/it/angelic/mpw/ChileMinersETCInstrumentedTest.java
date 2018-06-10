@@ -98,6 +98,8 @@ public class ChileMinersETCInstrumentedTest {
     public void testJsonBlockRequest() {
 
         final GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
+        builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Utils.getBlocksURL(sharedPreferences), null,
                 new Response.Listener<JSONObject>() {
@@ -128,6 +130,9 @@ public class ChileMinersETCInstrumentedTest {
     public void testJsonMinerRequest() {
 
         final GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
+        builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
+
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 Utils.getMinersStatsUrl(sharedPreferences), null,
                 new Response.Listener<JSONObject>() {

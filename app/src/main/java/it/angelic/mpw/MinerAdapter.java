@@ -105,11 +105,11 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
                 public void onClick(View view) {
                     if (cur.getScannerSite() != null) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(cur.getScannerSite() + "/address/" + game.getAddress()));
+                        i.setData(Uri.parse(cur.getScannerSite().getAccountsPath() + game.getAddress()));
                         ctx.startActivity(i);
                     } else {
                         ClipboardManager clipboard = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("NoobPool Client", game.getAddress());
+                        ClipData clip = ClipData.newPlainText("Mining Pool Watcher", game.getAddress());
                         clipboard.setPrimaryClip(clip);
                         Snackbar.make(view, "Blockchain explorer not available for "+cur.toString()+". Address copied to clipboard", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();

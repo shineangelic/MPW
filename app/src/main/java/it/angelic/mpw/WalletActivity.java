@@ -249,7 +249,7 @@ public class WalletActivity extends DrawerActivity {
                 public void onClick(View view) {
                     if (mCur.getScannerSite() != null) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(mCur.getScannerSite() + "/address/" + minerAddr));
+                        i.setData(Uri.parse(mCur.getScannerSite().getAccountsPath() + minerAddr));
                         startActivity(i);
                     } else {
                         Snackbar.make(view, "Blockchain explorer not available for "+mCur.toString(), Snackbar.LENGTH_SHORT)

@@ -110,10 +110,9 @@ public class BlockAdapter extends RecyclerView.Adapter<BlockAdapter.BlockViewHol
                 public void onClick(View view) {
                     if (cur.getScannerSite() != null) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(cur.getScannerSite() + "/block/" + game.getHeight()));
+                        i.setData(Uri.parse(cur.getScannerSite().getBlocksPath() + game.getHeight()));
                         ctx.startActivity(i);
                     } else {
-
                         Snackbar.make(view, "Blockchain explorer not available for " + cur.toString(), Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                     }
