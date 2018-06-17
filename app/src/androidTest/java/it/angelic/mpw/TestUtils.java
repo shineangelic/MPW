@@ -24,6 +24,7 @@ public class TestUtils {
         try {
             URL url = new URL(strUrl);
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+            urlConn.setConnectTimeout(2000);
             urlConn.connect();
             assertEquals(HttpURLConnection.HTTP_OK, urlConn.getResponseCode());
         } catch (IOException e) {

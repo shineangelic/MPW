@@ -71,31 +71,9 @@ public class MPWCoinmarketcapService extends JobService {
                         @Override
                         public void onResponse(final JSONArray response) {
                             Log.d(Constants.TAG, response.toString());
-                            GsonBuilder builder = new GsonBuilder();
-                            Gson gson = builder.create();
-                            Log.d(Constants.TAG, response.toString());
-                            Type listType = new TypeToken<List<Ticker>>() {
-                            }.getType();
-                            List<Ticker> posts = gson.fromJson(response.toString(), listType);
-                            Ticker fnd = null;
-                            for (Ticker currency : posts) {
-                                if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
-                                    fnd = currency;
-                                }
-                                //always save ETH
-                                if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
-                                    CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
-                                }
-                                //always save BTC
-                                if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
-                                    CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
-                                }
-                            }
-                            //eventually resets  when fnd = null
-                            CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
+                            MPWCoinmarketcapService.saveCurrencyValue(response,  mCur, ctx);
                             Log.e(TAG, "SERVICE MARKETCAP END Ok2");
                             MPWCoinmarketcapService.this.jobFinished(job,false);
-
                         }
                     }, new Response.ErrorListener() {
 
@@ -107,12 +85,35 @@ public class MPWCoinmarketcapService extends JobService {
                     MPWCoinmarketcapService.this.jobFinished(job,true);
                 }
             });
-
             // Adding request to request queue
             JSONClientSingleton.getInstance(ctx).addToRequestQueue(jsonArrayCurrenciesReq);
         } catch (Exception e) {
             Log.d(Constants.TAG, "ERROR DURING COINMARKETCAP: " + e.getMessage());
         }
+    }
+
+    public static void saveCurrencyValue(JSONArray response,  CurrencyEnum mCur, Context ctx) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        Type listType = new TypeToken<List<Ticker>>() {
+        }.getType();
+        List<Ticker> posts = gson.fromJson(response.toString(), listType);
+        Ticker fnd = null;
+        for (Ticker currency : posts) {
+            if (mCur.name().equalsIgnoreCase(currency.getSymbol()) || mCur.toString().equalsIgnoreCase(currency.getName())) {
+                fnd = currency;
+            }
+            //always save ETH
+            if (CurrencyEnum.ETH.name().equalsIgnoreCase(currency.getSymbol())) {
+                CryptoSharedPreferencesUtils.saveEthereumValues(currency, ctx);
+            }
+            //always save BTC
+            if (CurrencyEnum.BTC.name().equalsIgnoreCase(currency.getSymbol())) {
+                CryptoSharedPreferencesUtils.saveBtcValues(currency, ctx);
+            }
+        }
+        //eventually resets  when fnd = null
+        CryptoSharedPreferencesUtils.saveEtherValues(fnd, ctx);
     }
 
     @Override

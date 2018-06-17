@@ -6,11 +6,15 @@ import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
 import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +36,7 @@ import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
+import static it.angelic.mpw.Constants.COINMKCAP_STATS_COIN_LIMIT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -62,7 +67,9 @@ public class MasterInstrumentedTest {
                 {PoolEnum.NOOBPOOL, CurrencyEnum.ETH},
                 {PoolEnum.CRYPTOPOOL, CurrencyEnum.ETC},
                 {PoolEnum.CHILEMINERS, CurrencyEnum.CLO},
+                {PoolEnum.ANORAK, CurrencyEnum.PIRL},
                 {PoolEnum.MAXHASH, CurrencyEnum.ETH},
+                {PoolEnum.TWOMINERS, CurrencyEnum.MUSIC},
                 {PoolEnum.MAXHASH, CurrencyEnum.UBIQ}
         });
     }
@@ -71,7 +78,7 @@ public class MasterInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         appContext = InstrumentationRegistry.getTargetContext();
-        String fileName = "FILE_NAME";
+        String fileName = "MPW_TESTS";
         assertEquals("it.angelic.mpw", appContext.getPackageName());
         sharedPreferences = appContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -81,18 +88,43 @@ public class MasterInstrumentedTest {
         editor.putString("curEnum", mTestCurrency.name());
         editor.commit();
         assertNotNull(sharedPreferences);
+        //test with valid parameters
         assertTrue(toBeTested.getSupportedCurrencies().contains(mTestCurrency));
+    }
+
+    @Test
+    public void testCurrenciesPresent() {
+        List<CurrencyEnum> curs = toBeTested.getSupportedCurrencies();
+        Assert.assertTrue(curs.size() > 0);
     }
 
     @Test
     public void testBaseExplorer() {
         List<CurrencyEnum> curs = toBeTested.getSupportedCurrencies();
-        if (mTestCurrency.getScannerSite() != null) {
-            try {
-                TestUtils.testURL(mTestCurrency.getScannerSite().getBaseAddress().toString());
-            } catch (Exception e) {
-                fail("Blockchain explorer error for " + mTestCurrency.toString());
-            }
+        Assume.assumeNotNull(mTestCurrency.getScannerSite());
+        try {
+            TestUtils.testURL(mTestCurrency.getScannerSite().getBaseAddress().toString());
+        } catch (Exception e) {
+            fail("Blockchain explorer error for " + mTestCurrency.toString());
+        }
+    }
+
+    @Test
+    public void testCurrencyValueFrom() {
+        RequestFuture<JSONArray> future = RequestFuture.newFuture();
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET,
+                Constants.COINMKCAP_STATS_URL + COINMKCAP_STATS_COIN_LIMIT, new JSONArray(), future, future);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(request);
+        final Gson gson = TestUtils.getGsonFromBuilder();
+        try {
+            JSONArray response = future.get(); // this will block
+            MPWCoinmarketcapService.saveCurrencyValue(response,  mTestCurrency, appContext);
+            Assert.assertNotNull(CryptoSharedPreferencesUtils.readEtherValues(appContext));
+            Assert.assertNotEquals("---", CryptoSharedPreferencesUtils.readEtherChange24hValue(appContext));
+        } catch (InterruptedException e) {
+            fail(e.getMessage());
+        } catch (ExecutionException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -137,7 +169,13 @@ public class MasterInstrumentedTest {
         JSONClientSingleton.getInstance(appContext).addToRequestQueue(request);
         Gson gson = TestUtils.getGsonFromBuilder();
         try {
-            assertNotNull(getFirstMinerAddress(future, gson));
+            JSONObject response = future.get(); // this will block
+            MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
+            assertNotNull(retrieved);
+            HashMap<String, Miner> map = retrieved.getMiners();
+            String[] minerArr = new String[map.size()];
+            minerArr = map.keySet().toArray(minerArr);
+            assertNotNull(minerArr);
         } catch (InterruptedException e) {
             fail(e.getMessage());
         } catch (ExecutionException e) {
@@ -166,14 +204,19 @@ public class MasterInstrumentedTest {
         Gson gson = TestUtils.getGsonFromBuilder();
         String addr = null;
         try {
-            addr = getFirstMinerAddress(future, gson);
+            JSONObject response = future.get(); // this will block
+            MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
+            HashMap<String, Miner> map = retrieved.getMiners();
+            String[] minerArr = new String[map.size()];
+            minerArr = map.keySet().toArray(minerArr);
+            Assume.assumeTrue(minerArr.length > 0);
+            addr = minerArr[0];
         } catch (InterruptedException e) {
             fail(e.getMessage());
         } catch (ExecutionException e) {
             fail(e.getMessage());
         }
 
-        assertNotNull(addr);
 
         RequestFuture<JSONObject> futuress = RequestFuture.newFuture();
         try {

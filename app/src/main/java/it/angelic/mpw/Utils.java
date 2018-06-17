@@ -2,6 +2,7 @@ package it.angelic.mpw;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
@@ -192,10 +193,10 @@ class Utils {
         TextView textViewWhoPaid = navigationView.findViewById(R.id.textViewWhoPaid);
         SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
         try {
-            String val = settings.getString("CURUSD", "---");
-            String chg = settings.getString("CURCHG", "---");
+            //String val = settings.getString("CURUSD", "---");
+            String chg = CryptoSharedPreferencesUtils.readEtherChange24hValue(ctx);
             ethC.setText("Courtesy of coinmarketcap. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("CURTIMESTAMP", 0))));
-            ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder), cur.name(), val, Double.valueOf(chg)));
+            ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder), cur.name(), CryptoSharedPreferencesUtils.readEtherValues(ctx), Double.valueOf(chg)));
         } catch (Exception e) {
             Log.e(TAG, "Error eth currency panel:" + e.getMessage());
             ethC.setVisibility(View.INVISIBLE);
@@ -211,35 +212,28 @@ class Utils {
     }
 
     public static String getHomeStatsURL(SharedPreferences prefs) {
-        String mPool = prefs.getString("poolEnum", "");
-        String mCur = prefs.getString("curEnum", "");
-        PoolEnum puil = PoolEnum.valueOf(mPool);
-        String compose = (puil.getOmitCurrency() ? "" : mCur.toLowerCase()) + puil.getRadixSuffix();
-        return puil.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + puil.getWebRoot() + Constants.HOME_STATS_URL;
+        return getPoolBaseURL(prefs) + Constants.HOME_STATS_URL;
     }
 
     public static String getWalletStatsUrl(SharedPreferences prefs) {
-        String mPool = prefs.getString("poolEnum", "");
-        String mCur = prefs.getString("curEnum", "");
-        PoolEnum tgtpool = PoolEnum.valueOf(mPool);
-        String compose = (tgtpool.getOmitCurrency() ? "" : mCur.toLowerCase()) + tgtpool.getRadixSuffix();
-        return tgtpool.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + tgtpool.getWebRoot() + Constants.ACCOUNTS_STATS_URL;
+        return getPoolBaseURL(prefs) + Constants.ACCOUNTS_STATS_URL;
     }
 
     public static String getMinersStatsUrl(SharedPreferences prefs) {
-        String mPool = prefs.getString("poolEnum", "");
-        String mCur = prefs.getString("curEnum", "");
-        PoolEnum tgtpool = PoolEnum.valueOf(mPool);
-        String compose = (tgtpool.getOmitCurrency() ? "" : mCur.toLowerCase()) + tgtpool.getRadixSuffix();
-        return tgtpool.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + tgtpool.getWebRoot() + Constants.MINERS_STATS_URL;
+        return getPoolBaseURL(prefs) + Constants.MINERS_STATS_URL;
     }
 
     public static String getBlocksURL(SharedPreferences prefs) {
+        return getPoolBaseURL(prefs) + Constants.BLOCKS_URL;
+    }
+
+    @NonNull
+    private static String getPoolBaseURL(SharedPreferences prefs) {
         String mPool = prefs.getString("poolEnum", "");
         String mCur = prefs.getString("curEnum", "");
-        PoolEnum tgtpool = PoolEnum.valueOf(mPool);
-        String compose = (tgtpool.getOmitCurrency() ? "" : mCur.toLowerCase()) + tgtpool.getRadixSuffix();
-        return tgtpool.getTransportProtocolBase() + compose + (compose.length() == 0 ? "" : ".") + tgtpool.getWebRoot() + Constants.BLOCKS_URL;
+        PoolEnum chosenPool = PoolEnum.valueOf(mPool);
+        String currencyPath = (chosenPool.getOmitCurrency() ? "" : mCur.toLowerCase()) + chosenPool.getRadixSuffix();
+        return chosenPool.getTransportProtocolBase()+currencyPath+ (currencyPath.length() == 0 ? "" : ".") + chosenPool.getWebRoot();
     }
 
 

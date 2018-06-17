@@ -87,4 +87,12 @@ public class CryptoSharedPreferencesUtils {
         prefEditor.commit();
 
     }
+    public static String readEtherValues(  Context ctx) {
+        SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
+        return settings.getString("CURUSD", "---");
+    }
+    public static String readEtherChange24hValue(Context ctx) {
+        SharedPreferences settings = ctx.getSharedPreferences("COINMARKETCAP", MODE_PRIVATE);
+        return settings.getString("CURCHG", "---");
+    }
 }
