@@ -81,7 +81,7 @@ public class MPWService extends JobService {
             final CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
             Log.i(TAG, "Miner Pool Watcher Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
             Log.i(TAG, "SERVICE working on:" +mPool.toString() + " - " + mCur.toString());
-            final PoolDbHelper mDbHelper = new PoolDbHelper(ctx, mPool, mCur);
+            final PoolDbHelper mDbHelper = PoolDbHelper.getInstance(ctx, mPool, mCur);
             final NotificationManager mNotifyMgr =
                     (NotificationManager) ctx.getSystemService(NOTIFICATION_SERVICE);
             final GsonBuilder builder = new GsonBuilder();

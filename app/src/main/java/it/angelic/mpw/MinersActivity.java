@@ -73,7 +73,7 @@ public class MinersActivity extends DrawerActivity {
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
 
-        mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         textViewBlocksTitle = findViewById(R.id.textViewBlocksTitle);
         textViewHighestHashrateValue = findViewById(R.id.textViewHighestHashrateValue);
         textViewMostPaidMinerValue = findViewById(R.id.textViewMostPaidMinerValue);
@@ -320,7 +320,7 @@ public class MinersActivity extends DrawerActivity {
 
         @Override
         protected void onPreExecute() {
-            mDbHelper = new PoolDbHelper(MinersActivity.this, mPool, mCur);
+            mDbHelper = PoolDbHelper.getInstance(MinersActivity.this, mPool, mCur);
             if (mAdapter == null) {
                 mAdapter = new MinerAdapter(min, mPool, mCur);
                 min = mDbHelper.getMinerList(sortOrder);

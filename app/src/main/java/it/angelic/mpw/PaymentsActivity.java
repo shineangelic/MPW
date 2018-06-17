@@ -73,7 +73,7 @@ public class PaymentsActivity extends DrawerActivity {
         toolbar.setTitle(this.getTitle());
         setSupportActionBar(toolbar);
 
-        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         builder = new GsonBuilder();
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
         builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
@@ -119,7 +119,7 @@ public class PaymentsActivity extends DrawerActivity {
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_payment);
-        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + minerAddr);
 
     }

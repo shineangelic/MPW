@@ -85,7 +85,7 @@ public class MPWMinersService extends JobService {
             Log.w(TAG, "Miner Pool Watcher MINERS Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
             Log.i(TAG, "SERVICE MINERS working on:" + mPool.toString() + " - " + mCur.toString());
 
-            mDbHelper = new PoolDbHelper(this, mPool, mCur);
+            mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
             db = mDbHelper.getWritableDatabase();
             final GsonBuilder builder = new GsonBuilder();
             //gestione UNIX time lungo e non

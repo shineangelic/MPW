@@ -37,7 +37,7 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (isValidEthAddress((String) newValue)) return false;
 
-        PoolDbHelper db = new PoolDbHelper(mCtx,pool,cur);
+        PoolDbHelper db = PoolDbHelper.getInstance(mCtx,pool,cur);
         db.truncateWallets(db.getWritableDatabase());
         db.close();
         //salvo wallet in SharedPrefs preciso

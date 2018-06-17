@@ -68,7 +68,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         //LinearLayout linearSideDrawer = headerLayout.findViewById(R.id.linearSideDrawer);
 
         try {
-            PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
+            PoolDbHelper mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
             HomeStats lHit = mDbHelper.getLastHomeStats(1).getValue(0);
             refreshHeaderInfo(lHit);
         }catch (Exception amen){

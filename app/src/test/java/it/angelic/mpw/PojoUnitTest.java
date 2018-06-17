@@ -22,6 +22,7 @@ public class PojoUnitTest {
         sta.setCandidatesTotal(23);
         assertNotNull(sta.getNow());
     }
+
     @Test
     public void testPojoWallet() {
         Wallet sta = new Wallet();

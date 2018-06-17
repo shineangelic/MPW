@@ -83,7 +83,7 @@ public class MainActivity extends DrawerActivity {
         setContentView(R.layout.activity_main);
         //Locale current = getResources().getConfiguration().locale;
 
-        mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         builder = new GsonBuilder();
         //gestione UNIX time lungo e non
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -170,7 +170,7 @@ public class MainActivity extends DrawerActivity {
         navigationView.setCheckedItem(R.id.nav_home);
         Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
         //importante refresh
-        mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         issueAsynchRefresh(mDbHelper, builder);
     }
 

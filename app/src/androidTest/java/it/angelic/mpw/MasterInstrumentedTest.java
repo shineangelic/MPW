@@ -2,44 +2,40 @@ package it.angelic.mpw;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
+import org.junit.runners.Parameterized;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-import it.angelic.mpw.model.MyDateTypeAdapter;
-import it.angelic.mpw.model.MyTimeStampTypeAdapter;
+import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.blocks.Block;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
+import it.angelic.mpw.model.jsonpojos.miners.Miner;
 import it.angelic.mpw.model.jsonpojos.miners.MinerRoot;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -49,14 +45,27 @@ import static org.junit.Assert.fail;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(AndroidJUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(Parameterized.class)
 public class MasterInstrumentedTest {
-    private final PoolEnum toBeTested = PoolEnum.NOOBPOOL;
+    @Parameterized.Parameter()
+    public PoolEnum mTestPool;
+    @Parameterized.Parameter(value = 1)
+    public CurrencyEnum mTestCurrency;
+
+    private PoolEnum toBeTested;
     private Context appContext;
     private SharedPreferences sharedPreferences;
-    private String minerAddr;
-    private HomeStats retrievedHomeStats;
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> initParameters() {
+        return Arrays.asList(new Object[][]{
+                {PoolEnum.NOOBPOOL, CurrencyEnum.ETH},
+                {PoolEnum.CRYPTOPOOL, CurrencyEnum.ETC},
+                {PoolEnum.CHILEMINERS, CurrencyEnum.CLO},
+                {PoolEnum.MAXHASH, CurrencyEnum.ETH},
+                {PoolEnum.MAXHASH, CurrencyEnum.UBIQ}
+        });
+    }
 
     @Before
     public void useAppContext() {
@@ -66,194 +75,145 @@ public class MasterInstrumentedTest {
         assertEquals("it.angelic.mpw", appContext.getPackageName());
         sharedPreferences = appContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        toBeTested = mTestPool;
+        Log.w("TEST", toBeTested.toString());
         editor.putString("poolEnum", toBeTested.name());
-        editor.putString("curEnum", CurrencyEnum.ETH.name());
+        editor.putString("curEnum", mTestCurrency.name());
         editor.commit();
         assertNotNull(sharedPreferences);
-    }
-
-    @Test
-    public void testPref() {
-        String fileName = "FILE_NAME";
-
-        SharedPreferences sharedPreferences = appContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("key", "value");
-        editor.commit();
-
-        SharedPreferences sharedPreferences2 = appContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        assertEquals("value", sharedPreferences2.getString("key", null));
-    }
-
-    public void testURL(String strUrl) throws Exception {
-        try {
-            URL url = new URL(strUrl);
-            HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-            urlConn.connect();
-            assertEquals(HttpURLConnection.HTTP_OK, urlConn.getResponseCode());
-        } catch (IOException e) {
-            System.err.println("Error creating HTTP connection");
-            e.printStackTrace();
-            throw e;
-        }
+        assertTrue(toBeTested.getSupportedCurrencies().contains(mTestCurrency));
     }
 
     @Test
     public void testBaseExplorer() {
         List<CurrencyEnum> curs = toBeTested.getSupportedCurrencies();
-        for (CurrencyEnum cur : curs) {
-            if (cur.getScannerSite() != null) {
-                try {
-                   testURL(cur.getScannerSite().getBaseAddress().toString());
-                } catch (Exception e) {
-                    fail("Blockchain explorer error for "+ cur.toString());
-                }
-
+        if (mTestCurrency.getScannerSite() != null) {
+            try {
+                TestUtils.testURL(mTestCurrency.getScannerSite().getBaseAddress().toString());
+            } catch (Exception e) {
+                fail("Blockchain explorer error for " + mTestCurrency.toString());
             }
         }
     }
 
-
-
     @Test
-    public void testJsonHomeStatsRequest() {
-        final GsonBuilder builder = getGsonBuilder();
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Utils.getHomeStatsURL(sharedPreferences), null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(final JSONObject response) {
-                        Log.d(Constants.TAG, response.toString());
-                        Gson gson = builder.create();
-                        // Register an adapter to manage the date types as long values
-                        retrievedHomeStats = gson.fromJson(response.toString(), HomeStats.class);
-                        assertNotNull(retrievedHomeStats);
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                fail();
-                // hide the progress dialog
-            }
-        });
-        // Adding request to request queue
-        JSONClientSingleton.getInstance(InstrumentationRegistry.getTargetContext()).addToRequestQueue(jsonObjReq);
-    }
-
-    @NonNull
-    private GsonBuilder getGsonBuilder() {
-        final GsonBuilder builder = new GsonBuilder();
-        //gestione UNIX time lungo e non
-        builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
-        builder.registerTypeAdapter(Calendar.class, new MyTimeStampTypeAdapter());
-        return builder;
+    public void TestJsonHomeStatsSyncReq() {
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Utils.getHomeStatsURL(sharedPreferences), new JSONObject(), future, future);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(request);
+        final Gson gson = TestUtils.getGsonFromBuilder();
+        try {
+            JSONObject response = future.get(); // this will block
+            HomeStats retrievedHomeStats = gson.fromJson(response.toString(), HomeStats.class);
+            assertNotNull(retrievedHomeStats);
+        } catch (InterruptedException e) {
+            fail(e.getMessage());
+        } catch (ExecutionException e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
-    public void testJsonBlockRequest() {
-
-        final GsonBuilder builder = new GsonBuilder();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Utils.getBlocksURL(sharedPreferences), null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(final JSONObject response) {
-                        Log.i(Constants.TAG, response.toString());
-                        Gson gson = builder.create();
-                        // Register an adapter to manage the date types as long values
-                        Block retrievedBlocks = gson.fromJson(response.toString(), Block.class);
-                        assertNotNull(retrievedBlocks);
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(Constants.TAG, "Error: " + error.getMessage());
-                fail();
-            }
-        });
-
-        // Adding request to request queue
-        JSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
-
+    public void TestJsonBlockSyncReq() {
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Utils.getBlocksURL(sharedPreferences), new JSONObject(), future, future);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(request);
+        final Gson gson = TestUtils.getGsonFromBuilder();
+        try {
+            JSONObject response = future.get(); // this will block
+            Block retrievedBlocks = gson.fromJson(response.toString(), Block.class);
+            assertNotNull(retrievedBlocks);
+        } catch (InterruptedException e) {
+            fail(e.getMessage());
+        } catch (ExecutionException e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
-    public void testJsonMinerRequest() {
-        final GsonBuilder builder = getGsonBuilder();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Utils.getMinersStatsUrl(sharedPreferences), null,
-                new Response.Listener<JSONObject>() {
+    public void TestJsonMinerSyncReq() {
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Utils.getMinersStatsUrl(sharedPreferences), new JSONObject(), future, future);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(request);
+        Gson gson = TestUtils.getGsonFromBuilder();
+        try {
+            assertNotNull(getFirstMinerAddress(future, gson));
+        } catch (InterruptedException e) {
+            fail(e.getMessage());
+        } catch (ExecutionException e) {
+            fail(e.getMessage());
+        }
+    }
 
-                    @Override
-                    public void onResponse(final JSONObject response) {
-                        Log.i(Constants.TAG, response.toString());
-                        Gson gson = builder.create();
-                        // Register an adapter to manage the date types as long values
-                        MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
-                        minerAddr = retrieved.getMiners().values().iterator().next().getAddress();
-                        assertNotNull(minerAddr);
-                    }
-                }, new Response.ErrorListener() {
+    private String getFirstMinerAddress(RequestFuture<JSONObject> future, Gson gson) throws ExecutionException, InterruptedException {
+        JSONObject response = future.get(); // this will block
+        MinerRoot retrieved = gson.fromJson(response.toString(), MinerRoot.class);
+        assertNotNull(retrieved);
+        HashMap<String, Miner> map = retrieved.getMiners();
+        String[] minerArr = new String[map.size()];
+        minerArr = map.keySet().toArray(minerArr);
+        assertNotNull(minerArr);
+        return minerArr[0];
+        //assertNotNull(minerAddr);
+    }
 
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(Constants.TAG, "Error: " + error.getMessage());
-            }
-        });
 
-        // Adding request to request queue
-        JSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
+    @Test
+    public void TestJsonWalletSyncReq() {
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, Utils.getMinersStatsUrl(sharedPreferences), new JSONObject(), future, future);
+        JSONClientSingleton.getInstance(appContext).addToRequestQueue(request);
+        Gson gson = TestUtils.getGsonFromBuilder();
+        String addr = null;
+        try {
+            addr = getFirstMinerAddress(future, gson);
+        } catch (InterruptedException e) {
+            fail(e.getMessage());
+        } catch (ExecutionException e) {
+            fail(e.getMessage());
+        }
+
+        assertNotNull(addr);
+
+        RequestFuture<JSONObject> futuress = RequestFuture.newFuture();
+        try {
+            JsonObjectRequest requesst = new JsonObjectRequest(Request.Method.GET, Utils.getWalletStatsUrl(sharedPreferences) + addr, new JSONObject(), futuress, futuress);
+            JSONClientSingleton.getInstance(appContext).addToRequestQueue(requesst);
+            JSONObject response = futuress.get(); // this will block
+            Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
+            assertNotNull(retrieved);
+        } catch (InterruptedException e) {
+            fail(e.getMessage());
+        } catch (ExecutionException e) {
+            fail(e.getMessage());
+        }
+    }
+
+
+    @Test
+    public void testPersist() {
+        // Context of the app under test.
+        String mPool = sharedPreferences.getString("poolEnum", "");
+        String mCur = sharedPreferences.getString("curEnum", "");
+        PoolDbHelper db = PoolDbHelper.getInstance(appContext, PoolEnum.valueOf(mPool), CurrencyEnum.valueOf(mCur));
+        db.logHomeStats(new HomeStats());
+        assertNotNull(db.getLastHomeStats(1));
     }
 
     @Test
-    public void testJsonWalletRequest() {
-
-        final GsonBuilder builder = getGsonBuilder();
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                Utils.getWalletStatsUrl(sharedPreferences) + minerAddr, null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(final JSONObject response) {
-                        Log.i(Constants.TAG, response.toString());
-                        Gson gson = builder.create();
-                        // Register an adapter to manage the date types as long values
-                        Wallet retrieved = gson.fromJson(response.toString(), Wallet.class);
-                        assertNotNull(retrieved);
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(Constants.TAG, "Error: " + error.getMessage());
-            }
-        });
-
-        // Adding request to request queue
-        JSONClientSingleton.getInstance(appContext).addToRequestQueue(jsonObjReq);
+    public void testPersistClean() {
+        // Context of the app under test.
+        String mPool = sharedPreferences.getString("poolEnum", "");
+        String mCur = sharedPreferences.getString("curEnum", "");
+        PoolDbHelper db = PoolDbHelper.getInstance(appContext, PoolEnum.valueOf(mPool), CurrencyEnum.valueOf(mCur));
+        Calendar oldDate = Calendar.getInstance();
+        oldDate.add(Calendar.MONTH, -10);
+        HomeStats oldData = new HomeStats();
+        oldData.setNow(oldDate);
+        db.logHomeStats(oldData);//persist stale data
+        int prevHistorySize = db.getLastHomeStats(null).size();
+        PoolDbHelper.cleanOldData(db.getWritableDatabase());
+        assertNotEquals(prevHistorySize, db.getLastHomeStats(null).size());
     }
 
-
-    /**
-     * This cant be done async
-     *
-     @After public void testZPersist()  {
-     // Context of the app under test.
-     String mPool = sharedPreferences.getString("poolEnum", "");
-     String mCur = sharedPreferences.getString("curEnum", "");
-     PoolDbHelper db = new PoolDbHelper(appContext,PoolEnum.valueOf(mPool),CurrencyEnum.valueOf(mCur));
-     assertNotNull(minerAddr);
-     assertNotNull(retrievedHomeStats);
-     db.logHomeStats(retrievedHomeStats);
-     assertNotNull(db.getLastHomeStats(1));
-     PoolDbHelper.cleanOldData(db.getWritableDatabase());
-     }
-     */
 }

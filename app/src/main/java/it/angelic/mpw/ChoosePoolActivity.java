@@ -335,7 +335,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
             //la chiusa del DB serve
             try {
-                PoolDbHelper mDbHelper = new PoolDbHelper(ChoosePoolActivity.this, mPool, mCur);
+                PoolDbHelper mDbHelper = PoolDbHelper.getInstance(ChoosePoolActivity.this, mPool, mCur);
                 PoolDbHelper.cleanOldData(mDbHelper.getWritableDatabase());
                 mDbHelper.close();
             } catch (Exception e) {

@@ -74,8 +74,18 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     private static final String SQL_VACUUM = "VACUUM";
     private final GsonBuilder builder;
 
+    private static PoolDbHelper instance;
 
-    public PoolDbHelper(Context context, PoolEnum pool, CurrencyEnum cur) {
+
+    public static PoolDbHelper getInstance(Context context, PoolEnum pool, CurrencyEnum cur){
+        if (instance == null)
+            instance = new PoolDbHelper( context,  pool,  cur);
+
+        return instance;
+    }
+
+
+    private PoolDbHelper(Context context, PoolEnum pool, CurrencyEnum cur) {
         super(context, pool.name() + "_" + cur.name() + "_" + DATABASE_NAME, null, DATABASE_VERSION);
         Log.i(Constants.TAG, "Using DB: " + getDatabaseName());
         builder = new GsonBuilder();
@@ -358,9 +368,10 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         return ret;
     }
 
-    public LinkedMap<Date, HomeStats> getLastHomeStats(int limit) {
+    public LinkedMap<Date, HomeStats> getLastHomeStats(Integer limit) {
         LinkedMap<Date, HomeStats> ret = new LinkedMap<>();
         int cnt = 0;
+        String limitCond = limit == null ? "" : "" + limit;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(DataBaseContract.HomeStats_.TABLE_NAME, new String[]{
                         DataBaseContract.HomeStats_._ID,
@@ -371,7 +382,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
                 null,
                 null, // HAVING
                 DataBaseContract.HomeStats_.COLUMN_NAME_DTM + " DESC",
-                "" + limit);//2 results to do compare
+                limitCond);//2 results to do compare
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {

@@ -96,7 +96,7 @@ public class WalletActivity extends DrawerActivity {
         minerAddr = pref.getString("wallet_addr", null);
 
 
-        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         builder = new GsonBuilder();
 
         builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -155,7 +155,7 @@ public class WalletActivity extends DrawerActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        final PoolDbHelper mDbHelper = new PoolDbHelper(this, mPool, mCur);
+        final PoolDbHelper mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         issueRefresh(mDbHelper, builder, Utils.getWalletStatsUrl(PreferenceManager.getDefaultSharedPreferences(this)) + minerAddr);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -349,7 +349,7 @@ public class WalletActivity extends DrawerActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            mDbHelper = new PoolDbHelper(WalletActivity.this, mPool, mCur);
+            mDbHelper = PoolDbHelper.getInstance(WalletActivity.this, mPool, mCur);
 
             int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
             View radioButton =  findViewById(radioButtonID);
