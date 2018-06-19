@@ -37,6 +37,7 @@ public enum PoolEnum {
     }}, true),
     MAXHASH("MaxHash", "maxhash.org", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
+        add(CurrencyEnum.ETC);
         add(CurrencyEnum.EXP);
         add(CurrencyEnum.MC);
         add(CurrencyEnum.UBIQ);
@@ -51,8 +52,6 @@ public enum PoolEnum {
     SOYMINERO("SoyMinero", "soyminero.es", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ELLA);
-        //add(CurrencyEnum.MSR);
-        //add(CurrencyEnum.SUMO);
     }}, false),
     TWOMINERS("2miners", "2miners.com", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
