@@ -69,6 +69,7 @@ public class MasterInstrumentedTest {
                 {PoolEnum.CHILEMINERS, CurrencyEnum.CLO},
                 {PoolEnum.ANORAK, CurrencyEnum.PIRL},
                 {PoolEnum.ANORAK, CurrencyEnum.PIRL},
+                {PoolEnum.NOOBPOOL, CurrencyEnum.ETC},
                 {PoolEnum.MAXHASH, CurrencyEnum.ETC},
                 {PoolEnum.MAXHASH, CurrencyEnum.ETH},
                 {PoolEnum.TWOMINERS, CurrencyEnum.MUSIC},
