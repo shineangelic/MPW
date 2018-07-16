@@ -166,9 +166,14 @@ public class MainActivity extends DrawerActivity {
         mAdView.loadAd(adRequest);
 
         super.onStart();
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setCheckedItem(R.id.nav_home);
-        Utils.fillEthereumStats(this, mDbHelper, (NavigationView) findViewById(R.id.nav_view), mPool, mCur);
+
+        NavigationView navigationViewInterna = findViewById(R.id.navigation_view);
+        navigationViewInterna.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationViewInterna.setCheckedItem(R.id.nav_home);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        Utils.fillEthereumStats(this, mDbHelper, navigationView, mPool, mCur);
         //importante refresh
         mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
         issueAsynchRefresh(mDbHelper, builder);

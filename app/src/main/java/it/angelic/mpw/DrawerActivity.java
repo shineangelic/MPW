@@ -191,6 +191,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                                     startActivity(miner);
                                 }
                             }).show();
+                    DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
+                    return false;//non cambia selezione
                 } else {
                     Intent miner = new Intent(this, WalletActivity.class);
                     startActivity(miner);
@@ -210,6 +213,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                                     startActivity(miner);
                                 }
                             }).show();
+                    DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
+                    return false;//non cambia selezione
                 } else {
                     Intent miner = new Intent(this, PaymentsActivity.class);
                     startActivity(miner);
