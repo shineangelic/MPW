@@ -80,7 +80,6 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     public static PoolDbHelper getInstance(Context context, PoolEnum pool, CurrencyEnum cur){
         if (instance == null)
             instance = new PoolDbHelper( context,  pool,  cur);
-
         return instance;
     }
 
@@ -91,6 +90,12 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         builder = new GsonBuilder();
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        this.close();
+        super.finalize();
+    }
+
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_HomeSTATS);
         db.execSQL(SQL_CREATE_WALLET);
@@ -99,14 +104,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_MINERS_IDX);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
-
     public static void cleanOldData(SQLiteDatabase db) {
-
         Calendar oneMonthAgo = Calendar.getInstance();
         oneMonthAgo.add(Calendar.MONTH, -1);
         Log.w("DB", "SQL_ CLEANING older than: " + oneMonthAgo.getTime());
@@ -117,7 +115,6 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         db.delete(DataBaseContract.Miner_.TABLE_NAME,
                 DataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " < " + oneMonthAgo.getTime().getTime(), null);
         db.execSQL(SQL_VACUUM);
-        db.close();
     }
 
     public void truncateWallets(SQLiteDatabase db) {
@@ -140,7 +137,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     }
 
     // Adding new contact
-    public void logHomeStats(HomeStats contact) {
+    public long logHomeStats(HomeStats contact) {
         Gson gson = builder.create();
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -148,21 +145,17 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         values.put(DataBaseContract.HomeStats_.COLUMN_NAME_DTM, contact.getNow().getTime().getTime()); // Contact Name
         values.put(DataBaseContract.HomeStats_.COLUMN_NAME_JSON, gson.toJson(contact)); // Serializza
 
-        // Inserting Row
-        db.insert(DataBaseContract.HomeStats_.TABLE_NAME, null, values);
-        db.close(); // Closing database connection
+        return db.insert(DataBaseContract.HomeStats_.TABLE_NAME, null, values);
     }
 
-    public void logWalletStats(Wallet retrieved) {
+    public long logWalletStats(Wallet retrieved) {
         Gson gson = builder.create();
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DataBaseContract.Wallet_.COLUMN_NAME_DTM, new Date().getTime()); // Contact Name
         values.put(DataBaseContract.Wallet_.COLUMN_NAME_JSON, gson.toJson(retrieved)); // Serializza
 
-        // Inserting Row
-        db.insert(DataBaseContract.Wallet_.TABLE_NAME, null, values);
-        db.close(); // Closing database connection
+        return db.insert(DataBaseContract.Wallet_.TABLE_NAME, null, values);
     }
 
 
