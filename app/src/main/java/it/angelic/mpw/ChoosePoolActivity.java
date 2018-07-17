@@ -163,8 +163,10 @@ public class ChoosePoolActivity extends AppCompatActivity {
         restoreLastSettings(prefs);
         //ADS
         AdView mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        if (mAdView != null) {//adblocker? boh
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
     }
 
     /**
