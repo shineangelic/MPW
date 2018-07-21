@@ -56,7 +56,6 @@ public class PoolDbHelper extends SQLiteOpenHelper {
                     DataBaseContract.Miner_.COLUMN_NAME_CURHR + " INTEGER," +
                     DataBaseContract.Miner_.COLUMN_NAME_CUROFFLINE + " INTEGER," +
                     DataBaseContract.Miner_.COLUMN_NAME_PAID + " INTEGER)";
-
     private static final String SQL_CREATE_HOME_IDX =
             "CREATE INDEX " + DataBaseContract.HomeStats_.TABLE_NAME + "_dtm_idx ON "
                     + DataBaseContract.HomeStats_.TABLE_NAME + "(" + DataBaseContract.HomeStats_.COLUMN_NAME_DTM + ");";
@@ -72,22 +71,39 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     private static final String SQL_TRUNCATE_WALLET =
             "DELETE FROM " + DataBaseContract.Wallet_.TABLE_NAME;
     private static final String SQL_VACUUM = "VACUUM";
-    private final GsonBuilder builder;
-
+    //instance changes whenever cur or pool change
+    static PoolEnum poolEn;
+    static CurrencyEnum curEn;
     private static PoolDbHelper instance;
-
-
-    public static PoolDbHelper getInstance(Context context, PoolEnum pool, CurrencyEnum cur){
-        if (instance == null)
-            instance = new PoolDbHelper( context,  pool,  cur);
-        return instance;
-    }
+    private final GsonBuilder builder;
 
 
     private PoolDbHelper(Context context, PoolEnum pool, CurrencyEnum cur) {
         super(context, pool.name() + "_" + cur.name() + "_" + DATABASE_NAME, null, DATABASE_VERSION);
         Log.i(Constants.TAG, "Using DB: " + getDatabaseName());
         builder = new GsonBuilder();
+    }
+
+    public static PoolDbHelper getInstance(Context context, PoolEnum pool, CurrencyEnum cur) {
+        if (instance == null || !pool.equals(poolEn) || !cur.equals(curEn)) {
+            instance = new PoolDbHelper(context, pool, cur);
+            poolEn = pool;
+            curEn = cur;
+        }
+        return instance;
+    }
+
+    public static void cleanOldData(SQLiteDatabase db) {
+        Calendar oneMonthAgo = Calendar.getInstance();
+        oneMonthAgo.add(Calendar.MONTH, -1);
+        Log.w("DB", "SQL_ CLEANING older than: " + oneMonthAgo.getTime());
+        db.delete(DataBaseContract.HomeStats_.TABLE_NAME,
+                DataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
+        db.delete(DataBaseContract.Wallet_.TABLE_NAME,
+                DataBaseContract.Wallet_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
+        db.delete(DataBaseContract.Miner_.TABLE_NAME,
+                DataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " < " + oneMonthAgo.getTime().getTime(), null);
+        db.execSQL(SQL_VACUUM);
     }
 
     @Override
@@ -102,19 +118,6 @@ public class PoolDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_MINER);
         db.execSQL(SQL_CREATE_HOME_IDX);
         db.execSQL(SQL_CREATE_MINERS_IDX);
-    }
-
-    public static void cleanOldData(SQLiteDatabase db) {
-        Calendar oneMonthAgo = Calendar.getInstance();
-        oneMonthAgo.add(Calendar.MONTH, -1);
-        Log.w("DB", "SQL_ CLEANING older than: " + oneMonthAgo.getTime());
-        db.delete(DataBaseContract.HomeStats_.TABLE_NAME,
-                DataBaseContract.HomeStats_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
-        db.delete(DataBaseContract.Wallet_.TABLE_NAME,
-                DataBaseContract.Wallet_.COLUMN_NAME_DTM + " < " + oneMonthAgo.getTime().getTime(), null);
-        db.delete(DataBaseContract.Miner_.TABLE_NAME,
-                DataBaseContract.Miner_.COLUMN_NAME_LASTSEEN + " < " + oneMonthAgo.getTime().getTime(), null);
-        db.execSQL(SQL_VACUUM);
     }
 
     public void truncateWallets(SQLiteDatabase db) {
@@ -159,8 +162,8 @@ public class PoolDbHelper extends SQLiteOpenHelper {
     }
 
 
-    public int updateMiner(MinerDBRecord retrieved, SQLiteDatabase db) {
-
+    public int updateMiner(MinerDBRecord retrieved) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(DataBaseContract.Miner_.COLUMN_NAME_LASTSEEN, retrieved.getLastSeen().getTime());
@@ -285,7 +288,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
                 do {
                     Wallet retrieved = gson.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.Wallet_.COLUMN_NAME_JSON)), Wallet.class);
                     rec++;
-                    Double curPending = retrieved.getStats().getBalance() ;
+                    Double curPending = retrieved.getStats().getBalance();
                     if (curPending > prevPending) {
                         Log.d(TAG, "Block detected in history. Prev balance: " + prevPending + " current: " + curPending);
                         cnt++;
@@ -294,7 +297,7 @@ public class PoolDbHelper extends SQLiteOpenHelper {
                     }
                     prevPending = curPending;
                 } while (cursor.moveToNext());
-            }catch (Exception caz){
+            } catch (Exception caz) {
                 Log.e(TAG, "Cant read getAveragePending entry: " + caz.getMessage());
             }
         }

@@ -46,7 +46,6 @@ import static it.angelic.mpw.Constants.TAG;
 public class MPWMinersService extends JobService {
 
     private PoolDbHelper mDbHelper;
-    private SQLiteDatabase db;
 
     @NonNull
     public static Job getJobUpdate(FirebaseJobDispatcher dispatcher) {
@@ -86,7 +85,6 @@ public class MPWMinersService extends JobService {
             Log.i(TAG, "SERVICE MINERS working on:" + mPool.toString() + " - " + mCur.toString());
 
             mDbHelper = PoolDbHelper.getInstance(this, mPool, mCur);
-            db = mDbHelper.getWritableDatabase();
             final GsonBuilder builder = new GsonBuilder();
             //gestione UNIX time lungo e non
             builder.registerTypeAdapter(Date.class, new MyDateTypeAdapter());
@@ -143,7 +141,7 @@ public class MPWMinersService extends JobService {
                         rec.setLastSeen(retrieved.getStats().getLastShare());
                         rec.setBlocksFound(retrieved.getStats().getBlocksFound());
 
-                        mDbHelper.updateMiner(rec,db);
+                        mDbHelper.updateMiner(rec);
                     }
                 }, new Response.ErrorListener() {
             @Override

@@ -53,7 +53,7 @@ import it.angelic.mpw.model.jsonpojos.wallet.Payment;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
 public class PaymentsActivity extends DrawerActivity {
-    private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    private static final SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
 
     private String minerAddr;
     private GsonBuilder builder;

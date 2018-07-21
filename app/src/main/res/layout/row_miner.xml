@@ -34,16 +34,6 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageViewSfondoTest"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-
-                android:adjustViewBounds="true"
-                android:alpha="0.6"
-                card_view:srcCompat="@color/colorPrimary"
-                android:contentDescription="Pool's background" />
-
-            <ImageView
                 android:id="@+id/imageViewMinersLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,8 +44,8 @@
                 android:contentDescription="payment icon"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_account_balance_wallet_white_24dp"
-                android:backgroundTint="@color/colorAccent"/>
+                app:srcCompat="@drawable/ic_account_balance_wallet_black_24dp"
+                android:tint="@color/colorAccent"/>
 
             <TextView
                 android:id="@+id/blockMinerAddress"
@@ -64,21 +54,17 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="-40dp"
-                android:layout_marginTop="-16dp"
                 android:layout_toRightOf="@id/imageViewMinersLink"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textSize="46sp"
+                android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 tools:text="0xbba4e04fe3692ae8ddc8599a65f64cdc00606a13" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/imageViewSfondoTest">
+                android:layout_below="@id/imageViewMinersLink">
 
                 <TextView
                     android:id="@+id/textViewMinerFirstSeen"
