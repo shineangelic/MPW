@@ -61,18 +61,10 @@ public class MainActivity extends DrawerActivity {
     private TextView noobText;
     private TextView hashText;
 
-    private TextView poolLastBeat;
-    private TextView textViewNetDiffValue;
-    private TextView lastFoundText;
-    private TextView onlineMinersText;
-    private TextView textViewBlockChainHeightValue;
-    private TextView poolHashrateText;
     private TextView roundSharesText;
     private LinkedMap<Date, HomeStats> storia;
-    private TextView lastFoundTextLabel;
     private RadioGroup radioGroupBackTo;
     private TextView textViewNetDiffTitle;
-    private TextView textViewVarianceValue;
     private GsonBuilder builder;
     private PoolDbHelper mDbHelper;
 
@@ -92,18 +84,9 @@ public class MainActivity extends DrawerActivity {
         noobText = findViewById(R.id.textViewWalletTitle);
         hashText = findViewById(R.id.hashrateText);
         textViewNetDiffTitle = findViewById(R.id.textViewWalHashrateTitle);
-        poolLastBeat = findViewById(R.id.textViewWalLastShareValue);
-        textViewNetDiffValue = findViewById(R.id.textViewNetDiffValue);
-        lastFoundTextLabel = findViewById(R.id.textViewLastBlock);
-        lastFoundText = findViewById(R.id.textViewWalPaymentsValue);
 
-        onlineMinersText = findViewById(R.id.textViewWalCurHashrateValue);
-        textViewBlockChainHeightValue = findViewById(R.id.textViewBlockChainHeightValue);
-        poolHashrateText = findViewById(R.id.textViewPoolHashrateValue);
         roundSharesText = findViewById(R.id.textViewRoundSharesValue);
-        textViewVarianceValue = findViewById(R.id.textViewVarianceValue);
-
-
+        
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +181,7 @@ public class MainActivity extends DrawerActivity {
                                 int radioButtonID = radioGroupBackTo.getCheckedRadioButtonId();
                                 View radioButton = findViewById(radioButtonID);
                                 storia = mDbHelper.getHistoryData(BackToEnum.valueOf((String) radioButton.getTag()));
-                                updateCurrentStats();
+                                updateCurrentStatsPanel();
                                 final RadioButton radioDay = findViewById(R.id.radioButtonDay);
                                 final RadioButton radioMin = findViewById(R.id.radioButtonMinutes);
                                 GranularityEnum granoEnum = GranularityEnum.HOUR;
@@ -236,7 +219,7 @@ public class MainActivity extends DrawerActivity {
                 Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
                         .show();
                 // prevent stale data appear
-                updateCurrentStats();
+                updateCurrentStatsPanel();
             }
         });
 
@@ -249,42 +232,62 @@ public class MainActivity extends DrawerActivity {
     /**
      * Update header with last persisted DB row
      */
-    private void updateCurrentStats() {
+    private void updateCurrentStatsPanel() {
         try {
-            HomeStats lastHomeStats = storia.get(storia.lastKey());
-            refreshHeaderInfo(lastHomeStats);
-            try {
-                Calendar when = Calendar.getInstance();
-                when.setTimeZone(TimeZone.getDefault());
-                when.setTime(lastHomeStats.getStats().getLastBlockFound());
-                lastFoundTextLabel.setText(getString(R.string.last_block_found) + " " + Utils.getTimeAgo(when));
-                lastFoundText.setText(yearFormatExtended.format(lastHomeStats.getStats().getLastBlockFound()));
-            } catch (Exception ee) {
-                Log.w(Constants.TAG, "No block found yet?");
-            }
-            textViewNetDiffValue.setText(Utils.formatBigNumber(Long.parseLong(lastHomeStats.getNodes().get(0).getDifficulty())));
-            Calendar lastB = Calendar.getInstance();
-            lastB.setTime(lastHomeStats.getNodes().get(0).getLastBeat());
-            yearFormatExtended.setTimeZone(TimeZone.getDefault());
-            poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
 
-            onlineMinersText.setText("" + (lastHomeStats.getMinersTotal() == null ? 0 : lastHomeStats.getMinersTotal()));
+            TextView onlineMinersText = findViewById(R.id.textViewWalCurHashrateValue);
+            TextView poolHashrateText = findViewById(R.id.textViewPoolHashrateValue);
+            TextView textViewNetDiffValue = findViewById(R.id.textViewNetDiffValue);
+            TextView textViewBlockChainHeightValue = findViewById(R.id.textViewBlockChainHeightValue);
+            HomeStats lastHomeStats = storia.get(storia.lastKey());
+            //header from superclass
+            refreshHeaderInfo(lastHomeStats);
+            //refresh panel values
+            refreshLastFindings(lastHomeStats);
+            refreshPoolLastBeat(lastHomeStats);
+
+            textViewNetDiffValue.setText(Utils.formatBigNumber(Long.parseLong(lastHomeStats.getNodes().get(0).getDifficulty())));
+
+            onlineMinersText.setText(String.format(Locale.getDefault(),"%d", lastHomeStats.getMinersTotal() == null ? 0 : lastHomeStats.getMinersTotal()));
             textViewBlockChainHeightValue.setText(Utils.formatBigNumber(Long.parseLong(lastHomeStats.getNodes().get(0).getHeight())));
             poolHashrateText.setText(Utils.formatHashrate(Long.parseLong(lastHomeStats.getHashrate().toString())));
             roundSharesText.setText(Utils.formatBigNumber(lastHomeStats.getStats().getRoundShares()));
             noobText.setText(String.format(getString(R.string.tot_block_found), mPool.toString(), lastHomeStats.getMaturedTotal(), mCur.name()));
             try {
+                TextView textViewVarianceValue = findViewById(R.id.textViewVarianceValue);
                 BigDecimal bVar = Utils.computeBlockVariance(lastHomeStats.getStats().getRoundShares(), Long.parseLong(lastHomeStats.getNodes().get(0).getDifficulty()));
-                textViewVarianceValue.setText(bVar.stripTrailingZeros().toPlainString() + "%");
+                textViewVarianceValue.setText(String.format("%s%%", bVar.stripTrailingZeros().toPlainString()));
             } catch (Exception e) {
                 Log.e(Constants.TAG, "Errore refresh computeBlockVariance: " + e.getMessage());
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            Log.e(Constants.TAG, "Errore refresh: " + e.getMessage());
+            Log.e(Constants.TAG, "ERROR refresh: " + e.getMessage());
             e.printStackTrace();
         }
 
+    }
+
+    private void refreshPoolLastBeat(HomeStats lastHomeStats) {
+        TextView poolLastBeat = findViewById(R.id.textViewPoolLastBeatValue);
+        Calendar lastB = Calendar.getInstance();
+        lastB.setTime(lastHomeStats.getNodes().get(0).getLastBeat());
+        yearFormatExtended.setTimeZone(TimeZone.getDefault());
+        poolLastBeat.setText(yearFormatExtended.format(lastB.getTime()));
+    }
+
+    private void refreshLastFindings(HomeStats lastHomeStats) {
+        try {
+            TextView lastFoundTextLabel = findViewById(R.id.textViewLastBlock);
+            TextView lastFoundText = findViewById(R.id.textViewWalPaymentsValue);
+            Calendar when = Calendar.getInstance();
+            when.setTimeZone(TimeZone.getDefault());
+            when.setTime(lastHomeStats.getStats().getLastBlockFound());
+            lastFoundTextLabel.setText(String.format("%s %s", getString(R.string.last_block_found), Utils.getTimeAgo(when)));
+            lastFoundText.setText(yearFormatExtended.format(lastHomeStats.getStats().getLastBlockFound()));
+        } catch (Exception ee) {
+            Log.w(Constants.TAG, "No block found yet?");
+        }
     }
 
     @Override
@@ -299,7 +302,6 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -308,7 +310,6 @@ public class MainActivity extends DrawerActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent opzioni = new Intent(this, SettingsActivity.class);
             startActivity(opzioni);

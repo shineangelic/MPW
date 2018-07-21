@@ -218,11 +218,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
@@ -236,13 +231,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         boolean cancel = false;
         View focusView = null;
-
-        // Check for a valid email address.
-       /* if (!isWalletValid(email)) {
-            mWalletView.setError(getString(R.string.error_invalid_email));
-            focusView = mWalletView;
-            cancel = true;
-        }*/
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -319,7 +307,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
                     //clean curency value
                     CryptoSharedPreferencesUtils.cleanValues(ChoosePoolActivity.this);
                 }
-
                 prefs.edit().putString("poolEnum", mPool.name()).apply();
                 prefs.edit().putString("curEnum", mCur.name()).apply();
                 prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).commit();
@@ -343,7 +330,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e(Constants.TAG, "ERROR cleaning/DB operation: ", e);
             }
-
 
             try {
                 URL myUrl = new URL(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this)));
@@ -382,7 +368,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 startActivity(miner);
                 finish();
             } else if (connectError) {
-                //TODO show err
+                //fott nu cazz
             }
         }
 

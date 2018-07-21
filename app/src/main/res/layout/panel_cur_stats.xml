@@ -112,7 +112,7 @@
         android:layout_marginTop="8dp"
         android:text="Blockch. height"
         app:layout_constraintLeft_toLeftOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNetDifficulty" />
+        app:layout_constraintTop_toBottomOf="@id/textViewNetDifficulty" />
 
     <TextView
         android:id="@+id/textViewBlockChainHeightValue"
@@ -138,6 +138,28 @@
         app:layout_constraintTop_toBottomOf="@id/textViewBlockChainHeightValue" />
 
     <TextView
+        android:id="@+id/textViewWalLastShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Pool last beat"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewSeparatorWallet2" />
+
+    <TextView
+        android:id="@+id/textViewPoolLastBeatValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="NA"
+        android:textColor="#337ab7"
+        android:textStyle="bold"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewSeparatorWallet2" />
+
+    <TextView
         android:id="@+id/textViewLastBlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -159,7 +181,7 @@
         android:textColor="#337ab7"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewWalLastShareValue" />
+        app:layout_constraintTop_toBottomOf="@id/textViewPoolLastBeatValue" />
 
     <TextView
         android:id="@+id/textViewRoundShares"
@@ -169,7 +191,7 @@
         android:layout_marginTop="8dp"
         android:text="Round Shares"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLastBlock"
+        app:layout_constraintTop_toBottomOf="@id/textViewLastBlock"
         android:layout_marginStart="8dp" />
 
     <TextView
@@ -183,31 +205,7 @@
         android:textColor="#337ab7"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewWalPaymentsValue" />
-
-    <TextView
-        android:id="@+id/textViewWalLastShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Pool last beat"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="8dp" />
-
-    <TextView
-        android:id="@+id/textViewWalLastShareValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="NA"
-        android:textColor="#337ab7"
-        android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewSeparatorWallet2" />
+        app:layout_constraintTop_toBottomOf="@id/textViewWalPaymentsValue" />
 
     <TextView
         android:id="@+id/textViewVariance"
@@ -218,7 +216,7 @@
         android:text="Variance"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewRoundShares" />
+        app:layout_constraintTop_toBottomOf="@id/textViewRoundShares" />
 
     <TextView
         android:id="@+id/textViewVarianceValue"
@@ -231,7 +229,7 @@
         android:textColor="#337ab7"
         android:textStyle="bold"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewRoundSharesValue" />
+        app:layout_constraintTop_toBottomOf="@id/textViewRoundSharesValue" />
 
 
 </android.support.constraint.ConstraintLayout>
