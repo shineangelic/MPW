@@ -334,7 +334,7 @@ public class MPWService extends JobService {
     }
 
     @NonNull
-    public static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher, boolean replaceCurrent) {
+    public static Job getJobUpdate(SharedPreferences prefs, FirebaseJobDispatcher dispatcher) {
         Bundle myExtrasBundle = new Bundle();
         Integer intervalMsec = Integer.valueOf(prefs.getString("pref_sync_freq", "" + AlarmManager.INTERVAL_HALF_HOUR)) /1000;
         myExtrasBundle.putString("WALLETURL", prefs.getString("wallet_addr", null));

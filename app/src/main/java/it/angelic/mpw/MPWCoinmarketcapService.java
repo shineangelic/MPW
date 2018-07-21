@@ -30,7 +30,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import it.angelic.mpw.model.enums.CurrencyEnum;
-import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 
 import static it.angelic.mpw.Constants.COINMKCAP_STATS_COIN_LIMIT;
@@ -44,7 +43,7 @@ public class MPWCoinmarketcapService extends JobService {
         final Context ctx = MPWCoinmarketcapService.this;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         try {
-            final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
+            //final PoolEnum mPool = PoolEnum.valueOf(prefs.getString("poolEnum", ""));
             final CurrencyEnum mCur = CurrencyEnum.valueOf(prefs.getString("curEnum", ""));
             Log.w(TAG, "Miner Pool Watcher Coinmarketcap Service call:" + Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(ctx)));
             Log.i(TAG, "SERVICE MARKETCAP working on:" + mCur.toString());

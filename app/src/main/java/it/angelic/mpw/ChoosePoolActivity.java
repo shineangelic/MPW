@@ -77,7 +77,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
         if (synchActive) {
-            Job myJob = MPWService.getJobUpdate(prefs, dispatcher,false);
+            Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
             dispatcher.schedule(myJob);
         } else {
             dispatcher.cancelAll();
@@ -230,7 +230,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
         String email = mWalletView.getText().toString();
 
         boolean cancel = false;
-        View focusView = null;
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first

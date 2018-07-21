@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 import it.angelic.mpw.model.db.MinerDBRecord;
 import it.angelic.mpw.model.enums.CurrencyEnum;
-import it.angelic.mpw.model.enums.PoolEnum;
 
 /**
  * Created by shine@angelic.it on 02/02/2018.
@@ -27,14 +26,12 @@ import it.angelic.mpw.model.enums.PoolEnum;
 
 class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
 
-    private final PoolEnum mPool;
     private final CurrencyEnum mCur;
     private ArrayList<MinerDBRecord> minersArray;
 
 
-    public MinerAdapter(ArrayList<MinerDBRecord> minatori, PoolEnum pool, CurrencyEnum currencyEnum) {
+    public MinerAdapter(ArrayList<MinerDBRecord> minatori, CurrencyEnum currencyEnum) {
         super();
-        mPool = pool;
         mCur = currencyEnum;
         minersArray = minatori;
     }
@@ -51,7 +48,7 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
     public void onBindViewHolder(@NonNull MinerViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.bindBlock(minersArray.get(position), mPool, mCur);
+        holder.bindBlock(minersArray.get(position), mCur);
     }
 
     @Override
@@ -98,7 +95,7 @@ class MinerAdapter extends RecyclerView.Adapter<MinerAdapter.MinerViewHolder> {
 
         }
 
-        public void bindBlock(final MinerDBRecord game, PoolEnum pool,final CurrencyEnum cur) {
+        public void bindBlock(final MinerDBRecord game, final CurrencyEnum cur) {
             mblockMinerAddress.setText(Utils.formatEthAddress(game.getAddress()));
             View.OnClickListener list = new View.OnClickListener() {
                 @Override

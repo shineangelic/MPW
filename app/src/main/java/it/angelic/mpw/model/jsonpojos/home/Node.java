@@ -17,12 +17,6 @@ public class Node implements Serializable {
     public Node() {
     }
 
-    /**
-     * @param height
-     * @param name
-     * @param difficulty
-     * @param lastBeat
-     */
     public Node(String difficulty, String height, Date lastBeat, String name) {
         super();
         this.difficulty = difficulty;

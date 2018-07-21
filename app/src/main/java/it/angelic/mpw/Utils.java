@@ -134,12 +134,6 @@ class Utils {
         return getTimeAgo(cp);
     }
 
-    /**
-     * utility minutes
-     *
-     * @param ref
-     * @return
-     */
     public static String getTimeAgo(Calendar ref) {
         Calendar now = Calendar.getInstance();
 

@@ -308,7 +308,7 @@ public class MinersActivity extends DrawerActivity {
             textViewBlocksTitle.setText(retrieved.getMinersTotal() + " " + mCur.toString() + " miners on " + mPool.toString());
             updateUIRecordStats(min);
             if (mAdapter == null) {
-                mAdapter = new MinerAdapter(min, mPool, mCur);
+                mAdapter = new MinerAdapter(min, mCur);
                 mRecyclerView.setAdapter(mAdapter);
             } else {
                 mAdapter.setMinersArray(min);
@@ -322,7 +322,7 @@ public class MinersActivity extends DrawerActivity {
         protected void onPreExecute() {
             mDbHelper = PoolDbHelper.getInstance(MinersActivity.this, mPool, mCur);
             if (mAdapter == null) {
-                mAdapter = new MinerAdapter(min, mPool, mCur);
+                mAdapter = new MinerAdapter(min, mCur);
                 min = mDbHelper.getMinerList(sortOrder);
                 mAdapter.setMinersArray(min);
                 mRecyclerView.setAdapter(mAdapter);

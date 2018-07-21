@@ -37,7 +37,7 @@ public class Stats implements Serializable {
 
     /**
      * Arguable getter to patch anorak pool
-     * @return
+     * @return roundShares or backup on roundSharesDiff
      */
     public Long getRoundShares() {
         if (roundShares != null)

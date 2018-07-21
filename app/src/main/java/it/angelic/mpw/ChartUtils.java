@@ -104,7 +104,7 @@ class ChartUtils {
         ArrayList<Float> dataList = new ArrayList<>();
         ArrayList<String> labelsArr = new ArrayList<>();
         List<Date> dates = dateWalletLinkedMap.asList();
-        Wallet campione = dateWalletLinkedMap.values().iterator().next();
+       // Wallet campione = dateWalletLinkedMap.values().iterator().next();
         for (Date date2 : dates) {
             labelsArr.add(getLabelFormat(grane, date2));
             dataList.add(Utils.condenseHashRate(dateWalletLinkedMap.get(date2).getHashrate()));

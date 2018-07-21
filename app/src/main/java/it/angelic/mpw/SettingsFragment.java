@@ -59,7 +59,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
                 dispatcher.cancelAll();
                 if (nv) {
-                    Job myJob = MPWService.getJobUpdate(prefs, dispatcher, true);
+                    Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
                     int res  = dispatcher.schedule(myJob);
                     if (res != FirebaseJobDispatcher.SCHEDULE_RESULT_SUCCESS){
                         Toast.makeText(getActivity(),"Cannot enable service. Is Play Services up to date? Notifications won't work", Toast.LENGTH_SHORT).show();
@@ -91,7 +91,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 prefs.edit().putString("pref_sync_freq", ""+nv).apply();
 
                 FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(getActivity()));
-                Job myJob = MPWService.getJobUpdate(prefs, dispatcher, true);
+                Job myJob = MPWService.getJobUpdate(prefs, dispatcher);
                 dispatcher.schedule(myJob);
 
                 Bundle bundle = new Bundle();

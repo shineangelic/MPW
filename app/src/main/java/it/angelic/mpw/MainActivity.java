@@ -86,7 +86,7 @@ public class MainActivity extends DrawerActivity {
         textViewNetDiffTitle = findViewById(R.id.textViewWalHashrateTitle);
 
         roundSharesText = findViewById(R.id.textViewRoundSharesValue);
-        
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
