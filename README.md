@@ -31,3 +31,11 @@ It's also published on [playconsole](https://play.google.com/store/apps/details?
 
 Play store requires me to advise you about the fact Mining Pool Watcher is requesting READ_PHONE_STATE permission. Actually, the app has nothing to do with 'phone' and you can check it in the sources. Permission is required by a library, after I had to move to [firebase-job-scheduler](https://github.com/firebase/firebase-jobdispatcher-android) to ensure your blocks finding were reported and your pools payments notified.
 
+## Implementation 
+
+The app makes use of three SQLite tables, used to store wallet, pool and miners data. When a new Pool/currency pair is selected at app startup a new DB will be created, so that data is kept separate among different pools/currencies. Database's structure is dumb by design, storing only the pair date/rawjson. This allow differences among schemas implemented by different pools and leave flexibility to internal representation change.
+
+Blocks section and payments section are not stored on app's database: since the content of those jsons is generally small and those screens are not very used, I saved some dev time not binding recyclerViews to database but just asking JSons to Volley at runtime.
+
+The central class for app configuration is an enum that defines the pool's list. Near there, you'll find CurrencyEnum whose duty should be clear from its name. Mining Pool Watcher also uses a minimal ''Coinmarketcap'' client to refresh mined currencies value in BTC and $.
+
