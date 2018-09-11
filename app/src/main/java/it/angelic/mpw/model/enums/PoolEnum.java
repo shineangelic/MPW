@@ -10,6 +10,8 @@ public enum PoolEnum {
     NOOBPOOL("Noob Pool", "noobpool.com", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
+        add(CurrencyEnum.ELLA);
+        add(CurrencyEnum.ETP);
     }}, false),
     CRYPTOPOOL("CryptoPool Network", "cryptopool.network", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ELLA);
