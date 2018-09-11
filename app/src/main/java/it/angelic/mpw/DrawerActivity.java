@@ -115,6 +115,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case ETC:
                 //gia` cosi, e` default
                 break;
+            case ETP:
+                imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_etp_logo);
+                break;
             case UBIQ:
             case UBQ:
                 imageViewCurrencyLogoFoot.setImageResource(R.drawable.ic_ubiq_logo);

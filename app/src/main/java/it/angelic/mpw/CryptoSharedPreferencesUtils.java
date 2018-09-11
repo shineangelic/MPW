@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import it.angelic.mpw.model.jsonpojos.coinmarketcap.Ticker;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -75,7 +78,9 @@ public class CryptoSharedPreferencesUtils {
         SharedPreferences.Editor prefEditor = settings.edit();
         Log.w(Constants.TAG, "save value: " + result);
         try {
-            prefEditor.putString("CURUSD", result.getPrice_usd());
+            BigDecimal bd = new BigDecimal(result.getPrice_usd());
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
+            prefEditor.putString("CURUSD", ""+bd.doubleValue());
             prefEditor.putString("CURCHG", result.getPercent_change_24h());
             prefEditor.putLong("CURTIMESTAMP", Long.valueOf(result.getLast_updated()) * 1000);
         } catch (Exception ie) {

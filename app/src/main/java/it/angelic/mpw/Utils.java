@@ -192,7 +192,7 @@ class Utils {
             ethC.setText("Courtesy of coinmarketcap. Last update: " + MainActivity.yearFormatExtended.format(new Date(settings.getLong("CURTIMESTAMP", 0))));
             ethPlaceholder.setText(String.format(ctx.getString(R.string.currency_placeholder), cur.name(), CryptoSharedPreferencesUtils.readEtherValues(ctx), Double.valueOf(chg)));
         } catch (Exception e) {
-            Log.e(TAG, "Error eth currency panel:" + e.getMessage());
+            Log.e(TAG, "Errore aggiornamento eth currency panel:" + e.getMessage());
             ethC.setVisibility(View.INVISIBLE);
             ethPlaceholder.setVisibility(View.INVISIBLE);
         }
