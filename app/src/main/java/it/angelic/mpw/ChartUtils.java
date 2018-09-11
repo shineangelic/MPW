@@ -5,7 +5,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.widget.TextView;
 
-import junit.framework.Assert;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
@@ -89,7 +88,7 @@ class ChartUtils {
         for (Integer e : colArr)
             ret[i++] = e;
         chart.setColorArray(ret);
-        Assert.assertTrue(dataLists.size() == colArr.size());
+        //Assert.assertTrue(dataLists.size() == colArr.size());
         chart.setFloatDataList(dataLists); //or lineView.setFloatDataList(floatDataLists)
 
 
