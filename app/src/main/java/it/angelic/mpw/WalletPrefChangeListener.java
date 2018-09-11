@@ -35,7 +35,17 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (isValidEthAddress((String) newValue)) return false;
+        //METAVERSE addresses are different
+        if (cur.equals(CurrencyEnum.META) || cur.equals(CurrencyEnum.ETP)){
+            if (((String)newValue).length() != 34)
+            {
+                Toast.makeText(mCtx,"Invalid address format, METAVERSE addresses are 34 characters long", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        //all other coins
+        else if (!isValidEthAddress((String) newValue))
+            return false;
 
         PoolDbHelper db = PoolDbHelper.getInstance(mCtx,pool,cur);
         db.truncateWallets(db.getWritableDatabase());
@@ -57,19 +67,19 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
     private boolean isValidEthAddress(String newValue) {
         if (!newValue.startsWith("0x")) {
             Toast.makeText(mCtx,"Public addresses start with 0x", Toast.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
         //boolean isNumeric = ((String)newValue).matches("\\p{XDigit}+");
         boolean isHex = newValue.matches("^[0-9a-fA-Fx]+$");
         if(!isHex){
             Toast.makeText(mCtx,"Invalid address format, not an Hex", Toast.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
         //https://www.reddit.com/r/ethereum/comments/6l3da1/how_long_are_ethereum_addresses/
         if (newValue.length() != 42){
             Toast.makeText(mCtx,"Invalid address format, invalid length", Toast.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 }

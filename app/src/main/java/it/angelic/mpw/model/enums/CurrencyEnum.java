@@ -28,6 +28,7 @@ public enum CurrencyEnum {
 	EMC2("Einstenium"), //argh!
 	ETH("Ethereum", new EtherscanExplorer()),
     ETC("Ethereum Classic", new ETCExplorer()),
+    META("Metaverse"),
     ETP("Metaverse"),
     ETZ("EtherZero"),
 	EXP("Expanse"),

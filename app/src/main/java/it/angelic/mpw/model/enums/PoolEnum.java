@@ -11,7 +11,7 @@ public enum PoolEnum {
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.ELLA);
-        add(CurrencyEnum.ETP);
+        add(CurrencyEnum.META);
     }}, false),
     CRYPTOPOOL("CryptoPool Network", "cryptopool.network", true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ELLA);
