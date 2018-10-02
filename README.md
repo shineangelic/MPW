@@ -1,7 +1,7 @@
-# MPW
+
 
 ## ! App removed !!
-> Google decided to remove this dangerous app from its store, with following reasons:
+Google decided to remove this dangerous app from its store, with following reasons:
 
 > During review, we found that your app, Mining Pool Watcher (it.angelic.mpw), violates the Payments policy.
 
@@ -17,6 +17,8 @@
 > Donations must be facilitated via a web browser, and any collection must be made through a secure payment system.
 
 Since I don't want to take any action, as I believe this policy is broken, you are free to download this app, compile and use it as you prefer. Bye bye Play store
+
+# MPW
 
 
 Mining Pool Watcher is a generic Android client for [open-ethereum-pool](https://github.com/sammy007/open-ethereum-pool).
