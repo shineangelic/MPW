@@ -3,15 +3,15 @@ package it.angelic.mpw;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -226,11 +226,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 }
                 break;
             }
-            case R.id.nav_support: {
-                Intent opzioni = new Intent(DrawerActivity.this, EncourageActivity.class);
-                startActivity(opzioni);
-                break;
-            }
             case R.id.nav_blocks: {
                 Intent bb = new Intent(DrawerActivity.this, BlocksActivity.class);
                 startActivity(bb);
@@ -242,14 +237,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 break;
             }
             default:
-                Snackbar.make(findViewById(android.R.id.content), "Function not implemented yet. Please encourage development", Snackbar.LENGTH_LONG)
-                        .setAction("WHAT?", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent miner = new Intent(DrawerActivity.this, EncourageActivity.class);
-                                startActivity(miner);
-                            }
-                        }).show();
                 break;
         }
 

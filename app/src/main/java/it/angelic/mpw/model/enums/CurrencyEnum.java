@@ -1,7 +1,7 @@
 package it.angelic.mpw.model.enums;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import it.angelic.mpw.model.blockchainexplorers.BlockChainExplorer;
 import it.angelic.mpw.model.blockchainexplorers.CallistoExplorer;

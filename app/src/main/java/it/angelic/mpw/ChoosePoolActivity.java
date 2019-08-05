@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.preference.PreferenceManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -89,7 +89,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         }
 
         //admob
-        MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
+       // MobileAds.initialize(this, "ca-app-pub-2379213694485575~9889984422");
 
         ArrayAdapter poolSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, PoolEnum.values());
         poolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -308,7 +308,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
                 }
                 prefs.edit().putString("poolEnum", mPool.name()).apply();
                 prefs.edit().putString("curEnum", mCur.name()).apply();
-                prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).commit();
+                //prefs.edit().putBoolean("skipIntro", skipIntro.isChecked()).apply();
                 Log.w(Constants.TAG, "SAVED  pool: " + mPool.name() + " currency: " + mCur.name());
                 //wallet can be empty, changed in preference
                 //retrocompatibility

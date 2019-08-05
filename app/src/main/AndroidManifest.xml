@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="it.angelic.mpw">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,12 +8,16 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
+
         android:allowBackup="true"
         android:fullBackupContent="@xml/mpw_backup_rules"
         android:icon="@mipmap/ic_pool_watcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2379213694485575~9889984422"/>
         <activity
             android:name=".ChoosePoolActivity"
             android:label="@string/app_name"

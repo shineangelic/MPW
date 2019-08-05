@@ -3,8 +3,8 @@ package it.angelic.mpw;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Request;

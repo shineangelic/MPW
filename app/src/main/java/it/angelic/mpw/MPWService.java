@@ -12,9 +12,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -48,9 +48,9 @@ import it.angelic.mpw.model.enums.PoolEnum;
 import it.angelic.mpw.model.jsonpojos.home.HomeStats;
 import it.angelic.mpw.model.jsonpojos.wallet.Wallet;
 
-import static android.support.v4.app.NotificationCompat.CATEGORY_PROGRESS;
-import static android.support.v4.app.NotificationCompat.CATEGORY_SERVICE;
-import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
+import static androidx.core.app.NotificationCompat.CATEGORY_PROGRESS;
+import static androidx.core.app.NotificationCompat.CATEGORY_SERVICE;
+import static androidx.core.app.NotificationCompat.PRIORITY_LOW;
 import static it.angelic.mpw.Constants.LAST_TWO;
 import static it.angelic.mpw.Constants.TAG;
 

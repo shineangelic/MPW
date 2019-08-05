@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -48,7 +48,7 @@
             app:layout_constraintVertical_bias="0.0"
             android:gravity="start" />
 
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/buttonPay"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="20dp"
@@ -78,5 +78,5 @@
             app:layout_constraintTop_toBottomOf="@+id/buttonPay"
             app:layout_constraintHorizontal_bias="0.333"
             android:layout_marginEnd="8dp" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </TableRow>
