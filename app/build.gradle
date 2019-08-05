@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 android {
+    lintOptions {
+        abortOnError false
+    }
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     flavorDimensions "default"
