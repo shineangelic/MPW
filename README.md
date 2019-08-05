@@ -1,4 +1,25 @@
+
+
+## ! App removed !!
+Google decided to remove this dangerous app from its store, with following reasons:
+
+> During review, we found that your app, Mining Pool Watcher (it.angelic.mpw), violates the Payments policy.
+
+> Our policy states:
+
+> Developers charging for apps and downloads from Google Play must use Google Play’s payment system.
+> Developers offering virtual goods or currencies within a game downloaded from Google Play must use Google Play's in-app billing service as the method of payment.
+> For example, your app accepts donations without using Google Play's payment system.
+
+> Donations may only be collected within an app under certain conditions:
+
+> Donations are only permitted for validated non-profit charitable organizations (for example, a validated 501(c)(3) charitable organization or the local equivalent).
+> Donations must be facilitated via a web browser, and any collection must be made through a secure payment system.
+
+Since I don't want to take any action, as I believe this policy is broken, you are free to download this app, compile and use it as you prefer. Bye bye Play store
+
 # MPW
+
 
 Mining Pool Watcher is a generic Android client for [open-ethereum-pool](https://github.com/sammy007/open-ethereum-pool).
 It stores on a local SQLite database data retrieved via JSON, in order to show charts and rich miners statistics. It computes estimated earnings and plots payments history.
