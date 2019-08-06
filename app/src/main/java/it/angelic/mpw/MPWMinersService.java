@@ -11,7 +11,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.JobParameters;
@@ -100,7 +99,6 @@ public class MPWMinersService extends JobService {
 
         } catch (Exception se) {
             Log.e(TAG, "SERVICE MINERS ERROR: " + se);
-            Crashlytics.logException(se);
             MPWMinersService.this.jobFinished(job, true);
             Log.e(TAG, "SERVICE MINERS END KO");
             return false;

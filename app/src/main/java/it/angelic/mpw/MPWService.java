@@ -22,7 +22,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.JobParameters;
@@ -191,7 +190,6 @@ public class MPWService extends JobService {
 
         }catch (Exception se){
             Log.e(TAG, "SERVICE ERROR: "+se);
-            Crashlytics.logException(se);
         }
 
         return true; // Answers the question: "Is there still work going on?"

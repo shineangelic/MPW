@@ -7,7 +7,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import it.angelic.mpw.model.db.PoolDbHelper;
@@ -60,7 +59,6 @@ class WalletPrefChangeListener implements  Preference.OnPreferenceChangeListener
         Bundle bundle = new Bundle();
         //bundle.putString(FirebaseAnalytics.Param.ITEM_ID, (String) newValue);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-        Crashlytics.setUserIdentifier((String) newValue);
         return true;
     }
 

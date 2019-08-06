@@ -12,7 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.crashlytics.android.Crashlytics;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.JobParameters;
@@ -55,7 +54,6 @@ public class MPWCoinmarketcapService extends JobService {
 
         }catch (Exception se){
             Log.e(TAG, "SERVICE MARKETCAP ERROR: "+se);
-            Crashlytics.logException(se);
         }
 
         return true; // Answers the question: "Is there still work going on?"
@@ -80,7 +78,6 @@ public class MPWCoinmarketcapService extends JobService {
                 public void onErrorResponse(VolleyError error) {
                     Log.e(TAG, "SERVICE MARKETCAP END KO2");
                     VolleyLog.d(Constants.TAG, "Error: " + error.getMessage());
-                    Crashlytics.logException(error);
                     MPWCoinmarketcapService.this.jobFinished(job,true);
                 }
             });
