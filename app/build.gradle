@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 android {
     lintOptions {
         abortOnError false
@@ -32,7 +31,6 @@ dependencies {
         transitive = true
     }
     implementation 'com.google.firebase:firebase-core:17.0.1'
-    implementation 'com.google.firebase:firebase-crash:16.2.1'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation ('androidx.test.espresso:espresso-core:3.1.0', {
@@ -58,7 +56,3 @@ dependencies {
 
     implementation 'com.github.ganfra:material-spinner:2.0.0'
 }
-
-
-
-apply plugin: 'com.google.gms.google-services'
