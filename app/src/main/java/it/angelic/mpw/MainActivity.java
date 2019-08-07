@@ -1,6 +1,7 @@
 package it.angelic.mpw;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -217,7 +218,7 @@ public class MainActivity extends DrawerActivity {
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e(Constants.TAG, "Error: " + error.getMessage());
                 Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
-                        .show();
+                .setAction("CHECK POOL", new MyUndoListener()).show();
                 // prevent stale data appear
                 updateCurrentStatsPanel();
             }
@@ -319,4 +320,14 @@ public class MainActivity extends DrawerActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private class MyUndoListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (mPool.getWebRoot() != null) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(Utils.getHomeStatsURL(PreferenceManager.getDefaultSharedPreferences(MainActivity.this))));
+                startActivity(i);
+            }
+        }
+    }
 }

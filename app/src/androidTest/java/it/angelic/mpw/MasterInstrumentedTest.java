@@ -66,13 +66,11 @@ public class MasterInstrumentedTest {
         return Arrays.asList(new Object[][]{
                 {PoolEnum.NOOBPOOL, CurrencyEnum.ETH},
                 {PoolEnum.CRYPTOPOOL, CurrencyEnum.ETC},
-                {PoolEnum.CHILEMINERS, CurrencyEnum.CLO},
-                {PoolEnum.ANORAK, CurrencyEnum.PIRL},
-                {PoolEnum.ANORAK, CurrencyEnum.PIRL},
-                {PoolEnum.NOOBPOOL, CurrencyEnum.ETC},
+                {PoolEnum.MINERPOOL, CurrencyEnum.PIRL},
+                {PoolEnum.MAXHASH, CurrencyEnum.CLO},
                 {PoolEnum.MAXHASH, CurrencyEnum.ETC},
                 {PoolEnum.MAXHASH, CurrencyEnum.ETH},
-                {PoolEnum.TWOMINERS, CurrencyEnum.MUSIC},
+                {PoolEnum.TWOMINERS, CurrencyEnum.ETC},
                 {PoolEnum.MAXHASH, CurrencyEnum.UBIQ}
         });
     }

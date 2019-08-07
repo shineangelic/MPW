@@ -34,6 +34,8 @@ import it.angelic.mpw.model.db.PoolDbHelper;
 import it.angelic.mpw.model.enums.CurrencyEnum;
 import it.angelic.mpw.model.enums.PoolEnum;
 
+import static android.app.UiModeManager.MODE_NIGHT_AUTO;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -57,7 +59,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ChoosePoolActivity.this);
-        AppCompatDelegate.setDefaultNightMode(Integer.valueOf(prefs.getString("pref_theme", "0")));
+        AppCompatDelegate.setDefaultNightMode(Integer.valueOf(prefs.getString("pref_theme", ""+ MODE_NIGHT_AUTO)));
 
         setContentView(R.layout.activity_choose_pool);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -65,7 +67,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
         mWalletView = findViewById(R.id.wallet);
 
         poolSpinner = findViewById(R.id.spinnerPoolChooser);
-
+        currencySpinner = findViewById(R.id.spinnerCurrencyChooser);
         skipIntro = findViewById(R.id.skipIntro);
         skipIntro.setChecked(prefs.getBoolean("skipIntro", false));
         Bundle bundle = new Bundle();
@@ -95,8 +97,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
         poolSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         poolSpinner.setAdapter(poolSpinnerAdapter);
 
-
-        currencySpinner = findViewById(R.id.spinnerCurrencyChooser);
         ArrayAdapter curAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CurrencyEnum.values());
         curAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinner.setAdapter(curAdapter);
@@ -118,7 +118,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
 
         });
@@ -137,7 +136,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
             }
 
         });
@@ -152,7 +150,6 @@ public class ChoosePoolActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
 
     }
 
@@ -174,7 +171,7 @@ public class ChoosePoolActivity extends AppCompatActivity {
      *
      * @param prefs
      */
-    private void restoreLastSettings(SharedPreferences prefs) {
+    private void restoreLastSettings(final SharedPreferences prefs) {
 
         String prevPool = prefs.getString("poolEnum", "");
         final String prevCur = prefs.getString("curEnum", "");
@@ -191,12 +188,13 @@ public class ChoosePoolActivity extends AppCompatActivity {
             poolSpinner.invalidate();
             //take a breath THEN re-set currency
             //currency reneed DELAYED adapter
-            poolSpinner.postDelayed(new Runnable() {
+           poolSpinner.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     PoolEnum pp = (PoolEnum) poolSpinner.getItemAtPosition(poolSpinner.getSelectedItemPosition());
                     if (pp != null) {
-                        ArrayAdapter arra = new ArrayAdapter<>(ChoosePoolActivity.this, android.R.layout.simple_spinner_item, pp.getSupportedCurrencies());
+
+                        ArrayAdapter arra = new ArrayAdapter<>(poolSpinner.getContext(), android.R.layout.simple_spinner_item, pp.getSupportedCurrencies());
                         arra.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         currencySpinner.setAdapter(arra);
                         currencySpinner.invalidate();

@@ -54,7 +54,7 @@
                 android:layout_weight="1"
                 app:ms_enableErrorLabel="false"
                 app:ms_floatingLabelText="Choose your mining pool"
-                android:paddingVertical="12dp"  />
+                android:paddingVertical="12dp"/>
 
             <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/spinnerCurrencyChooser"
@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 app:ms_enableErrorLabel="false"
                 app:ms_floatingLabelText="Choose the currency you are mining"
-                android:paddingVertical="12dp" />
+                android:paddingVertical="12dp"/>
 
             <TextView
                 android:id="@+id/walletInfo"

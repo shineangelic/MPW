@@ -21,9 +21,6 @@ public enum PoolEnum {
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.UBQ);
     }}, false),
-    /*ELLAISMDEV("Ella Dev Pool", "ellaism.org", false, new ArrayList<CurrencyEnum>() {{
-        add(CurrencyEnum.ELLA);
-    }}, true, "pool"),*/
     MINERPOOL("Minerpool", "minerpool.net", false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ELLA);
         add(CurrencyEnum.ETZ);
@@ -42,6 +39,7 @@ public enum PoolEnum {
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.EXP);
         add(CurrencyEnum.MC);
+        add(CurrencyEnum.CLO);
         add(CurrencyEnum.UBIQ);
     }}, false, "pool"),
     NEVERMINING( "Nevermining",   "nevermining.org", false, new ArrayList<CurrencyEnum>() {{
@@ -60,6 +58,7 @@ public enum PoolEnum {
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.EXP);
         add(CurrencyEnum.MUSIC);
+        add(CurrencyEnum.CLO);
         add(CurrencyEnum.ETP);
         add(CurrencyEnum.PIRL);
         add(CurrencyEnum.ELLA);
@@ -73,29 +72,21 @@ public enum PoolEnum {
     /*MININGPOOLITA("Europool", "europool.me",true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETC);
     }}, false),*/
-    ANORAK("Anorak.Tech", "anorak.tech",true, new ArrayList<CurrencyEnum>() {{
+   /* ANORAK("Anorak.Tech", "anorak.tech",true, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.UBIQ);
         add(CurrencyEnum.PIRL);
-    }}, false),
+    }}, false),*/
     GIGANTPOOL("Gigantpool", "gigantpool.com",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.XMR);
-    }}, false),
-    CHILEMINERS("Chileminers", "chileminers.cl",false, new ArrayList<CurrencyEnum>() {{
+    }}, false);
+    /*CHILEMINERS("Chileminers", "chileminers.cl",false, new ArrayList<CurrencyEnum>() {{
         add(CurrencyEnum.ETH);
         add(CurrencyEnum.ETC);
         add(CurrencyEnum.CLO);
         add(CurrencyEnum.AKROMA);
-    }}, false);
-    /*DIGIPOOL("Digipools", "digipools.org",false, new ArrayList<CurrencyEnum>() {{
-        add(CurrencyEnum.ETC);
-        add(CurrencyEnum.EXP);
-        add(CurrencyEnum.MUSIC);
-        add(CurrencyEnum.PIRL);
-        add(CurrencyEnum.ELLA);
-        add(CurrencyEnum.UBIQ);
     }}, false);*/
     //human friendly name
     private final String friendlyName;
