@@ -79,9 +79,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         curLogo.setImageResource(R.mipmap.ic_pool_watcher);
         switch (mPool) {
 
-            case NOOBPOOL:
-                curLogo.setImageResource(R.mipmap.pool_noob);
-                break;
             case MAXHASH:
                 curLogo.setImageResource(R.mipmap.ic_maxhash_logo);
                 break;
@@ -97,15 +94,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case XEMINERS:
                 curLogo.setImageResource(R.mipmap.ic_xeminer_logo);
                 break;
-            case SOYMINERO:
-                curLogo.setImageResource(R.mipmap.ic_soyminero_logo);
-                break;
-            case GIGANTPOOL:
-                curLogo.setImageResource(R.mipmap.ic_gigantpool_logo);
-                break;
-            //case MININGPOOLITA:
-             //   curLogo.setImageResource(R.mipmap.ic_europool_logo);
-              //  break;
         }
         switch (mCur) {
             case ETH:

@@ -3,16 +3,16 @@ android {
     lintOptions {
         abortOnError false
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "28.0.3"
     flavorDimensions "default"
     defaultConfig {
         applicationId "it.angelic.mpw"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 34
-        versionName "1.6.0"
+        targetSdkVersion 29
+        versionCode 35
+        versionName "1.6.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,9 +25,9 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-ads:18.1.1'
+    implementation 'com.google.android.gms:play-services-ads:18.2.0'
 
-    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation ('androidx.test.espresso:espresso-core:3.1.0', {
@@ -35,10 +35,10 @@ dependencies {
     })
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.media:media:1.0.1'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.media:media:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.preference:preference:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
