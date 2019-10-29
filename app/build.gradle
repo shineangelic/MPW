@@ -4,15 +4,15 @@ android {
         abortOnError false
     }
     compileSdkVersion 29
-    buildToolsVersion "28.0.3"
+    buildToolsVersion "29.0.1"
     flavorDimensions "default"
     defaultConfig {
         applicationId "it.angelic.mpw"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 35
-        versionName "1.6.1"
+        versionCode 36
+        versionName "1.6.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

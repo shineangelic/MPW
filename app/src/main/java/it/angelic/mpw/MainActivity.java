@@ -217,6 +217,7 @@ public class MainActivity extends DrawerActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.e(Constants.TAG, "Error: " + error.getMessage());
+                Log.e(Constants.TAG, "Errore refresh MAIN: " + error.getMessage());
                 Snackbar.make(findViewById(android.R.id.content), "Network Error", Snackbar.LENGTH_SHORT)
                 .setAction("CHECK POOL", new MyUndoListener()).show();
                 // prevent stale data appear
